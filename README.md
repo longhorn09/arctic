@@ -19,6 +19,10 @@ The following settings need to be ```on```
 ```
 prompt newline
 opt gag_move
+```
+
+The following setting is needed so carriage return is not necessary and there are no breaks in screen output, therefore the scripts can fully capture and parse the mem and spell list.
+```
 opt lines 200
 ``` 
 
