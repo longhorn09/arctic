@@ -1,4 +1,4 @@
-# arctic
+# Oligo's scripts for Arctic
 Client scripts for MUSHClient
 
 ## Getting started
