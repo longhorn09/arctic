@@ -1,2 +1,5 @@
 # arctic
-scripts for MUSHClient
+Client scripts for MUSHClient
+
+
+# Getting started
