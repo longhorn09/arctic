@@ -15,7 +15,7 @@ C:\Program Files (x86)\MUSHclient\worlds\plugins\Chat_Capture_Miniwindow.xml
 
 Within Arctic - the scripts are sensitive to the in-game settings
 
-The following settings need to be on
+The following settings need to be ```on```
 ```prompt newline
 opt gag_move
 opt lines 200
@@ -23,6 +23,7 @@ opt lines 200
 
 ## Recommended Arctic settings
 
-The following settings need to be off
-```opt expert``` off
-```opt compact``` off
+The following settings need to be ```off```
+```opt expert
+opt compact
+``` 
