@@ -77,7 +77,7 @@
 -- v0.72 - 10/03/2016 - added cflee alias, and also automem power word stun (currently just red robe)
 -- v0.73 - 10/03/2016 - fixed bug (code omission) in tracking of pws capability
 -- v0.74 - 10/23/2016 - fix bug with not always autostanding after missed bash by doing a hardcode hack in doBashMiss
-
+-- v0.75 - 09/28/2018 - tweak druid spell slots to match latest spell circles - added cure massive, need to add divine free action
 --[[
 function Trim(s)
     return (s:gsub("^%s*(.-)%s*$", "%1"))
@@ -128,7 +128,7 @@ function doClearShamanVars(name,line,wildcards)
 	isfound = false
 	for k, v in pairs (GetVariableList()) do
 	  if (string.match(k,"^([A-Za-z]+)count$")) then
-		if (k ~= "resistcount" and k ~= "flycount" and k ~= "freeactioncount" and k ~= "massflycount" and k ~= "cureblindnesscount" and 
+		if (k ~= "resistcount" and k ~= "flycount" and k ~= "freeactioncount" and k ~= "massflycount" and k ~= "cureblindnesscount" and
 			k~= "cureseriouscount" and k~= "curelightcount" and k~="curecriticalcount" and k~="healcount" and
 			k~= "freeactioncount") then
 			varcount = varcount + 1
@@ -153,22 +153,22 @@ function doClearShamanVars(name,line,wildcards)
 	if (GetVariable("freeactioncount") == nil) then
 		SetVariable("freeactioncount",0)
 	end
-	if (GetVariable("cureblindnesscount") == nil) then  
-		SetVariable("cureblindnesscount",0) --otherwise bug in doCheckBlind 
-	end	
-	if (GetVariable("cureseriouscount") == nil) then  
+	if (GetVariable("cureblindnesscount") == nil) then
+		SetVariable("cureblindnesscount",0) --otherwise bug in doCheckBlind
+	end
+	if (GetVariable("cureseriouscount") == nil) then
 		SetVariable("cureseriouscount",0) --otherwise potential bug
 	end
-	if (GetVariable("curelightcount") == nil) then  
+	if (GetVariable("curelightcount") == nil) then
 		SetVariable("curelightcount",0) --otherwise potential bug
 	end
-	if (GetVariable("curecriticalcount") == nil) then  
+	if (GetVariable("curecriticalcount") == nil) then
 		SetVariable("curecriticalcount",0) --otherwise potential bug
 	end
-	if (GetVariable("healcount") == nil) then  
+	if (GetVariable("healcount") == nil) then
 		SetVariable("healcount",0) --otherwise potential bug
 	end
-	if (GetVariable("freeactioncount") == nil) then  
+	if (GetVariable("freeactioncount") == nil) then
 		SetVariable("freeactioncount",0) --otherwise potential bug
 	end
 end
@@ -176,59 +176,59 @@ end
 --* Char hp and other prompt line data collection for use with server data push
 --* <msg><cmd>CHARDATA</cmd><payload><chardata name='Poimoiwuer' charclass='Warrior' currenthp='499' maxhp='499' currentmv='113' maxmv='113' /></payload></msg>
 --*********************************************************
-function doCollectCharPromptData(name,line,wildcards)    
+function doCollectCharPromptData(name,line,wildcards)
     local isChanged = false
 
 	if (GetVariable("charRankPct") == nil) then
-		SetVariable("charRankPct",0.0)		
+		SetVariable("charRankPct",0.0)
 	end
-	
+
 	if (GetVariable("charXpTnl") == nil) then
-		SetVariable("charXpTnl",0)		
+		SetVariable("charXpTnl",0)
 	end
-	
+
 	if (wildcards[3] ~= nil and #wildcards[3] > 0) then
 		if (GetVariable("charXpTnl") ~= wildcards[3]) then
-			SetVariable("charXpTnl",wildcards[3])		
+			SetVariable("charXpTnl",wildcards[3])
 			isChanged = true
-		end		
+		end
 	end
-	
+
 	if (wildcards[4] ~= nil and #wildcards[4] > 0) then
 		if (GetVariable("charRankPct") ~= wildcards[4]) then
-			SetVariable("charRankPct",wildcards[4])		
+			SetVariable("charRankPct",wildcards[4])
 			isChanged = true
-		end		
+		end
 	end
-		
+
 	if (tonumber(wildcards[1]) ~= tonumber(GetVariable("charCurrentHP"))) then
 	  SetVariable("charCurrentHP", wildcards[1])
 	  isChanged = true
 	end
-	
+
 	if (tonumber(wildcards[2]) ~= tonumber(GetVariable("charCurrentMV"))) then
 	  SetVariable("charCurrentMV", wildcards[2])
 	  isChanged = true
 	end
-	
+
 	if (tonumber(wildcards[5]) ~= tonumber(GetVariable("coinsOnHand"))) then
 	  SetVariable("coinsOnHand", wildcards[5])
 	  isChanged = true
 	end
-	
-	parsePromptLine(Trim(wildcards[6]))	
+
+	parsePromptLine(Trim(wildcards[6]))
 
 	if (tonumber(GetTriggerOption("group_line","enabled")) == 1) then
 	  Execute("healgroupparse")
-	end	
-	
+	end
+
 	EnableTrigger("group_line", false)
 	--EnableTrigger("group_stopper", false)
-	
+
 	if (isChanged and IsSocketConnected()) then
 	    --Note("isChanged: "..tostring(isChanged))
 		--Note("IsSocketConnected: "..tostring(IsSocketConnected()))
-		local xmlstr = CreateXMLMsg("CHARPROMPT","<chardata />")		
+		local xmlstr = CreateXMLMsg("CHARPROMPT","<chardata />")
 		--Note("xmlstr: "..xmlstr)
 		--assert(c:send(xmlstr.."\\n"))
 	end
@@ -364,7 +364,7 @@ function doArrivalTrigger(name,line,wildcards)
 	local ancestralspiritcount = 0
 	local zombifycount = 0
 	local darkenedsoulcount = 0
-	
+
 	--need to take tally of shaman circle 6 spells for accurate divine regenerate count
 	  if (GetVariable("regeneratecount") ~= nil) then
 		regeneratecount = tonumber(GetVariable("regeneratecount"))
@@ -380,7 +380,7 @@ function doArrivalTrigger(name,line,wildcards)
 	  end
 	  if (GetVariable("zombifycount") ~= nil) then
 		zombifycount = tonumber(GetVariable("zombifycount"))
-	  end	  
+	  end
 	  if (GetVariable("darkenedsoulcount") ~= nil) then
 		darkenedsoulcount = tonumber(GetVariable("darkenedsoulcount"))
 	  end
@@ -390,7 +390,7 @@ function doArrivalTrigger(name,line,wildcards)
 
 	if (GetVariable("isnomagicfight") == nil) then
 	  SetVariable("isnomagicfight",0)
-	elseif (tonumber(GetVariable("isnomagicfight")) == 1) then  	
+	elseif (tonumber(GetVariable("isnomagicfight")) == 1) then
 	  isnomagicfight = true
 	end
 	--Note("** healtarget: "..healtarget)
@@ -409,7 +409,7 @@ function doArrivalTrigger(name,line,wildcards)
 	  else
 		SetVariable("stoneskincount",0)
 	  end
-	  
+
 	  if (stoneskincount > 0) then
 		Execute("doautostand;cast 'stone skin' "..healtarget)
 		if (stoneskincount > 0 and IsSocketConnected()) then
@@ -507,24 +507,24 @@ function orderAllGolemKill(name,line,wildcards)
 	local isfighting  = false
 	local target 	  = wildcards[2]
 	local hasgolem 	  = false
-	
+
 	if (target ~= nil) then
 		target = Trim(target)
 	else
 		target = ""
 	end
-	
+
 	if (GetVariable("hasgolem") == nil) then
 		SetVariable("hasgolem",0)
 	elseif (tonumber(GetVariable("hasgolem")) == 1) then
-		hasgolem = true		
+		hasgolem = true
 	end
 	--Note("hasgolem: "..tostring(hasgolem))
-	
+
 	if (tonumber(GetVariable("isfighting")) == 1) then
 		isfighting = true
 	end
-	
+
 	if (#target > 0 and hasgolem) then
 		if (isfighting) then
 			Execute("order all.golem kill "..target)
@@ -533,7 +533,7 @@ function orderAllGolemKill(name,line,wildcards)
 		end
 	elseif (#target > 0 and isfighting == false) then
 	  Execute("kill "..target)
-	end	
+	end
 end
 
 --*********************************************************
@@ -826,6 +826,7 @@ function resetSpell_List(name,line,wildcards)
 	SetVariable("spell_removeparalysis",0)
 	SetVariable("spell_rot",0)
 	SetVariable("spell_calm",0)
+  SetVariable("spell_curemassive",0)
 	SetVariable("spell_cureserious",0)
 	SetVariable("spell_daze",0)
 	SetVariable("spell_entangle",0)
@@ -983,12 +984,12 @@ function doBashMiss(name,line,wildcards)
 
 	if (isdebug) then
 		Note("** Time between bashes: "..tostring(math.abs(socket.gettime() - tonumber(GetVariable("lastbashtime")))))
-		Note("** laststandtime: "..GetVariable("laststandtime"))	
+		Note("** laststandtime: "..GetVariable("laststandtime"))
 	end
 
-	--manually force it to consider stand beyond 4 second window in doAutostandTrack so condition always evaluates > 4 seconds 
-	SetVariable("laststandtime", tonumber(GetVariable("laststandtime")) - 4.1)	
-	
+	--manually force it to consider stand beyond 4 second window in doAutostandTrack so condition always evaluates > 4 seconds
+	SetVariable("laststandtime", tonumber(GetVariable("laststandtime")) - 4.1)
+
 	Execute("dostand")
 	SetVariable("lastbashtime", tonumber(round(socket.gettime(),3)))
 end
@@ -1054,7 +1055,7 @@ function doShamanBotOn(name,line,wildcards)
 	SetVariable("isMainHealer",1)
 	SetVariable("isRandomDelay",0)
 	SetVariable("fademode",0)
-	Execute("sethdelay 0")	
+	Execute("sethdelay 0")
 	Execute("compsoff;endheal;shabotstatus;trainoff;buffsstatus;rdelaystatus;nmoff;asson")
 	Execute("setengage oask")  --order all.spirit kill logic
 	if (tonumber(GetVariable("islegendary")) == 1) then
@@ -1330,7 +1331,7 @@ function doBotCombatSkill(name,line,wildcards)
     randomid = math.random(#t)
     if (isfighting) then
       Send(t[randomid])
-    end	
+    end
   elseif (GetVariable("charClass")=="Warrior") then
     SetTimerOption("botskill_timer","minute","0")
     SetTimerOption("botskill_timer","second","5")
@@ -2074,7 +2075,7 @@ function doHealLogic(healcount,curecriticalcount,cureseriouscount,curelightcount
   elseif (curecriticalcount > 0) then          --NOTE: DRUID, SHAMAN, CLERIC share remaining spells
     Execute("doautostand;cast 'cure critical' "..healtarget)
     Note("** CURE CRITICAL --> "..healtarget.." ("..hits..")")
-	SetVariable("healtype",2)
+	  SetVariable("healtype",2)
     tryingheal = 1
     SetVariable("tryingheal",1)
   elseif (cureseriouscount > 0) then
@@ -2159,13 +2160,13 @@ function healGroupParse()
   end
   if (GetVariable("zombifycount") ~= nil) then
 	zombifycount = tonumber(GetVariable("zombifycount"))
-  end	  
+  end
   if (GetVariable("darkenedsoulcount") ~= nil) then
 	darkenedsoulcount = tonumber(GetVariable("darkenedsoulcount"))
   end
-  
+
   --total since regen is divine spell
-  regeneratecount = regeneratecount + healboostcount + ritualvoyagecount + ancestralspiritcount + zombifycount + darkenedsoulcount  
+  regeneratecount = regeneratecount + healboostcount + ritualvoyagecount + ancestralspiritcount + zombifycount + darkenedsoulcount
 
   math.randomseed( os.time() )
   math.random(); math.random(); math.random()
@@ -2627,20 +2628,20 @@ function doAutoFrag(name,lines,wildcards)
   end
   -- initialize white robe frags
   if (GetVariable("arcanelashcount") == nil) then
-	SetVariable("arcanelashcount",0)    
-  end  
+	SetVariable("arcanelashcount",0)
+  end
   arcanelashcount = tonumber(GetVariable("arcanelashcount"))
-  
+
   if (GetVariable("scorchcount") == nil) then
-	SetVariable("scorchcount",0)    
-  end  
-  scorchcount = tonumber(GetVariable("scorchcount"))  
-  
+	SetVariable("scorchcount",0)
+  end
+  scorchcount = tonumber(GetVariable("scorchcount"))
+
   if (GetVariable("arcanespearcount") == nil) then
-	SetVariable("arcanespearcount",0)    
-  end  
-  arcanespearcount = tonumber(GetVariable("arcanespearcount"))    
-  
+	SetVariable("arcanespearcount",0)
+  end
+  arcanespearcount = tonumber(GetVariable("arcanespearcount"))
+
   -- initialize druid frags
   if (GetVariable("calllightningcount") ~= nil) then
     calllightningcount = tonumber(GetVariable("calllightningcount"))
@@ -2723,12 +2724,12 @@ function doAutoFrag(name,lines,wildcards)
     elseif (lightningboltcount > 0) then
       Execute("doautostand;cast 'lightning bolt' "..target1)
     elseif (shockinggraspcount > 0) then
-      Execute("doautostand;cast 'shocking grasp' "..target1)	  
+      Execute("doautostand;cast 'shocking grasp' "..target1)
     elseif (magicmissilecount > 0) then
       Execute("doautostand;cast 'magic missile' "..target1)
     else
       Execute("fragoff")
-    end  
+    end
   elseif (charclass == "Black Robe" and isautofrag and math.abs(socket.gettime() - lastcasttime) > 3.9) then
     if (devastationcount > 0) then
       Execute("doautostand;cast 'devastation' "..target1)
@@ -3464,7 +3465,7 @@ function parseBuffs()
 
   --buffs for black robe ( blur/shield/mentalacuity/vitriolicshield/blackrune/reposecount/tenebrous orb)
   local blackrunecount, vitriolicshieldcount, tenebrousorbcount = 0,0,0
-  
+
   --buffs for white robe
   local fireshieldcount, arcaneshellcount, epiphanycount, whiterunecount = 0,0,0,0
   local mindafirecount, jukecount, preservationcount, watchfuleyecount, foldspacecount = 0,0,0,0,0
@@ -3508,8 +3509,8 @@ function parseBuffs()
   local boilingbloodcount, amplifyspiritscount, monstrousmantlecount, endurancecount = 0,0,0,0
   local spiritualguidancecount, detectpoisoncount, spectralglowcount, healboostcount = 0,0,0,0
   local tenaciousheartcount,  spectralsightcount, darkenedsoulcount,  etherealarmorcount = 0,0,0,0
-  local ancestralshroudcount = 0 
-  
+  local ancestralshroudcount = 0
+
   --buffs for dk
   --local detectgoodcount = 0  --cleric already has
   local cloakofshadowscount = 0
@@ -3533,33 +3534,33 @@ function parseBuffs()
     unholymightcount = tonumber(GetVariable("unholymightcount"))
   else
 	SetVariable("unholymightcount",0)
-  end  
+  end
   if (GetVariable("protectionfromgoodcount") ~= nil) then
     protectionfromgoodcount = tonumber(GetVariable("protectionfromgoodcount"))
   else
 	SetVariable("protectionfromgoodcount",0)
-  end    
+  end
   if (GetVariable("cloakofshadowscount") ~= nil) then
     cloakofshadowscount = tonumber(GetVariable("cloakofshadowscount"))
   else
 	SetVariable("cloakofshadowscount",0)
-  end      
+  end
   if (GetVariable("nightvisioncount") ~= nil) then
     nightvisioncount = tonumber(GetVariable("nightvisioncount"))
   else
 	SetVariable("nightvisioncount",0)
-  end        
+  end
   if (GetVariable("unholyauracount") ~= nil) then
     unholyauracount = tonumber(GetVariable("unholyauracount"))
   else
 	SetVariable("unholyauracount",0)
-  end          
+  end
   if (GetVariable("soulprotectioncount") ~= nil) then
     soulprotectioncount = tonumber(GetVariable("soulprotectioncount"))
   else
 	SetVariable("soulprotectioncount",0)
-  end            
-  
+  end
+
   --*****************************************************
   --*** Let's get paladin spell counts
   --*****************************************************
@@ -3655,8 +3656,8 @@ function parseBuffs()
   --*****************************************************
   if (GetVariable("ancestralshroudcount") ~= nil) then
     ancestralshroudcount = tonumber(GetVariable("ancestralshroudcount"))
-  end  
-  
+  end
+
   if (GetVariable("boilingbloodcount") ~= nil) then
     boilingbloodcount = tonumber(GetVariable("boilingbloodcount"))
   end
@@ -3733,7 +3734,7 @@ function parseBuffs()
   if (GetVariable("potencycount") ~= nil) then
     potencycount = tonumber(GetVariable("potencycount"))
   end
-  if (GetVariable("mnemonicenhancercount") ~= nil) then	
+  if (GetVariable("mnemonicenhancercount") ~= nil) then
     mnemonicenhancercount = tonumber(GetVariable("mnemonicenhancercount"))
   end
   if (GetVariable("minorglobeofinvulcount") ~= nil) then
@@ -3749,57 +3750,57 @@ function parseBuffs()
 	SetVariable("fireshieldcount",0)
   end
   fireshieldcount = tonumber(GetVariable("fireshieldcount"))
-  
+
   if (GetVariable("arcaneshellcount") == nil) then
 	SetVariable("arcaneshellcount",0)
   end
-  arcaneshellcount = tonumber(GetVariable("arcaneshellcount"))  
-  
+  arcaneshellcount = tonumber(GetVariable("arcaneshellcount"))
+
   if (GetVariable("whiterunecount") == nil) then
 	SetVariable("whiterunecount",0)
   end
-  whiterunecount = tonumber(GetVariable("whiterunecount"))  
+  whiterunecount = tonumber(GetVariable("whiterunecount"))
 
   if (GetVariable("epiphanycount") == nil) then
 	SetVariable("epiphanycount",0)
   end
-  epiphanycount = tonumber(GetVariable("epiphanycount"))  
-  
+  epiphanycount = tonumber(GetVariable("epiphanycount"))
+
   if (GetVariable("mindafirecount") == nil) then
 	SetVariable("mindafirecount",0)
   end
-  mindafirecount = tonumber(GetVariable("mindafirecount"))  
-  
+  mindafirecount = tonumber(GetVariable("mindafirecount"))
+
   if (GetVariable("jukecount") == nil) then
 	SetVariable("jukecount",0)
   end
-  jukecount = tonumber(GetVariable("jukecount"))  
+  jukecount = tonumber(GetVariable("jukecount"))
 
   if (GetVariable("watchfuleyecount") == nil) then
 	SetVariable("watchfuleyecount",0)
   end
-  watchfuleyecount = tonumber(GetVariable("watchfuleyecount"))  
+  watchfuleyecount = tonumber(GetVariable("watchfuleyecount"))
 
   if (GetVariable("foldspacecount") == nil) then
 	SetVariable("foldspacecount",0)
   end
-  foldspacecount = tonumber(GetVariable("foldspacecount"))    
+  foldspacecount = tonumber(GetVariable("foldspacecount"))
 
   if (GetVariable("booncount") == nil) then
 	SetVariable("booncount",0)
   end
-  booncount = tonumber(GetVariable("booncount"))     
+  booncount = tonumber(GetVariable("booncount"))
 
   if (GetVariable("preservationcount") == nil) then
 	SetVariable("preservationcount",0)
   end
-  preservationcount = tonumber(GetVariable("preservationcount"))     
-  
+  preservationcount = tonumber(GetVariable("preservationcount"))
+
   if (GetVariable("globeofinvulnerabicount") == nil) then
 	SetVariable("globeofinvulnerabicount",0)
   end
-  globeofinvulnerabicount = tonumber(GetVariable("globeofinvulnerabicount"))    
-  
+  globeofinvulnerabicount = tonumber(GetVariable("globeofinvulnerabicount"))
+
   --*****************************************************
   --*** Let's get black robe spell counts
   --*****************************************************
@@ -3846,29 +3847,29 @@ function parseBuffs()
   elseif (charclass == "Dark Knight") then
 	if (not isBuffApplied(buffsArr, "unholy might") and unholymightcount > 0) then
       table.insert(buffslist, "cast 'unholy might' me;")
-    end	
+    end
 	if (not isBuffApplied(buffsArr, "cloak of shadows") and cloakofshadowscount > 0) then
       table.insert(buffslist, "cast 'cloak of shadows' me;")
-    end	
+    end
 	if (not isBuffApplied(buffsArr, "protection from good") and protectionfromgoodcount > 0) then
       table.insert(buffslist, "cast 'protection from good' me;")
-    end	
+    end
 	if (not isBuffApplied(buffsArr, "bless") and blesscount > 0) then
       table.insert(buffslist, "cast 'bless' me;")
-    end		
+    end
 	if (not isBuffApplied(buffsArr, "detect good") and detectgoodcount > 0) then
       table.insert(buffslist, "cast 'detect good' me;")
-    end		
+    end
 	if (not isBuffApplied(buffsArr, "nightvision") and nightvisioncount > 0) then
       table.insert(buffslist, "cast 'nightvision' me;")
-    end				
+    end
 	if (not isBuffApplied(buffsArr, "soul protection") and soulprotectioncount > 0) then
       table.insert(buffslist, "cast 'soul protection';")
-    end				
+    end
 	if (not isBuffApplied(buffsArr, "unholy aura") and unholyauracount > 0) then
       table.insert(buffslist, "cast 'unholy aura';")
-    end			
-	
+    end
+
     --*****************************************************
     --*** Shaman buffs
     --*****************************************************
@@ -4042,29 +4043,29 @@ function parseBuffs()
     end
 	if (not isBuffApplied(buffsArr, "white rune") and whiterunecount > 0) then
       table.insert(buffslist, "cast 'white rune';")
-    end	
+    end
 	if (not isBuffApplied(buffsArr, "mind afire") and mindafirecount > 0) then
       table.insert(buffslist, "cast 'mind afire';")
-    end	
+    end
 	if (not isBuffApplied(buffsArr, "juke") and jukecount > 0) then
       table.insert(buffslist, "cast 'juke' me;")
-    end			
+    end
 	if (not isBuffApplied(buffsArr, "preservation") and preservationcount > 0) then
       table.insert(buffslist, "cast 'preservation';")
-    end	
+    end
 	if (not isBuffApplied(buffsArr, "watchful eye") and watchfuleyecount > 0) then
       table.insert(buffslist, "cast 'watchful eye';")
-    end	
+    end
 	if (not isBuffApplied(buffsArr, "fold space") and foldspacecount > 0) then
       table.insert(buffslist, "cast 'fold space';")
-    end	
+    end
 	if (not isBuffApplied(buffsArr, "boon") and booncount > 0) then
       table.insert(buffslist, "cast 'boon' me;")
-    end			
+    end
 	if (not isBuffApplied(buffsArr, "globe of invulnerability") and globeofinvulnerabicount > 0) then
       table.insert(buffslist, "cast 'globe of inv' me;")
-    end		
-		
+    end
+
     --*****************************************************
     --*** Cleric buffs
     --*****************************************************
@@ -4662,6 +4663,7 @@ function resetMem(name,line,wildcards)
   SetVariable("crusadecount", 0);
   SetVariable("cureblindnesscount", 0)
   SetVariable("curelightcount", 0);
+  SetVariable("curemassivecount", 0);
   SetVariable("cureseriouscount", 0);
   SetVariable("curecritcount", 0);
   SetVariable("curecriticalcount", 0);
@@ -4687,7 +4689,7 @@ function resetMem(name,line,wildcards)
   SetVariable("fireshieldcount", 0);
   SetVariable("firestormcount", 0);
   SetVariable("flameshroudcount", 0);
-  SetVariable("fleshshieldcount", 0);  
+  SetVariable("fleshshieldcount", 0);
   SetVariable("foldspacecount", 0); -- w.robe buff
   SetVariable("forceboltcount", 0);
   SetVariable("forcemissilecount", 0);
@@ -4723,7 +4725,7 @@ function resetMem(name,line,wildcards)
   SetVariable("magicmissilecount", 0);
   SetVariable("mentalacuitycount", 0);
   SetVariable("mindafirecount", 0);-- w.robe buff
-  SetVariable("minorglobeofinvulcount", 0);  
+  SetVariable("minorglobeofinvulcount", 0);
   SetVariable("monstrousmantlecount", 0);
   SetVariable("nightmarecount", 0);
   SetVariable("nightvisioncount", 0);
@@ -4774,7 +4776,7 @@ function resetMem(name,line,wildcards)
   SetVariable("vitriolicshieldcount", 0);
   SetVariable("watchfuleyecount", 0); -- w.robe buff
   SetVariable("waterbreathcount", 0); -- divine refresh
-  SetVariable("whiterunecount", 0); 
+  SetVariable("whiterunecount", 0);
   SetVariable("wordofrecallcount", 0);
   SetVariable("zombifycount", 0);	--divine regen
 end
@@ -4792,31 +4794,31 @@ function doDivineHeal()
   else
 	SetVariable("animatedeadcount",0)
   end
-  
+
   if (GetVariable("darknesscount") ~= nil) then
 	darknesscount    = tonumber(GetVariable("darknesscount"))
   else
 	SetVariable("darknesscount",0)
-  end  
-  
+  end
+
   if (GetVariable("harmcount") ~= nil) then
 	harmcount        = tonumber(GetVariable("harmcount"))
   else
 	SetVariable("harmcount",0)
-  end  	
-  
+  end
+
   if (GetVariable("restorationcount") ~= nil) then
 	restorationcount = tonumber(GetVariable("restorationcount"))
   else
 	SetVariable("restorationcount",0)
   end
-  
+
   if (GetVariable("summoncount") ~= nil) then
 	summoncount      = tonumber(GetVariable("summoncount"))
   else
 	SetVariable("summoncount",0)
   end
-  
+
   if (GetVariable("healcount") ~= nil) then
 	healcount        = tonumber(GetVariable("healcount"))
   else
@@ -4853,67 +4855,67 @@ function showHeals(name,line,wildcards)
 	healcount         = tonumber(GetVariable("healcount"))
   else
 	SetVariable("healcount",0)
-  end  
-	
+  end
+
   if (GetVariable("curecriticalcount") ~= nil) then
 	curecriticalcount = tonumber(GetVariable("curecriticalcount"))
   else
 	SetVariable("curecriticalcount",0)
-  end	
-	  
+  end
+
   if (GetVariable("cureseriouscount") ~= nil) then
 	cureseriouscount  = tonumber(GetVariable("cureseriouscount"))
   else
 	SetVariable("cureseriouscount",0)
-  end		
-  
+  end
+
   if (GetVariable("curelightcount") ~= nil) then
 	curelightcount    = tonumber(GetVariable("curelightcount"))
   else
 	SetVariable("curelightcount",0)
-  end			
-  
+  end
+
   --shaman spells
   if (GetVariable("regeneratecount") ~= nil) then
 	regeneratecount        = tonumber(GetVariable("regeneratecount"))
   else
 	SetVariable("regeneratecount",0)
   end
-  
+
   if (GetVariable("healboostcount") ~= nil) then
 	healboostcount         = tonumber(GetVariable("healboostcount"))
   else
 	SetVariable("healboostcount",0)
   end
-  
+
   if (GetVariable("ritualvoyagecount") ~= nil) then
 	ritualvoyagecount      = tonumber(GetVariable("ritualvoyagecount"))
   else
 	SetVariable("ritualvoyagecount",0)
   end
-  
+
   if (GetVariable("ancestralspiritcount") ~= nil) then
 	ancestralspiritcount   = tonumber(GetVariable("ancestralspiritcount"))
   else
 	SetVariable("ancestralspiritcount",0)
   end
-  
+
   if (GetVariable("healingwavecount") ~= nil) then
 	healingwavecount       = tonumber(GetVariable("healingwavecount"))
   else
 	SetVariable("healingwavecount",0)
   end
-  
+
   if (GetVariable("zombifycount") ~= nil) then
 	zombifycount = tonumber(GetVariable("zombifycount"))
   else
 	SetVariable("zombifycount",0)
-  end	  
-  
+  end
+
   if (GetVariable("darkenedsoulcount") ~= nil) then
 	darkenedsoulcount = tonumber(GetVariable("darkenedsoulcount"))
   else
-	SetVariable("darkenedsoulcount",0)	
+	SetVariable("darkenedsoulcount",0)
   end
 
   if (GetVariable("spell_healingwave") ~= nil) then
@@ -4962,7 +4964,7 @@ function gtShowHeals(name,line,wildcards)
   local stoneskincount 	  = 0
   local healingcloudcount = 0
   local isdruidbot 		  = false
-  
+
   --determine if druid bot enabled
   if (tonumber(GetVariable("isdruidbot")) == 1 and GetVariable("charClass") == "Druid") then
 	isdruidbot = true
@@ -5054,6 +5056,9 @@ function parseMemSlots(name,line,wildcards)
   local spell_coneofcold = false
   local spell_flameshroud = false
   local spell_freeaction = false
+  local spell_curemassive = false
+  local spell_paralysis = false
+  local spell_calllightning = false
 
   --check if cleric has certain spells before auto-memming them
   local spell_steelskin = false
@@ -5122,6 +5127,13 @@ function parseMemSlots(name,line,wildcards)
   	end
   end
 
+  --** druid circle 4 spells
+  if (GetVariable("spell_paralysis") ~= nil) then
+  	if (tonumber(GetVariable("spell_paralysis")) == 1) then
+  		spell_paralysis = true
+  	end
+  end
+
   --** druid circle 7 spells
   if (GetVariable("spell_curecritical") ~= nil) then
   	if (tonumber(GetVariable("spell_curecritical")) == 1) then
@@ -5153,6 +5165,18 @@ function parseMemSlots(name,line,wildcards)
   	end
   end
 
+  if (GetVariable("spell_curemassive") ~= nil) then
+  	if (tonumber(GetVariable("spell_curemassive")) == 1) then
+  		spell_curemassive = true
+  	end
+  end
+
+  if (GetVariable("spell_calllightning") ~= nil) then
+  	if (tonumber(GetVariable("spell_calllightning")) == 1) then
+  		spell_lightning = true
+  	end
+  end
+
   --cleric spell list
   if (GetVariable("spell_steelskin") ~= nil) then
   	if (tonumber(GetVariable("spell_steelskin")) == 1) then
@@ -5177,8 +5201,8 @@ function parseMemSlots(name,line,wildcards)
   	if (tonumber(GetVariable("spell_healingwave")) == 1) then
   		spell_healingwave = true
   	end
-  end  
-  
+  end
+
   --blackrobe spell list
   if (GetVariable("spell_nightmare") ~= nil) then
   	if (tonumber(GetVariable("spell_nightmare")) == 1) then
@@ -5204,12 +5228,12 @@ function parseMemSlots(name,line,wildcards)
   		spell_shockingblast = true
   	end
   end
-  
+
   if (GetVariable("spell_powerwordstun") ~= nil) then
   	if (tonumber(GetVariable("spell_powerwordstun")) == 1) then
   		spell_powerwordstun = true
   	end
-  end  
+  end
 
   if (GetVariable("spell_chainlightning") ~= nil) then
   	if (tonumber(GetVariable("spell_chainlightning")) == 1) then
@@ -5222,7 +5246,7 @@ function parseMemSlots(name,line,wildcards)
   		spell_forcemissile = true
   	end
   end
-  
+
   if (charclass == "Druid" or charclass == "Cleric" or charclass == "Shaman") then
     doDivineHeal()
     showHeals()
@@ -5248,7 +5272,7 @@ function parseMemSlots(name,line,wildcards)
           elseif (charclass == "Dark Knight") then
             for i = 1, tonumber(slot), 1 do
               table.insert(memtable, "'unh mig' ")
-            end			
+            end
           elseif (charclass == "Shaman") then
             for i = 1, tonumber(slot), 1 do
               table.insert(memtable, "'sati' ") --satiate
@@ -5277,7 +5301,7 @@ function parseMemSlots(name,line,wildcards)
             end
 		  elseif (charclass == "Druid") then
             for i = 1, tonumber(slot), 1 do
-              table.insert(memtable, "'bu han' ")
+              table.insert(memtable, "'e fist' ")
             end
           elseif (charclass == "Red Robe" or charclass == "Black Robe" or charclass == "White Robe" ) then
             for i = 1, tonumber(slot), 1 do
@@ -5295,7 +5319,7 @@ function parseMemSlots(name,line,wildcards)
             end
           elseif (charclass == "Druid") then
             for i = 1, tonumber(slot), 1 do
-              table.insert(memtable, "'e fist' ")
+              table.insert(memtable, "'fla shr' ")
             end
           elseif (charclass == "Red Robe" or charclass == "Black Robe" or charclass == "White Robe") then
             for i = 1, tonumber(slot), 1 do
@@ -5315,8 +5339,8 @@ function parseMemSlots(name,line,wildcards)
             for i = 1, tonumber(slot), 1 do
 				if (spell_coneofcold) then
 					table.insert(memtable, "'con o co' ")
-				elseif  (spell_flameshroud) then
-					table.insert(memtable, "'fla shr' ")
+				elseif  (spell_paralysis) then
+					table.insert(memtable, "'paralysis' ")
 				elseif  (spell_freeaction) then
 					table.insert(memtable, "'free act' ")
 				end
@@ -5339,7 +5363,11 @@ function parseMemSlots(name,line,wildcards)
 			end
           elseif (charclass == "Druid") then
             for i = 1, tonumber(slot), 1 do
-              table.insert(memtable, "'cure ser' ")
+              if (spell_curecritical) then
+                table.insert(memtable, "'cure critical' ")
+              elseif (spell_firestorm) then
+                table.insert(memtable, "'fire storm' ")
+              end
             end
           elseif (charclass == "Red Robe") then
             for i = 1, tonumber(slot), 1 do
@@ -5361,9 +5389,9 @@ function parseMemSlots(name,line,wildcards)
             end
           elseif (charclass == "Druid") then
             for i = 1, tonumber(slot), 1 do
-				if (spell_firestorm) then
-					table.insert(memtable, "'fire storm' ")
-				end
+      				if (spell_calllightning) then
+      					table.insert(memtable, "'call light' ")        --*** Druid 6th circle - call lightning
+      				end
             end
           elseif (charclass == "Red Robe") then
             for i = 1, tonumber(slot), 1 do
@@ -5390,9 +5418,9 @@ function parseMemSlots(name,line,wildcards)
               end
             end
           elseif (charclass == "Druid") then
-			if (spell_curecritical) then
+			if (spell_curemassive) then
 				for i = 1, tonumber(slot), 1 do
-				  table.insert(memtable, "'cure crit' ")
+				  table.insert(memtable, "'cure massive' ")
 				end
 			end
 		  elseif (charclass == "Shaman") then
@@ -5436,7 +5464,7 @@ function parseMemSlots(name,line,wildcards)
 			  if (spell_healingwave) then
 				table.insert(memtable, "'healing wave' ")
 			  end
-            end			
+            end
           elseif (charclass == "Black Robe") then
             for i = 1, tonumber(slot), 1 do
               table.insert(memtable, "'devastation' ")
