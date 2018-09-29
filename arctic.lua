@@ -826,7 +826,7 @@ function resetSpell_List(name,line,wildcards)
 	SetVariable("spell_removeparalysis",0)
 	SetVariable("spell_rot",0)
 	SetVariable("spell_calm",0)
-  SetVariable("spell_curemassive",0)
+  SetVariable("spell_curemassive",0)  -- new 7th circle as of 3Q18
 	SetVariable("spell_cureserious",0)
 	SetVariable("spell_daze",0)
 	SetVariable("spell_entangle",0)
@@ -2048,16 +2048,17 @@ function doBandAll()
 end
 
 --***********************************************************************************************
---* Function leveraged for both healbot and shaman bot
+--* Function leveraged for both healbot, druid, and shaman bot
 --* Don't get thrown off by variable name healcount, healcount can also represent regens if shamanbot
 --***********************************************************************************************
 function doHealLogic(healcount,curecriticalcount,cureseriouscount,curelightcount,healtarget,hits)
   local tryingheal = 0
   local isshamanbot       = false
+  local curemassivecount = 0    -- temp variable for development - delete
 
   if (GetVariable("isShamanbot") ~= nil and GetVariable("charClass") ~= nil) then
 	  if (tonumber(GetVariable("isShamanbot")) == 1 and GetVariable("charClass") == "Shaman") then
-		isshamanbot = true
+		  isshamanbot = true
 	  end
   end
 
@@ -2072,10 +2073,16 @@ function doHealLogic(healcount,curecriticalcount,cureseriouscount,curelightcount
 	SetVariable("healtype",1)
     tryingheal = 1
     SetVariable("tryingheal",1)
-  elseif (curecriticalcount > 0) then          --NOTE: DRUID, SHAMAN, CLERIC share remaining spells
+  elseif (curecriticalcount > 0) then          --NOTE: DRUID, SHAMAN, CLERIC share remaining spells (except for cure massive as of 3Q18)
     Execute("doautostand;cast 'cure critical' "..healtarget)
     Note("** CURE CRITICAL --> "..healtarget.." ("..hits..")")
 	  SetVariable("healtype",2)
+    tryingheal = 1
+    SetVariable("tryingheal",1)
+  elseif (curemassivecount > 0) then          --NOTE: DRUID, SHAMAN, CLERIC share remaining spells (except for cure massive as of 3Q18)
+    Execute("doautostand;cast 'cure massive' "..healtarget)
+    Note("** CURE MASSIVE --> "..healtarget.." ("..hits..")")
+	  SetVariable("healtype",5)
     tryingheal = 1
     SetVariable("tryingheal",1)
   elseif (cureseriouscount > 0) then
@@ -2114,6 +2121,7 @@ function healGroupParse()
   local curecriticalcount = 0
   local cureseriouscount  = 0
   local curelightcount    = 0
+  local curemassivecount  = 0        -- for druid as of 3Q18
   local tryingheal        = 0        --for healer/druid/shaman
   local tryingregen       = 0        --for shaman
   local isstanding        = true
@@ -2172,6 +2180,7 @@ function healGroupParse()
   math.random(); math.random(); math.random()
   healcount         = tonumber(GetVariable("healcount"))
   curecriticalcount = tonumber(GetVariable("curecriticalcount"))
+  curemassivecount  = tonumber(GetVariable("curemassivecount"))
   cureseriouscount  = tonumber(GetVariable("cureseriouscount"))
   curelightcount    = tonumber(GetVariable("curelightcount"))
   charname = Trim(GetVariable("charname"))
@@ -2232,49 +2241,46 @@ function healGroupParse()
 
 	--need to put lastregen_<target> check in this block of code because target might be nil outside of it
 	  if (isshamanbot and GetVariable("lastregen_"..target) ~= nil) then
-		lastregen_target = tonumber(GetVariable("lastregen_"..target))
-		--Note("lastregen_target: "..lastregen_target)
-		if ((os.clock() - lastregen_target) > regen_threshhold) then
-			isRegenExpired = true
-		else
-			isRegenExpired = false
-		end
+  		lastregen_target = tonumber(GetVariable("lastregen_"..target))
+  		--Note("lastregen_target: "..lastregen_target)
+  		if ((os.clock() - lastregen_target) > regen_threshhold) then
+  			isRegenExpired = true
+  		else
+  			isRegenExpired = false
+  		end
 	  end
 
 	if (healMode == HEAL_VBAD) then
       if (tryingheal == 0 and (string.lower(health) == "v.bad" or string.lower(health) == "awful" or string.lower(health) == "dying")) then
-		if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
-			tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
-		elseif (isRegenExpired == false and isshamanbot) then
-			tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
-		end
+    		if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
+    			tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
+    		elseif (isRegenExpired == false and isshamanbot) then
+    			tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
+    		end
       end
     elseif (healMode == HEAL_BAD) then
       if (tryingheal == 0 and (string.lower(health) == "bad" or string.lower(health) == "v.bad" or string.lower(health) == "awful" or string.lower(health) == "dying")) then
---        tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
-		if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
-			tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
-		elseif (isRegenExpired == false and isshamanbot) then
-			tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
-		end
+    		if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
+    			tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
+    		elseif (isRegenExpired == false and isshamanbot) then
+    			tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
+    		end
       end
     elseif (healMode == HEAL_FAIR) then
       if (tryingheal == 0 and (string.lower(health) == "fair" or string.lower(health) == "bad" or string.lower(health) == "v.bad" or string.lower(health) == "awful" or string.lower(health) == "dying")) then
-        --tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
-		if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
-			tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
-		elseif (isRegenExpired == false and isshamanbot) then
-			tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
-		end
+    		if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
+    			tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
+    		elseif (isRegenExpired == false and isshamanbot) then
+    			tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
+    		end
       end
     elseif (healMode == HEAL_PK) then
       if (tryingheal == 0 and (string.lower(health) == "bad" or string.lower(health) == "v.bad" or string.lower(health) == "awful" or string.lower(health) == "dying")) then
-        --tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
-		if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
-			tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
-		elseif (isRegenExpired == false and isshamanbot) then
-			tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
-		end
+    		if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
+    			tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
+    		elseif (isRegenExpired == false and isshamanbot) then
+    			tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
+    		end
       end
     end
   end
@@ -2305,22 +2311,21 @@ function healGroupParse()
 		--this logic to determine when regen was last cast on target
 	    if (isshamanbot and GetVariable("lastregen_"..target) ~= nil) then
 		  lastregen_target = tonumber(GetVariable("lastregen_"..target))
-		  --Note("lastregen_target: "..lastregen_target)
-		  if ((os.clock() - lastregen_target) > regen_threshhold) then
-			isRegenExpired = true
-		  else
-		    isRegenExpired = false
-		  end
+		    --Note("lastregen_target: "..lastregen_target)
+  		  if ((os.clock() - lastregen_target) > regen_threshhold) then
+  			isRegenExpired = true
+  		  else
+  		    isRegenExpired = false
+  		  end
 	    end
 
         if (charcount == randomid) then
-          --tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
-			if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
-				tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
-			elseif (isRegenExpired == false and isshamanbot) then
-				tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
-			end
-			break
+    			if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
+    				tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
+    			elseif (isRegenExpired == false and isshamanbot) then
+    				tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
+    			end
+			    break
         end
       end
     end
@@ -2337,13 +2342,13 @@ function healGroupParse()
 	    if (isshamanbot and GetVariable("lastregen_"..target) ~= nil) then
 		  lastregen_target = tonumber(GetVariable("lastregen_"..target))
 		  --Note("lastregen_target: "..lastregen_target)
-		  if ((os.clock() - lastregen_target) > regen_threshhold) then
-			isRegenExpired = true
-		  else
-		    isRegenExpired = false
-		  end
+  		  if ((os.clock() - lastregen_target) > regen_threshhold) then
+  			isRegenExpired = true
+  		  else
+  		    isRegenExpired = false
+  		  end
 	    end
-        --tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
+
 			if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
 				tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
 			elseif (isRegenExpired == false and isshamanbot) then
@@ -2380,23 +2385,21 @@ function healGroupParse()
 
 			--this logic to determine when regen was last cast on target
 		  if (isshamanbot and GetVariable("lastregen_"..target) ~= nil) then
-			lastregen_target = tonumber(GetVariable("lastregen_"..target))
-			if ((os.clock() - lastregen_target) > regen_threshhold) then
-			  isRegenExpired = true
-			else
-			  Note("** lastregen_"..target..": "..tostring(os.clock() - lastregen_target))
-			  isRegenExpired = false
-			end
+  			lastregen_target = tonumber(GetVariable("lastregen_"..target))
+  			if ((os.clock() - lastregen_target) > regen_threshhold) then
+  			  isRegenExpired = true
+  			else
+  			  Note("** lastregen_"..target..": "..tostring(os.clock() - lastregen_target))
+  			  isRegenExpired = false
+  			end
 		  end
 
           if (charcount == randomid) then
-            --tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
-			if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
-				tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
-			elseif (isRegenExpired == false and isshamanbot) then
-				tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
-			end
-
+      			if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
+      				tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
+      			elseif (isRegenExpired == false and isshamanbot) then
+      				tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
+      			end
             break
           end
         end
@@ -2426,25 +2429,23 @@ function healGroupParse()
           charcount = charcount + 1
           target = charName
 
-			--this logic to determine when regen was last cast on target
-			if (isshamanbot and GetVariable("lastregen_"..target) ~= nil) then
-			  lastregen_target = tonumber(GetVariable("lastregen_"..target))
-			  --Note("lastregen_target: "..lastregen_target)
-			  if ((os.clock() - lastregen_target) > regen_threshhold) then
-				isRegenExpired = true
-			  else
-				isRegenExpired = false
-			  end
-			end
+    			--this logic to determine when regen was last cast on target
+    			if (isshamanbot and GetVariable("lastregen_"..target) ~= nil) then
+    			  lastregen_target = tonumber(GetVariable("lastregen_"..target))
+    			  --Note("lastregen_target: "..lastregen_target)
+    			  if ((os.clock() - lastregen_target) > regen_threshhold) then
+    				isRegenExpired = true
+    			  else
+    				isRegenExpired = false
+    			  end
+    			end
 
           if (charcount == randomid) then
-            --tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
-			if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
-				tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
-			elseif (isRegenExpired == false and isshamanbot) then
-				tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
-			end
-
+      			if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
+      				tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
+      			elseif (isRegenExpired == false and isshamanbot) then
+      				tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
+      			end
             break
           end
         end
@@ -5930,6 +5931,8 @@ function doLostConcentration(name,lines,wildcards)
     Execute("decrement cureseriouscount")
   elseif (tryingheal and healtype == 4) then
     Execute("decrement curelightcount")
+  elseif (tryingheal and healtype == 5) then  -- new druid as of 3Q18
+    Execute("decrement curemassivecount")
   end
 
   if (tryingstone) then
