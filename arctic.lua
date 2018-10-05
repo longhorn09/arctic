@@ -5057,9 +5057,9 @@ function parseMemSlots(name,line,wildcards)
   local spell_coneofcold = false
   local spell_flameshroud = false
   local spell_freeaction = false
-  local spell_curemassive = false
   local spell_paralysis = false
   local spell_calllightning = false
+  local spell_curemassive = false
 
   --check if cleric has certain spells before auto-memming them
   local spell_steelskin = false
@@ -5419,11 +5419,11 @@ function parseMemSlots(name,line,wildcards)
               end
             end
           elseif (charclass == "Druid") then
-			if (spell_curemassive) then
-				for i = 1, tonumber(slot), 1 do
-				  table.insert(memtable, "'cure massive' ")
-				end
-			end
+      			if (spell_curemassive) then
+      				for i = 1, tonumber(slot), 1 do
+      				  table.insert(memtable, "'cure massive' ")
+      				end
+      			end
 		  elseif (charclass == "Shaman") then
             for i = 1, tonumber(slot), 1 do
               table.insert(memtable, "'ghostsk' ")
