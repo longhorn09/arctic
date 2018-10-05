@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE muclient>
-<!-- Saved on Friday, September 21, 2018, 10:47 PM -->
+<!-- Saved on Thursday, October 04, 2018, 9:34 PM -->
 <!-- MuClient version 5.05 -->
 <!-- Written by Nick Gammon -->
 <!-- Home Page: http://www.mushclient.com/ -->
@@ -8,7 +8,7 @@
 <world
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-09-21 22:47:02"
+   date_saved="2018-10-04 21:34:20"
 
    auto_say_override_prefix="-"
    auto_say_string="say "
@@ -119,7 +119,7 @@
 <triggers
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-09-21 22:47:02"
+   date_saved="2018-10-04 21:34:20"
   >
   <trigger
    enabled="y"
@@ -158,7 +158,7 @@ SetVariable("isstanding",1)</send>
   >
   <send>local spellnamecount = Trim("%1")
 if (#Trim("%1") &gt; 20) then
-  spellnamecount = string.sub(spellnamecount,1,20)
+  spellnamecount = string.sub(spellnamecount,1,20) 
 end
 
 spellnamecount = string.gsub(Trim(spellnamecount)," ","").."count"
@@ -258,7 +258,7 @@ if string.len("%5") &gt; 0 then
 else
   SetVariable("islegendary", 0)
   --Note("is not legendary")
-end
+end 
 </send>
   </trigger>
   <trigger
@@ -288,7 +288,7 @@ if string.len("%3") &gt; 0 then
 else
   SetVariable("islegendary", 0)
   --Note("is not legendary")
-end
+end 
 </send>
   </trigger>
   <trigger
@@ -7230,7 +7230,7 @@ if (resistcount &gt; 0 and charclass == "Druid" and isdruidbot and isTargetInGro
     Send("cast 'resist' acid")
   elseif ("%2" == "shocked" and not isBuffApplied(buffsArr, "resist electricity") ) then
     table.insert(buffsArr,"resist electricity")
-    Send("cast 'resist' electricity")
+    Send("cast 'resist' electricity") 
   end
 end</send>
   </trigger>
@@ -7380,7 +7380,7 @@ end</send>
   <send>if (GetVariable("lastlook") ~= Trim("%1")) then
   if (tonumber(GetVariable("islookback")) == 1) then
     Send("look "..Trim("%1"))
-    SetVariable("lastlook", Trim("%1"))
+    SetVariable("lastlook", Trim("%1"))    
   else
     Execute("lbstatus")
   end
@@ -7843,16 +7843,16 @@ local isdruidbot = false
 local tryingheal = tonumber(GetVariable("tryingheal"))
 
 if (tonumber(GetVariable("isHealbot")) == 1 ) then
-  ishealbot = true
+  ishealbot = true  
 end
 
 if (tonumber(GetVariable("isdruidbot")) == 1 ) then
-  isdruidbot = true
+  isdruidbot = true  
 end
 
 if ((isdruidbot or ishealbot) and tryingheal == 0) then
   EnableTriggerGroup("gas_script",false)
-  Execute("gheal")
+  Execute("gheal")    
 end</send>
   </trigger>
   <trigger
@@ -10525,7 +10525,7 @@ Note("** Palanthas : guild2p ")
   <send>local charclass = GetVariable("charClass")
 local isbottrain = false
 --[[
-Note:
+Note: 
 use Send() if command can be directly sent to mud without any processing by MUSH
 use Execute() if you need some processing, like semicolon stacking
 in general you can use Execute for nearly everything
@@ -10537,7 +10537,7 @@ end
 if (isbottrain) then
   if (charclass == "Scout") then
     Execute("wake;st")
-    Send("camp")
+    Send("camp")         
   elseif (charclass == "Red Robe") then
     Send("temporal vis")
   elseif (charclass == "Barbarian") then
@@ -11322,15 +11322,15 @@ end
   >
   <send>if (tonumber(GetVariable("iscoinloot"))==1) then
   Execute("get all.coins corpse")
-end
+end 
 
 if (tonumber(GetVariable("iscomploot"))==1) then
   Execute("get all.component corpse")
-end
+end 
 
 if (tonumber(GetVariable("doexam"))==1) then
   Execute("exa corpse")
-end
+end 
 
 if (tonumber(GetVariable("isautocarve"))==1 and GetVariable("charClass")=="Barbarian" and tonumber(GetVariable("isfighting"))==0) then
   Execute("carve corpse")
@@ -12388,7 +12388,7 @@ SetVariable("last_burst_attempt",round(socket.gettime(),3))</send>
 if (tonumber(GetVariable("ishideon")) == 0)  then
   Execute("get "..GetVariable("food").." "..GetVariable("container"))
   Execute("eat "..GetVariable("food"))
-end
+end 
 
 if (tonumber(GetVariable("isbottrain"))==1) then
   if (GetVariable("charClass")=="Druid") then
@@ -13224,7 +13224,7 @@ Note("** Wizard eye died")</send>
   </trigger>
   <trigger
    enabled="y"
-   group="healbot"
+   group="spelltracker"
    match="^You lost your concentration\!$"
    regexp="y"
    send_to="12"
@@ -13234,7 +13234,7 @@ Note("** Wizard eye died")</send>
   </trigger>
   <trigger
    enabled="y"
-   group="spelltracker"
+   group="healbot"
    match="^You lost your concentration\!$"
    regexp="y"
    send_to="12"
@@ -14199,7 +14199,7 @@ if (tonumber(GetVariable("isscan")) == 1) then
     count = count + 1
   end
   SetVariable(scandir.."count",count)
-else
+else  
   Execute("checkpktarget "..Trim("%4"))
 end
 </send>
@@ -14222,7 +14222,7 @@ if (tonumber(GetVariable("isscan")) == 1) then
     count = count + 1
   end
   SetVariable(scandir.."count",count)
-else
+else  
   Execute("checkpktarget "..Trim("%4"))
 end
 </send>
@@ -14247,7 +14247,7 @@ if (tonumber(GetVariable("isscan")) == 1) then
     count = count + 1
   end
   SetVariable(scandir.."count",count)
-else
+else  
   Execute("checkpktarget "..Trim("%4"))
 end
 </send>
@@ -14280,7 +14280,7 @@ if (isscan == false) then
     --Note("target: "..Trim("%5"))
   else
     doCheckRescueTarget(Trim("%4"),Trim("%7"),3)
-  end
+  end  
   Execute("checkpktarget "..Trim("%4"))
 end</send>
   </trigger>
@@ -14392,7 +14392,7 @@ Note("** Celes. Valley : bard2cv")
 <aliases
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-09-21 22:47:02"
+   date_saved="2018-10-04 21:34:20"
   >
   <alias
    match="^(?:forcegh|fgh)$"
@@ -14444,7 +14444,7 @@ end</send>
   >
   <send>if (#Trim("%1") &gt; 0) then
   pkLoot(Trim("%1"))
-else
+else 
   pkLoot("corpse")
 end
 </send>
@@ -14707,6 +14707,28 @@ end
    sequence="100"
   >
   <send>Note("** Lorebot who")</send>
+  </alias>
+  <alias
+   match="^a(?:uto)?mem(on|off|status)$"
+   enabled="y"
+   group="auto_mem"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>
+if (string.len(Trim("%1")) &gt; 0) then
+  Note(Trim("%1"))
+end
+
+if (tonumber(GetVariable("isautomem")) == 1) then
+  Note("** Auto-mem       : Enabled")
+elseif  (tonumber(GetVariable("isautomem")) == 0) then
+  Note("** Auto-mem       : Disabled")
+end
+
+
+</send>
   </alias>
   <alias
    match="^aa$"
@@ -14977,7 +14999,7 @@ end</send>
   else
     Execute("doautostand;bash "..Trim("%1"))
   end
-else
+else 
   Note("** Syntax: b1 &lt;target&gt;")
 end</send>
   </alias>
@@ -14996,7 +15018,7 @@ end</send>
   else
     Execute("doautostand;bash "..Trim("%1"))
   end
-else
+else 
   Note("** Syntax: b2 &lt;target&gt;")
 end</send>
   </alias>
@@ -15128,7 +15150,7 @@ end</send>
   else
     Execute("doautostand;bash "..Trim("%1"))
   end
-else
+else 
   Note("** Syntax: b3 &lt;target&gt;")
 end</send>
   </alias>
@@ -15497,7 +15519,7 @@ wait.make (function ()
 
     wait.time (1)
   end -- for
-
+  
    SetStatus ("Ready")
 
 end) </send>
@@ -18190,7 +18212,7 @@ end
    sequence="100"
   >
   <send>if (tonumber(GetVariable("fademode")) == 0) then
-  Execute("down")
+  Execute("down")  
 elseif (tonumber(GetVariable("fademode")) == 1) then
   Execute("fade down")
 end
@@ -18206,7 +18228,7 @@ SetVariable("lastdir","down")</send>
    sequence="100"
   >
   <send>if (tonumber(GetVariable("fademode")) == 0) then
-  Execute("east")
+  Execute("east")  
 elseif (tonumber(GetVariable("fademode")) == 1) then
   Execute("fade east")
 end
@@ -18222,7 +18244,7 @@ SetVariable("lastdir","east")</send>
    sequence="100"
   >
   <send>if (tonumber(GetVariable("fademode")) == 0) then
-  Execute("north")
+  Execute("north")  
 elseif (tonumber(GetVariable("fademode")) == 1) then
   Execute("fade north")
 end
@@ -18238,7 +18260,7 @@ SetVariable("lastdir","north")</send>
    sequence="100"
   >
   <send>if (tonumber(GetVariable("fademode")) == 0) then
-  Execute("south")
+  Execute("south")  
 elseif (tonumber(GetVariable("fademode")) == 1) then
   Execute("fade south")
 end
@@ -18254,7 +18276,7 @@ SetVariable("lastdir","south")</send>
    sequence="100"
   >
   <send>if (tonumber(GetVariable("fademode")) == 0) then
-  Execute("up")
+  Execute("up")  
 elseif (tonumber(GetVariable("fademode")) == 1) then
   Execute("fade up")
 end
@@ -18270,7 +18292,7 @@ SetVariable("lastdir","up")</send>
    sequence="100"
   >
   <send>if (tonumber(GetVariable("fademode")) == 0) then
-  Execute("west")
+  Execute("west")  
 elseif (tonumber(GetVariable("fademode")) == 1) then
   Execute("fade west")
 end
@@ -18286,7 +18308,7 @@ SetVariable("lastdir","west")</send>
    sequence="100"
   >
   <send>local charname = "bloat"
-if (#Trim("%1") &gt; 0) then
+if (#Trim("%1") &gt; 0) then 
   SetVariable("my_proxy_password",Trim("%1"))
 end
 local passwd = Trim(GetVariable("my_proxy_password"))
@@ -20568,7 +20590,7 @@ end</send>
   >
   <send>if (#Trim("%1") == 0) then
   Note("** Syntax: passwd &lt;password&gt;")
-else
+else 
   SetVariable("my_proxy_password",Trim("%1"))
   Note("** Password set")
 end</send>
@@ -21942,7 +21964,7 @@ Note("** Drink          : "..GetVariable("drink"))</send>
   >
   <send>if (string.len(Trim("%1")) &gt; 0) then
   SetVariable("engageaction",Trim("%1"))
-end
+end 
 
 Note("** Engage Action  : "..GetVariable("engageaction"))
 Execute("rdelaystatus")</send>
@@ -21987,7 +22009,7 @@ Note("** Heal delay     : "..GetVariable("healdelay"))
   >
   <send>if (string.len("%1") &gt; 0) then
   SetVariable("leader",Trim(Proper("%1")))
-end
+end 
 Note("** Leader         : "..GetVariable("leader"))
 </send>
   </alias>
@@ -22001,7 +22023,7 @@ Note("** Leader         : "..GetVariable("leader"))
   >
   <send>if (string.len("%1") &gt; 0) then
   SetVariable("maintank",Trim(Proper("%1")))
-end
+end 
 
 Note("** Main tank      : "..GetVariable("maintank"))</send>
   </alias>
@@ -22224,7 +22246,7 @@ end
   >
   <send>if (string.len("%2") &gt; 0) then
   SetVariable("skimamount",tonumber("%2"))
-end
+end 
 Execute("splitstatus")</send>
   </alias>
   <alias
@@ -24075,7 +24097,7 @@ end</send>
 <timers
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-09-21 22:47:02"
+   date_saved="2018-10-04 21:34:20"
   >
   <timer name="ticktimer" enabled="y" minute="1" second="0.00" offset_second="0.00"    send_to="12"
 group="tickscript" >
@@ -24101,7 +24123,7 @@ group="bot_train" >
 <macros
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-09-21 22:47:02"
+   date_saved="2018-10-04 21:34:20"
   >
 
   <macro name="up" type="send_now" >
@@ -24235,7 +24257,7 @@ group="bot_train" >
 <variables
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-09-21 22:47:02"
+   date_saved="2018-10-04 21:34:20"
   >
   <variable name="absolutioncount">1</variable>
   <variable name="acidblastcount">0</variable>
@@ -24243,7 +24265,7 @@ group="bot_train" >
   <variable name="acidmistcount">0</variable>
   <variable name="aidcount">0</variable>
   <variable name="aiqzacount">0</variable>
-  <variable name="allow_order">1</variable>
+  <variable name="allow_order">0</variable>
   <variable name="allow_snoop">1</variable>
   <variable name="amplifyspiritscount">0</variable>
   <variable name="ancestralblessingcount">1</variable>
@@ -24276,22 +24298,22 @@ group="bot_train" >
   <variable name="causelightcount">3</variable>
   <variable name="cfzaheyaoecount">0</variable>
   <variable name="chainlightningcount">0</variable>
-  <variable name="char1">Thun </variable>
-  <variable name="char2">Faxinton </variable>
+  <variable name="char1">Marvolo </variable>
+  <variable name="char2">Leona </variable>
   <variable name="char3">Chungawong </variable>
   <variable name="char4">Aymahn </variable>
   <variable name="char5">Yhonk </variable>
   <variable name="char6">Hendo </variable>
   <variable name="char7">Alanis </variable>
   <variable name="char9">Glynda </variable>
-  <variable name="charAge">17</variable>
+  <variable name="charAge">18</variable>
   <variable name="charAlign">Evil</variable>
   <variable name="charClass">Magic User</variable>
-  <variable name="charCurrentHP">319</variable>
-  <variable name="charCurrentMV">131</variable>
+  <variable name="charCurrentHP">320</variable>
+  <variable name="charCurrentMV">132</variable>
   <variable name="charLevel">31</variable>
-  <variable name="charMaxHP">319</variable>
-  <variable name="charMaxMV">131</variable>
+  <variable name="charMaxHP">320</variable>
+  <variable name="charMaxMV">132</variable>
   <variable name="charname">Oligo</variable>
   <variable name="clanName">Unforgiving</variable>
   <variable name="clanRank">Neophyte</variable>
@@ -24317,8 +24339,9 @@ group="bot_train" >
   <variable name="curecriticalcount">0</variable>
   <variable name="curelightcount">0</variable>
   <variable name="curemalefactioncount">1</variable>
+  <variable name="curemassivecount">0</variable>
   <variable name="cureseriouscount">0</variable>
-  <variable name="currentroom">Flook's Room</variable>
+  <variable name="currentroom">Oligo's Orifice of Opulence</variable>
   <variable name="cursecount">0</variable>
   <variable name="darkenedsoulcount">0</variable>
   <variable name="darknesscount">0</variable>
@@ -24349,7 +24372,7 @@ group="bot_train" >
   <variable name="entanglecount">0</variable>
   <variable name="epiphanycount">0</variable>
   <variable name="etherealarmorcount">0</variable>
-  <variable name="exitdirs">NEW</variable>
+  <variable name="exitdirs">ESWU</variable>
   <variable name="fademode">0</variable>
   <variable name="faeriefirecount">0</variable>
   <variable name="fireballcount">0</variable>
@@ -24373,7 +24396,7 @@ group="bot_train" >
   <variable name="ghostskincount">0</variable>
   <variable name="globeofinvulnerabicount">0</variable>
   <variable name="granitehandcount">0</variable>
-  <variable name="groupaction">give bread</variable>
+  <variable name="groupaction">poke</variable>
   <variable name="gtmode">2</variable>
   <variable name="gublucount">0</variable>
   <variable name="gustofwindcount">2</variable>
@@ -24404,7 +24427,7 @@ group="bot_train" >
   <variable name="isCureOn">1</variable>
   <variable name="isHealbot">0</variable>
   <variable name="isMainHealer">0</variable>
-  <variable name="isMemmed">0</variable>
+  <variable name="isMemmed">1</variable>
   <variable name="isRandomDelay">0</variable>
   <variable name="isShamanbot">0</variable>
   <variable name="isaimneeded">1</variable>
@@ -24474,21 +24497,21 @@ group="bot_train" >
   <variable name="lastbashtime">1366140496.334</variable>
   <variable name="lastcasttime">1537336976.712</variable>
   <variable name="lastchancecount">2</variable>
-  <variable name="lastdir">east</variable>
+  <variable name="lastdir">south</variable>
   <variable name="lastengageclock">0</variable>
   <variable name="lastlook">Everlast</variable>
-  <variable name="lastmovetime">38.3</variable>
+  <variable name="lastmovetime">107.357</variable>
   <variable name="lastmv">96</variable>
   <variable name="lastregen_Bloat">2367.738</variable>
   <variable name="lastregen_Glynda">1306.222</variable>
   <variable name="lastregen_Khonsu ">2154.676</variable>
   <variable name="lastregen_Pyrrha ">1256.89</variable>
   <variable name="lastrescuetime">1503.556</variable>
-  <variable name="lastroom">Oligo's Orifice of Opulence</variable>
-  <variable name="lastroundclock">1537337168.288</variable>
-  <variable name="laststandtime">69.963</variable>
+  <variable name="lastroom">Sanjuro's Mulberry Field</variable>
+  <variable name="lastroundclock">1538552909.527</variable>
+  <variable name="laststandtime">130.303</variable>
   <variable name="lastveiltime">0</variable>
-  <variable name="leader">Leona</variable>
+  <variable name="leader">Premier</variable>
   <variable name="lightcount">0</variable>
   <variable name="lightningboltcount">0</variable>
   <variable name="lightningshieldcount">0</variable>
@@ -24496,7 +24519,7 @@ group="bot_train" >
   <variable name="magicblastcount">0</variable>
   <variable name="magicboltcount">0</variable>
   <variable name="magicmissilecount">0</variable>
-  <variable name="maintank">Oligo</variable>
+  <variable name="maintank">Eddisuun</variable>
   <variable name="malevolenttentaclescount">5</variable>
   <variable name="massflycount">0</variable>
   <variable name="massrefreshcount">0</variable>
@@ -24595,6 +24618,7 @@ group="bot_train" >
   <variable name="spell_curecritical">0</variable>
   <variable name="spell_curedisease">0</variable>
   <variable name="spell_curelight">0</variable>
+  <variable name="spell_curemassive">0</variable>
   <variable name="spell_cureserious">0</variable>
   <variable name="spell_curse">0</variable>
   <variable name="spell_darkenedsoul">0</variable>
@@ -24713,7 +24737,7 @@ group="bot_train" >
   <variable name="temporalpathcount">4</variable>
   <variable name="tenaciousheartcount">0</variable>
   <variable name="tenebrousorbcount">0</variable>
-  <variable name="thornspraycount">0</variable>
+  <variable name="thornspraycount">2</variable>
   <variable name="thunderboltcount">0</variable>
   <variable name="tryingheal">0</variable>
   <variable name="tryingstone">0</variable>
@@ -24742,7 +24766,7 @@ group="bot_train" >
 <colours
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-09-21 22:47:02"
+   date_saved="2018-10-04 21:34:20"
   >
 
 <ansi>
@@ -24799,7 +24823,7 @@ group="bot_train" >
 <keypad
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-09-21 22:47:02"
+   date_saved="2018-10-04 21:34:20"
   >
 
   <key name="0" >
@@ -24913,7 +24937,7 @@ group="bot_train" >
 <printing
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-09-21 22:47:02"
+   date_saved="2018-10-04 21:34:20"
   >
 
 <ansi>
