@@ -78,6 +78,7 @@
 -- v0.73 - 10/03/2016 - fixed bug (code omission) in tracking of pws capability
 -- v0.74 - 10/23/2016 - fix bug with not always autostanding after missed bash by doing a hardcode hack in doBashMiss
 -- v0.75 - 09/28/2018 - tweak druid spell slots to match latest spell circles - added cure massive, need to add divine free action
+-- v0.76 - 10/10/2018 - added automem toggle
 --[[
 function Trim(s)
     return (s:gsub("^%s*(.-)%s*$", "%1"))
@@ -5044,6 +5045,7 @@ end
 
 function parseMemSlots(name,line,wildcards)
   local spellslots = ""
+  local isautomem = tonumber(GetVariable("isautomem"))
   local charclass = GetVariable("charClass")
   local charname = GetVariable("charname")
   local memtable = {}
@@ -5252,7 +5254,8 @@ function parseMemSlots(name,line,wildcards)
     doDivineHeal()
     showHeals()
   end
-  if (#wildcards > 0) then
+
+  if (#wildcards > 0 and isautomem == 1) then
     spellslots = Trim(table.concat(wildcards))
     for circle,slot in string.gmatch(spellslots, "(%d+)%-(%d+)%s?") do
       if (tonumber(slot) > 0) then
