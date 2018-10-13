@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE muclient>
-<!-- Saved on Wednesday, October 10, 2018, 8:32 PM -->
+<!-- Saved on Friday, October 12, 2018, 10:29 PM -->
 <!-- MuClient version 5.05 -->
 <!-- Written by Nick Gammon -->
 <!-- Home Page: http://www.mushclient.com/ -->
@@ -8,7 +8,7 @@
 <world
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-10 20:32:37"
+   date_saved="2018-10-12 22:29:50"
 
    auto_say_override_prefix="-"
    auto_say_string="say "
@@ -119,7 +119,7 @@
 <triggers
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-10 20:32:37"
+   date_saved="2018-10-12 22:29:50"
   >
   <trigger
    enabled="y"
@@ -7203,6 +7203,16 @@ SetVariable("lastengageclock",0)</send>
   </trigger>
   <trigger
    enabled="y"
+   group="blazewight"
+   match="^([A-Z][a-z]+) howls in pain as Blazewight, the fiery dracolich's arcane spear rips into (him|her)\.$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>Execute("checkareadmg "..Trim("%1"))</send>
+  </trigger>
+  <trigger
+   enabled="y"
    expand_variables="y"
    group="autoresists"
    match="^([A-Z][a-z]+) is (burned|chilled|corroded|shocked)\, as (he|she) swings (at|as) ([A-Za-z \,\.\-\']+)\.$"
@@ -7333,6 +7343,16 @@ end</send>
   >
   <send>--local charclass
 --if (isTargetInGroup("%1")) then</send>
+  </trigger>
+  <trigger
+   enabled="y"
+   group="blazewight"
+   match="^([A-Z][a-z]+) is partly made ash, as Blazewight, the fiery dracolich breathes fire\.$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>Execute("checkareadmg "..Trim("%1"))</send>
   </trigger>
   <trigger
    enabled="y"
@@ -8539,6 +8559,16 @@ end</send>
   </trigger>
   <trigger
    enabled="y"
+   group="kraken"
+   match="^A gigantic black tentacle descends from above to grope insistently at ([A-Z][a-z]+)'s face!$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>Execute("checkareadmg "..Trim("%1"))</send>
+  </trigger>
+  <trigger
+   enabled="y"
    group="pkscript"
    match="^A glowing portal opens in front of you\, and ([A-Z][a-z]+) steps from it\.$"
    regexp="y"
@@ -8969,6 +8999,16 @@ end</send>
   </trigger>
   <trigger
    enabled="y"
+   group="kraken"
+   match="^A massive golden tentacle descends from above to skewer ([A-Z][a-z]+) through the shoulder!$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>Execute("checkareadmg "..Trim("%1"))</send>
+  </trigger>
+  <trigger
+   enabled="y"
    group="splitscript"
    match="^A mound of glittering treasure lies here."
    regexp="y"
@@ -9396,6 +9436,26 @@ end</send>
   </trigger>
   <trigger
    enabled="y"
+   group="kraken"
+   match="^An enormous green tentacle descends from above to hit ([A-Z][a-z]+) over the head!$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>Execute("checkareadmg "..Trim("%1"))</send>
+  </trigger>
+  <trigger
+   enabled="y"
+   group="kraken"
+   match="^An immense purple tentacle descends from above to wrap around ([A-Z][a-z]+)'s wrist!$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>Execute("checkareadmg "..Trim("%1"))</send>
+  </trigger>
+  <trigger
+   enabled="y"
    group="splitscript"
    match="^An inconsequential amount of steel coins lies here\.$"
    regexp="y"
@@ -9664,6 +9724,16 @@ Note("** Kalaman: kern2k")
   <send>
 Note("** KWD : OPEN KITCHEN")
 </send>
+  </trigger>
+  <trigger
+   enabled="y"
+   group="blazewight"
+   match="^Blazewight, the fiery dracolich uses his bony wings to skewer ([A-Z][a-z]+) through the chest!$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>Execute("checkareadmg "..Trim("%1"))</send>
   </trigger>
   <trigger
    back_colour="8"
@@ -9954,6 +10024,16 @@ Note("** Tollhouse : lemish2th")
    sequence="100"
   >
   <send>dostand</send>
+  </trigger>
+  <trigger
+   enabled="y"
+   group="blazewight"
+   match="^Flesh burns as Blazewight, the fiery dracolich's fiery hands contact ([A-Z][a-z]+)\.$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>Execute("checkareadmg "..Trim("%1"))</send>
   </trigger>
   <trigger
    enabled="y"
@@ -10318,6 +10398,16 @@ Execute("afillon")
 Note("** Speedwalks from Flying Citadel **")
 Note("** Neraka : fc2n")
 </send>
+  </trigger>
+  <trigger
+   enabled="y"
+   group="blazewight"
+   match="^One of the dark orbs blasts through ([A-Z][a-z]+)\.$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>Execute("checkareadmg "..Trim("%1"))</send>
   </trigger>
   <trigger
    enabled="y"
@@ -11435,6 +11525,16 @@ end</send>
    sequence="100"
   >
   <send>dostand</send>
+  </trigger>
+  <trigger
+   enabled="y"
+   group="blazewight"
+   match="^The force of the explosion maims ([A-Z][a-z]+)'s body\.$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>Execute("checkareadmg "..Trim("%1"))</send>
   </trigger>
   <trigger
    enabled="y"
@@ -13668,16 +13768,6 @@ Execute("buffrem blur")</send>
   </trigger>
   <trigger
    enabled="y"
-   group="tickscript"
-   match="^You throw away your bloody bandages\.$"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>Execute("dotick")</send>
-  </trigger>
-  <trigger
-   enabled="y"
    group="barb_train"
    match="^You throw away your bloody bandages\.$"
    regexp="y"
@@ -13693,6 +13783,16 @@ end
 if (isbarbtrain) then
   Execute("stand;learn all;lore claymore;bandself")
 end</send>
+  </trigger>
+  <trigger
+   enabled="y"
+   group="tickscript"
+   match="^You throw away your bloody bandages\.$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>Execute("dotick")</send>
   </trigger>
   <trigger
    enabled="y"
@@ -13913,6 +14013,16 @@ Execute("doautostand")</send>
    sequence="100"
   >
   <send>dostand</send>
+  </trigger>
+  <trigger
+   enabled="y"
+   group="blazewight"
+   match="^Your flesh burns as Blazewight, the fiery dracolich's fiery hands contact you\.$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>Execute("checkareadmg "..Trim(GetVariable("charname")))</send>
   </trigger>
   <trigger
    enabled="y"
@@ -14392,7 +14502,7 @@ Note("** Celes. Valley : bard2cv")
 <aliases
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-10 20:32:37"
+   date_saved="2018-10-12 22:29:50"
   >
   <alias
    match="^(?:forcegh|fgh)$"
@@ -24075,7 +24185,7 @@ end</send>
 <timers
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-10 20:32:37"
+   date_saved="2018-10-12 22:29:50"
   >
   <timer name="ticktimer" enabled="y" minute="1" second="0.00" offset_second="0.00"    send_to="12"
 group="tickscript" >
@@ -24101,7 +24211,7 @@ group="bot_train" >
 <macros
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-10 20:32:37"
+   date_saved="2018-10-12 22:29:50"
   >
 
   <macro name="up" type="send_now" >
@@ -24235,7 +24345,7 @@ group="bot_train" >
 <variables
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-10 20:32:37"
+   date_saved="2018-10-12 22:29:50"
   >
   <variable name="absolutioncount">1</variable>
   <variable name="acidblastcount">0</variable>
@@ -24286,13 +24396,13 @@ group="bot_train" >
   <variable name="char9">Glynda </variable>
   <variable name="charAge">19</variable>
   <variable name="charAlign">Evil</variable>
-  <variable name="charClass">Druid</variable>
-  <variable name="charCurrentHP">40</variable>
-  <variable name="charCurrentMV">131</variable>
-  <variable name="charLevel">1</variable>
-  <variable name="charMaxHP">40</variable>
-  <variable name="charMaxMV">131</variable>
-  <variable name="charname">Eddisurien</variable>
+  <variable name="charClass">Magic User</variable>
+  <variable name="charCurrentHP">320</variable>
+  <variable name="charCurrentMV">132</variable>
+  <variable name="charLevel">31</variable>
+  <variable name="charMaxHP">320</variable>
+  <variable name="charMaxMV">132</variable>
+  <variable name="charname">Oligo</variable>
   <variable name="clanName">Unforgiving</variable>
   <variable name="clanRank">Neophyte</variable>
   <variable name="clearskiescount">0</variable>
@@ -24319,7 +24429,7 @@ group="bot_train" >
   <variable name="curemalefactioncount">1</variable>
   <variable name="curemassivecount">0</variable>
   <variable name="cureseriouscount">0</variable>
-  <variable name="currentroom">A Grove of Neutrality</variable>
+  <variable name="currentroom">Oligo's Orifice of Opulence</variable>
   <variable name="cursecount">0</variable>
   <variable name="darkenedsoulcount">0</variable>
   <variable name="darknesscount">0</variable>
@@ -24350,7 +24460,7 @@ group="bot_train" >
   <variable name="entanglecount">0</variable>
   <variable name="epiphanycount">0</variable>
   <variable name="etherealarmorcount">0</variable>
-  <variable name="exitdirs">U</variable>
+  <variable name="exitdirs">ESWU</variable>
   <variable name="fademode">0</variable>
   <variable name="faeriefirecount">0</variable>
   <variable name="fireballcount">0</variable>
@@ -24439,8 +24549,8 @@ group="bot_train" >
   <variable name="iscoinloot">1</variable>
   <variable name="iscomploot">0</variable>
   <variable name="isdebug">0</variable>
-  <variable name="isdobuffs">0</variable>
-  <variable name="isdruidbot">1</variable>
+  <variable name="isdobuffs">1</variable>
+  <variable name="isdruidbot">0</variable>
   <variable name="isdrunk">0</variable>
   <variable name="isfighting">0</variable>
   <variable name="isfleesafe">0</variable>
@@ -24480,14 +24590,14 @@ group="bot_train" >
   <variable name="lastdir">north</variable>
   <variable name="lastengageclock">0</variable>
   <variable name="lastlook">Everlast</variable>
-  <variable name="lastmovetime">1105.307</variable>
+  <variable name="lastmovetime">3133.391</variable>
   <variable name="lastmv">131</variable>
   <variable name="lastregen_Bloat">2367.738</variable>
   <variable name="lastregen_Glynda">1306.222</variable>
   <variable name="lastregen_Khonsu ">2154.676</variable>
   <variable name="lastregen_Pyrrha ">1256.89</variable>
   <variable name="lastrescuetime">1503.556</variable>
-  <variable name="lastroom">On a Vallenwood Bough</variable>
+  <variable name="lastroom">Babbler's Bubbling Brook</variable>
   <variable name="lastroundclock">1537337168.288</variable>
   <variable name="laststandtime">69.963</variable>
   <variable name="lastveiltime">0</variable>
@@ -24574,13 +24684,13 @@ group="bot_train" >
   <variable name="spell_ancestralblessing">0</variable>
   <variable name="spell_ancestralshroud">0</variable>
   <variable name="spell_ancestralspirit">0</variable>
-  <variable name="spell_barkskin">1</variable>
+  <variable name="spell_barkskin">0</variable>
   <variable name="spell_barrier">0</variable>
   <variable name="spell_blindness">0</variable>
   <variable name="spell_blur">0</variable>
   <variable name="spell_boilingblood">0</variable>
   <variable name="spell_boneshape">0</variable>
-  <variable name="spell_burninghands">1</variable>
+  <variable name="spell_burninghands">0</variable>
   <variable name="spell_calllightning">0</variable>
   <variable name="spell_calm">0</variable>
   <variable name="spell_chainlightning">0</variable>
@@ -24592,12 +24702,12 @@ group="bot_train" >
   <variable name="spell_constantwinds">0</variable>
   <variable name="spell_createfood">0</variable>
   <variable name="spell_createwater">0</variable>
-  <variable name="spell_createwine">1</variable>
+  <variable name="spell_createwine">0</variable>
   <variable name="spell_cultivate">0</variable>
   <variable name="spell_cureblindness">0</variable>
   <variable name="spell_curecritical">0</variable>
   <variable name="spell_curedisease">0</variable>
-  <variable name="spell_curelight">1</variable>
+  <variable name="spell_curelight">0</variable>
   <variable name="spell_curemassive">0</variable>
   <variable name="spell_cureserious">0</variable>
   <variable name="spell_curse">0</variable>
@@ -24612,8 +24722,8 @@ group="bot_train" >
   <variable name="spell_enlarge">0</variable>
   <variable name="spell_entangle">0</variable>
   <variable name="spell_etherealarmor">0</variable>
-  <variable name="spell_faeriefire">1</variable>
-  <variable name="spell_faeriefog">1</variable>
+  <variable name="spell_faeriefire">0</variable>
+  <variable name="spell_faeriefog">0</variable>
   <variable name="spell_feast">0</variable>
   <variable name="spell_firestorm">0</variable>
   <variable name="spell_flameshroud">0</variable>
@@ -24659,7 +24769,7 @@ group="bot_train" >
   <variable name="spell_sanctuary">0</variable>
   <variable name="spell_sapstrength">0</variable>
   <variable name="spell_satiate">0</variable>
-  <variable name="spell_senselife">1</variable>
+  <variable name="spell_senselife">0</variable>
   <variable name="spell_shockingblast">0</variable>
   <variable name="spell_silence">0</variable>
   <variable name="spell_sleep">0</variable>
@@ -24675,11 +24785,11 @@ group="bot_train" >
   <variable name="spell_stratification">0</variable>
   <variable name="spell_sublimeresistance">0</variable>
   <variable name="spell_summon">0</variable>
-  <variable name="spell_summonfaerie">1</variable>
-  <variable name="spell_sustenance">1</variable>
+  <variable name="spell_summonfaerie">0</variable>
+  <variable name="spell_sustenance">0</variable>
   <variable name="spell_temporalpath">0</variable>
   <variable name="spell_tenaciousheart">0</variable>
-  <variable name="spell_thornspray">1</variable>
+  <variable name="spell_thornspray">0</variable>
   <variable name="spell_thunderbolt">0</variable>
   <variable name="spell_tornado">0</variable>
   <variable name="spell_veilofice">0</variable>
@@ -24746,7 +24856,7 @@ group="bot_train" >
 <colours
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-10 20:32:37"
+   date_saved="2018-10-12 22:29:50"
   >
 
 <ansi>
@@ -24803,7 +24913,7 @@ group="bot_train" >
 <keypad
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-10 20:32:37"
+   date_saved="2018-10-12 22:29:50"
   >
 
   <key name="0" >
@@ -24917,7 +25027,7 @@ group="bot_train" >
 <printing
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-10 20:32:37"
+   date_saved="2018-10-12 22:29:50"
   >
 
 <ansi>
