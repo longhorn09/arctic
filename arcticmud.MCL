@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE muclient>
-<!-- Saved on Friday, October 12, 2018, 10:29 PM -->
+<!-- Saved on Saturday, October 13, 2018, 10:43 PM -->
 <!-- MuClient version 5.05 -->
 <!-- Written by Nick Gammon -->
 <!-- Home Page: http://www.mushclient.com/ -->
@@ -8,7 +8,7 @@
 <world
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-12 22:29:50"
+   date_saved="2018-10-13 22:43:15"
 
    auto_say_override_prefix="-"
    auto_say_string="say "
@@ -119,7 +119,7 @@
 <triggers
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-12 22:29:50"
+   date_saved="2018-10-13 22:43:15"
   >
   <trigger
    enabled="y"
@@ -14502,7 +14502,7 @@ Note("** Celes. Valley : bard2cv")
 <aliases
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-12 22:29:50"
+   date_saved="2018-10-13 22:43:15"
   >
   <alias
    match="^(?:forcegh|fgh)$"
@@ -15951,38 +15951,26 @@ EnableTriggerGroup("barb_train",true)</send>
   <send>--calls arctic.lua script function removeBuff()</send>
   </alias>
   <alias
-   match="^buffsoff$"
+   match="^buffs(on|status|off)$"
    enabled="y"
+   expand_variables="y"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("isautobuff",0)
-Execute("buffsstatus")</send>
-  </alias>
-  <alias
-   match="^buffson$"
-   enabled="y"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("isautobuff",1)
-Execute("buffsstatus")</send>
-  </alias>
-  <alias
-   match="^buffsstatus$"
-   enabled="y"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>if (tonumber(GetVariable("isautobuff")) == 1) then
+  <send>if (Trim("%1") == "status") then
+  if (tonumber(GetVariable("isautobuff")) == 1) then
+    Note("** Auto-buffs     : Enabled")
+  else
+    Note("** Auto-buffs     : Disabled")
+  end 
+elseif (Trim("%1") == "on") then
+  SetVariable("isautobuff",1)
   Note("** Auto-buffs     : Enabled")
-elseif (tonumber(GetVariable("isautobuff")) == 0) then
+else
+  SetVariable("isautobuff",0) 
   Note("** Auto-buffs     : Disabled")
-end
-</send>
+end </send>
   </alias>
   <alias
    match="^burst$"
@@ -16257,37 +16245,25 @@ end
 </send>
   </alias>
   <alias
-   match="^communeoff$"
+   match="^commune(on|off|status)$"
    enabled="y"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("isautocommune",0)
-Execute("communestatus")</send>
-  </alias>
-  <alias
-   match="^communeon$"
-   enabled="y"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("isautocommune",1)
-Execute("communestatus")</send>
-  </alias>
-  <alias
-   match="^communestatus$"
-   enabled="y"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>if (tonumber(GetVariable("isautocommune"))==1) then
-  Note("** Auto-Commune   : Enabled")
+  <send>if (Trim("%1") == "status") then
+  if (tonumber(GetVariable("isautocommune")) == 1) then
+    Note("** Auto-commune   : Enabled")
+  else
+    Note("** Auto-commune   : Disabled")
+  end 
+elseif (Trim("%1") == "on") then
+  SetVariable("isautocommune",1)
+  Note("** Auto-commune   : Enabled")
 else
-  Note("** Auto-Commune   : Disabled")
-end</send>
+  SetVariable("isautocommune",0) 
+  Note("** Auto-commune   : Disabled")
+end </send>
   </alias>
   <alias
    match="^complootoff$"
@@ -17957,37 +17933,26 @@ end
 </send>
   </alias>
   <alias
-   match="^flygroupoff$"
+   match="^flygroup(on|status|off)$"
    enabled="y"
+   expand_variables="y"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("isflygroup",0)
-Execute("flygroupstatus")</send>
-  </alias>
-  <alias
-   match="^flygroupon$"
-   enabled="y"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("isflygroup",1)
-Execute("flygroupstatus")</send>
-  </alias>
-  <alias
-   match="^flygroupstatus$"
-   enabled="y"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>if (tonumber(GetVariable("isflygroup")) == 1) then
+  <send>if (Trim("%1") == "status") then
+  if (tonumber(GetVariable("isflygroup")) == 1) then
+    Note("** Fly-group      : Enabled")
+  else
+    Note("** Fly-group      : Disabled")
+  end 
+elseif (Trim("%1") == "on") then
+  SetVariable("isflygroup",1) 
   Note("** Fly-group      : Enabled")
 else
+  SetVariable("isflygroup",0) 
   Note("** Fly-group      : Disabled")
-end</send>
+end </send>
   </alias>
   <alias
    match="^flyme(\s+([0-9\.A-Za-z]+))?$"
@@ -18686,6 +18651,24 @@ else
 end</send>
   </alias>
   <alias
+   match="^guild(on|off)$"
+   enabled="y"
+   expand_variables="y"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>if (Trim("%1") == "on") then
+  SetVariable("isguild",1)
+  SetVariable("isautoskill",1)
+  Execute("skillstatus")
+else
+  SetVariable("isguild",0)
+  SetVariable("isautoskill",0)
+  Execute("skillstatus")
+end </send>
+  </alias>
+  <alias
    match="^guild2p$"
    enabled="y"
    group="speedwalk"
@@ -18700,26 +18683,6 @@ if (fademode == 0) then
 else
   Execute("fade n;fade w;fade n;fade n;fade e;fade n;fade e;fade e;fade e;fade e")
 end</send>
-  </alias>
-  <alias
-   match="^guildoff$"
-   enabled="y"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("isguild",0)
-Execute("skillstatus")</send>
-  </alias>
-  <alias
-   match="^guildon$"
-   enabled="y"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("isguild",1)
-Execute("skillstatus")</send>
   </alias>
   <alias
    match="^h1$"
@@ -19447,37 +19410,26 @@ end
   end</send>
   </alias>
   <alias
-   match="^lboff$"
+   match="^lb(on|status|off)$"
    enabled="y"
+   expand_variables="y"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("islookback",0)
-Execute("lbstatus")</send>
-  </alias>
-  <alias
-   match="^lbon$"
-   enabled="y"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("islookback",1)
-Execute("lbstatus")</send>
-  </alias>
-  <alias
-   match="^lbstatus$"
-   enabled="y"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>if (tonumber(GetVariable("islookback")) == 1) then
+  <send>if (Trim("%1") == "status") then
+  if (tonumber(GetVariable("islookback")) == 1) then
+    Note("** Look back      : Enabled")
+  else
+    Note("** Look back      : Disabled")
+  end 
+elseif (Trim("%1") == "on") then
+  SetVariable("islookback",1) 
   Note("** Look back      : Enabled")
-elseif (tonumber(GetVariable("islookback")) == 0) then
+else
+  SetVariable("islookback",0) 
   Note("** Look back      : Disabled")
-end</send>
+end </send>
   </alias>
   <alias
    match="^lemish2th$"
@@ -21960,37 +21912,26 @@ end</send>
 Send("scan")</send>
   </alias>
   <alias
-   match="^scribeoff$"
+   match="^scribe(on|status|off)$"
    enabled="y"
+   expand_variables="y"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("isautoscribe",0)
-Execute("scribestatus")</send>
-  </alias>
-  <alias
-   match="^scribeon$"
-   enabled="y"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("isautoscribe",1)
-Execute("scribestatus")</send>
-  </alias>
-  <alias
-   match="^scribestatus$"
-   enabled="y"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>if (tonumber(GetVariable("isautoscribe"))==1) then
+  <send>if (Trim("%1") == "status") then
+  if (tonumber(GetVariable("isautoscribe")) == 1) then
+    Note("** Auto-scribe    : Enabled")
+  else
+    Note("** Auto-scribe    : Disabled")
+  end 
+elseif (Trim("%1") == "on") then
+  SetVariable("isautoscribe",1) 
   Note("** Auto-scribe    : Enabled")
 else
+  SetVariable("isautoscribe",0) 
   Note("** Auto-scribe    : Disabled")
-end</send>
+end </send>
   </alias>
   <alias
    match="^sellcomps$"
@@ -22290,38 +22231,26 @@ end
 </send>
   </alias>
   <alias
-   match="^skilloff$"
+   match="^skill(on|status|off)$"
    enabled="y"
+   expand_variables="y"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("isautoskill",0)
-Execute("skillstatus")</send>
-  </alias>
-  <alias
-   match="^skillon$"
-   enabled="y"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("isautoskill",1)
-Execute("skillstatus")</send>
-  </alias>
-  <alias
-   match="^skillstatus$"
-   enabled="y"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>if (tonumber(GetVariable("isautoskill"))==1) then
+  <send>if (Trim("%1") == "status") then
+  if (tonumber(GetVariable("isautoskill")) == 1) then
+    Note("** Auto-skill     : Enabled")
+  else
+    Note("** Auto-skill     : Disabled")
+  end 
+elseif (Trim("%1") == "on") then
+  SetVariable("isautoskill",1) 
   Note("** Auto-skill     : Enabled")
 else
+  SetVariable("isautoskill",0) 
   Note("** Auto-skill     : Disabled")
-end
-</send>
+end </send>
   </alias>
   <alias
    match="^skim(\s+(\d+))?$"
@@ -23663,9 +23592,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e;n;n;n;n;n;n;n;w;s;e")
+  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e")
 else
-  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade n;fade n;fade n;fade n;fade n;fade n;fade n;fade w;fade s;fade e")
+  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e")
 end</send>
   </alias>
   <alias
@@ -23678,9 +23607,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e")
+  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e;n;n;n;n;n;n;n;w;s;e")
 else
-  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e")
+  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade n;fade n;fade n;fade n;fade n;fade n;fade n;fade w;fade s;fade e")
 end</send>
   </alias>
   <alias
@@ -24185,7 +24114,7 @@ end</send>
 <timers
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-12 22:29:50"
+   date_saved="2018-10-13 22:43:15"
   >
   <timer name="ticktimer" enabled="y" minute="1" second="0.00" offset_second="0.00"    send_to="12"
 group="tickscript" >
@@ -24211,7 +24140,7 @@ group="bot_train" >
 <macros
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-12 22:29:50"
+   date_saved="2018-10-13 22:43:15"
   >
 
   <macro name="up" type="send_now" >
@@ -24345,7 +24274,7 @@ group="bot_train" >
 <variables
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-12 22:29:50"
+   date_saved="2018-10-13 22:43:15"
   >
   <variable name="absolutioncount">1</variable>
   <variable name="acidblastcount">0</variable>
@@ -24429,7 +24358,7 @@ group="bot_train" >
   <variable name="curemalefactioncount">1</variable>
   <variable name="curemassivecount">0</variable>
   <variable name="cureseriouscount">0</variable>
-  <variable name="currentroom">Oligo's Orifice of Opulence</variable>
+  <variable name="currentroom">Eldrad tells you 'ty'</variable>
   <variable name="cursecount">0</variable>
   <variable name="darkenedsoulcount">0</variable>
   <variable name="darknesscount">0</variable>
@@ -24554,14 +24483,14 @@ group="bot_train" >
   <variable name="isdrunk">0</variable>
   <variable name="isfighting">0</variable>
   <variable name="isfleesafe">0</variable>
-  <variable name="isflygroup">0</variable>
+  <variable name="isflygroup">1</variable>
   <variable name="isgactgood">0</variable>
   <variable name="isgheal">0</variable>
   <variable name="isghealgood">0</variable>
   <variable name="isguild">0</variable>
   <variable name="ishideon">0</variable>
   <variable name="islegendary">0</variable>
-  <variable name="islookback">0</variable>
+  <variable name="islookback">1</variable>
   <variable name="ismagebot">0</variable>
   <variable name="isnomagicfight">0</variable>
   <variable name="ispaladinbot">0</variable>
@@ -24590,14 +24519,14 @@ group="bot_train" >
   <variable name="lastdir">north</variable>
   <variable name="lastengageclock">0</variable>
   <variable name="lastlook">Everlast</variable>
-  <variable name="lastmovetime">3133.391</variable>
+  <variable name="lastmovetime">11794.167</variable>
   <variable name="lastmv">131</variable>
   <variable name="lastregen_Bloat">2367.738</variable>
   <variable name="lastregen_Glynda">1306.222</variable>
   <variable name="lastregen_Khonsu ">2154.676</variable>
   <variable name="lastregen_Pyrrha ">1256.89</variable>
   <variable name="lastrescuetime">1503.556</variable>
-  <variable name="lastroom">Babbler's Bubbling Brook</variable>
+  <variable name="lastroom">Eldrad tells you 'pls'</variable>
   <variable name="lastroundclock">1537337168.288</variable>
   <variable name="laststandtime">69.963</variable>
   <variable name="lastveiltime">0</variable>
@@ -24856,7 +24785,7 @@ group="bot_train" >
 <colours
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-12 22:29:50"
+   date_saved="2018-10-13 22:43:15"
   >
 
 <ansi>
@@ -24913,7 +24842,7 @@ group="bot_train" >
 <keypad
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-12 22:29:50"
+   date_saved="2018-10-13 22:43:15"
   >
 
   <key name="0" >
@@ -25027,7 +24956,7 @@ group="bot_train" >
 <printing
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-12 22:29:50"
+   date_saved="2018-10-13 22:43:15"
   >
 
 <ansi>
