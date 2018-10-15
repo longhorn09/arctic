@@ -79,6 +79,7 @@
 -- v0.74 - 10/23/2016 - fix bug with not always autostanding after missed bash by doing a hardcode hack in doBashMiss
 -- v0.75 - 09/28/2018 - tweak druid spell slots to match latest spell circles - added cure massive, need to add divine free action
 -- v0.76 - 10/10/2018 - added automem toggle
+-- v0.77 - 10/13/2018 - cure massive auto-heal logic
 --[[
 function Trim(s)
     return (s:gsub("^%s*(.-)%s*$", "%1"))
@@ -90,7 +91,7 @@ function endswith(s, send)
 end
 
 function getVersion(name,line,wildcards)
-  local version = "0.74"
+  local version = "0.77"
   Note("** Version        : v"..version)
   Execute("cgt ** Version        : v"..version)
 
@@ -2052,7 +2053,7 @@ end
 --* Function leveraged for both healbot, druid, and shaman bot
 --* Don't get thrown off by variable name healcount, healcount can also represent regens if shamanbot
 --***********************************************************************************************
-function doHealLogic(healcount,curecriticalcount,cureseriouscount,curelightcount,healtarget,hits)
+function doHealLogic(healcount,curemassivecount,curecriticalcount,cureseriouscount,curelightcount,healtarget,hits)
   local tryingheal = 0
   local isshamanbot       = false
   local curemassivecount = 0    -- temp variable for development - delete
@@ -2074,16 +2075,17 @@ function doHealLogic(healcount,curecriticalcount,cureseriouscount,curelightcount
 	SetVariable("healtype",1)
     tryingheal = 1
     SetVariable("tryingheal",1)
-  elseif (curecriticalcount > 0) then          --NOTE: DRUID, SHAMAN, CLERIC share remaining spells (except for cure massive as of 3Q18)
-    Execute("doautostand;cast 'cure critical' "..healtarget)
-    Note("** CURE CRITICAL --> "..healtarget.." ("..hits..")")
-	  SetVariable("healtype",2)
-    tryingheal = 1
-    SetVariable("tryingheal",1)
+  -- *** prioritize cure massive over cure critical for now ******************************
   elseif (curemassivecount > 0) then          --NOTE: DRUID, SHAMAN, CLERIC share remaining spells (except for cure massive as of 3Q18)
     Execute("doautostand;cast 'cure massive' "..healtarget)
     Note("** CURE MASSIVE --> "..healtarget.." ("..hits..")")
 	  SetVariable("healtype",5)
+    tryingheal = 1
+    SetVariable("tryingheal",1)
+  elseif (curecriticalcount > 0) then          --NOTE: DRUID, SHAMAN, CLERIC share remaining spells (except for cure massive as of 3Q18)
+    Execute("doautostand;cast 'cure critical' "..healtarget)
+    Note("** CURE CRITICAL --> "..healtarget.." ("..hits..")")
+	  SetVariable("healtype",2)
     tryingheal = 1
     SetVariable("tryingheal",1)
   elseif (cureseriouscount > 0) then
@@ -2152,26 +2154,26 @@ function healGroupParse()
   local isRegenExpired	     = true -- better to default to true, because lastregen_<target> may not exist as variable
 
   if (GetVariable("regen_threshhold") ~= nil) then
-	regen_threshhold = tonumber(GetVariable("regen_threshhold"))
+	   regen_threshhold = tonumber(GetVariable("regen_threshhold"))
   end
 
   if (GetVariable("regeneratecount") ~= nil) then
-	regeneratecount = tonumber(GetVariable("regeneratecount"))
+	   regeneratecount = tonumber(GetVariable("regeneratecount"))
   end
   if (GetVariable("healboostcount") ~= nil) then
-	healboostcount = tonumber(GetVariable("healboostcount"))
+	   healboostcount = tonumber(GetVariable("healboostcount"))
   end
   if (GetVariable("ritualvoyagecount") ~= nil) then
-	ritualvoyagecount = tonumber(GetVariable("ritualvoyagecount"))
+	   ritualvoyagecount = tonumber(GetVariable("ritualvoyagecount"))
   end
   if (GetVariable("ancestralspiritcount") ~= nil) then
-	ancestralspiritcount   = tonumber(GetVariable("ancestralspiritcount"))
+	   ancestralspiritcount   = tonumber(GetVariable("ancestralspiritcount"))
   end
   if (GetVariable("zombifycount") ~= nil) then
-	zombifycount = tonumber(GetVariable("zombifycount"))
+	   zombifycount = tonumber(GetVariable("zombifycount"))
   end
   if (GetVariable("darkenedsoulcount") ~= nil) then
-	darkenedsoulcount = tonumber(GetVariable("darkenedsoulcount"))
+	   darkenedsoulcount = tonumber(GetVariable("darkenedsoulcount"))
   end
 
   --total since regen is divine spell
@@ -2193,8 +2195,7 @@ function healGroupParse()
   --determine if shaman bot enabled
   if (tonumber(GetVariable("isShamanbot")) == 1 and GetVariable("charClass") == "Shaman") then
     isshamanbot = true
-	healcount   = regeneratecount
-	--Note("regen count:"..regeneratecount)
+	  healcount   = regeneratecount
   end
 
   if (tonumber(GetVariable("isCureOn")) == 1) then
@@ -2234,7 +2235,7 @@ function healGroupParse()
     if (target ~= nil and health ~= nil and #target > 0 and #health > 0) then
       break
     end
-  end
+  end -- end of the for loop
   maintankhealth = health
 
   --if (target ~= nil and health ~= nil and #target > 0 and #health > 0 and isMainHealer and tryingheal == 0) then
@@ -2254,33 +2255,33 @@ function healGroupParse()
 	if (healMode == HEAL_VBAD) then
       if (tryingheal == 0 and (string.lower(health) == "v.bad" or string.lower(health) == "awful" or string.lower(health) == "dying")) then
     		if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
-    			tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
+    			tryingheal = doHealLogic(healcount, curemassivecount, curecriticalcount, cureseriouscount, curelightcount, target, health)
     		elseif (isRegenExpired == false and isshamanbot) then
-    			tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
+    			tryingheal = doHealLogic(0, 0, curecriticalcount, cureseriouscount, curelightcount, target, health)
     		end
       end
     elseif (healMode == HEAL_BAD) then
       if (tryingheal == 0 and (string.lower(health) == "bad" or string.lower(health) == "v.bad" or string.lower(health) == "awful" or string.lower(health) == "dying")) then
     		if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
-    			tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
+    			tryingheal = doHealLogic(healcount, curemassivecount, curecriticalcount, cureseriouscount, curelightcount, target, health)
     		elseif (isRegenExpired == false and isshamanbot) then
-    			tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
+    			tryingheal = doHealLogic(0, 0, curecriticalcount, cureseriouscount, curelightcount, target, health)
     		end
       end
     elseif (healMode == HEAL_FAIR) then
       if (tryingheal == 0 and (string.lower(health) == "fair" or string.lower(health) == "bad" or string.lower(health) == "v.bad" or string.lower(health) == "awful" or string.lower(health) == "dying")) then
     		if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
-    			tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
+    			tryingheal = doHealLogic(healcount,curemassivecount, curecriticalcount, cureseriouscount, curelightcount, target, health)
     		elseif (isRegenExpired == false and isshamanbot) then
-    			tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
+    			tryingheal = doHealLogic(0, 0, curecriticalcount, cureseriouscount, curelightcount, target, health)
     		end
       end
     elseif (healMode == HEAL_PK) then
       if (tryingheal == 0 and (string.lower(health) == "bad" or string.lower(health) == "v.bad" or string.lower(health) == "awful" or string.lower(health) == "dying")) then
     		if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
-    			tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
+    			tryingheal = doHealLogic(healcount, curemassivecount, curecriticalcount, cureseriouscount, curelightcount, target, health)
     		elseif (isRegenExpired == false and isshamanbot) then
-    			tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
+    			tryingheal = doHealLogic(0, 0, curecriticalcount, cureseriouscount, curelightcount, target, health)
     		end
       end
     end
@@ -2322,9 +2323,9 @@ function healGroupParse()
 
         if (charcount == randomid) then
     			if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
-    				tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
+    				tryingheal = doHealLogic(healcount, curemassivecount, curecriticalcount, cureseriouscount, curelightcount, target, health)
     			elseif (isRegenExpired == false and isshamanbot) then
-    				tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
+    				tryingheal = doHealLogic(0, 0, curecriticalcount, cureseriouscount, curelightcount, target, health)
     			end
 			    break
         end
@@ -2351,9 +2352,9 @@ function healGroupParse()
 	    end
 
 			if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
-				tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
+				tryingheal = doHealLogic(healcount, curemassivecount, curecriticalcount, cureseriouscount, curelightcount, target, health)
 			elseif (isRegenExpired == false and isshamanbot) then
-				tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
+				tryingheal = doHealLogic(0, 0, curecriticalcount, cureseriouscount, curelightcount, target, health)
 			end
         break
       end
@@ -2397,9 +2398,9 @@ function healGroupParse()
 
           if (charcount == randomid) then
       			if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
-      				tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
+      				tryingheal = doHealLogic(healcount, curemassivecount, curecriticalcount, cureseriouscount, curelightcount, target, health)
       			elseif (isRegenExpired == false and isshamanbot) then
-      				tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
+      				tryingheal = doHealLogic(0, 0, curecriticalcount, cureseriouscount, curelightcount, target, health)
       			end
             break
           end
@@ -2443,9 +2444,9 @@ function healGroupParse()
 
           if (charcount == randomid) then
       			if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
-      				tryingheal = doHealLogic(healcount, curecriticalcount, cureseriouscount, curelightcount, target, health)
+      				tryingheal = doHealLogic(healcount, curemassivecount, curecriticalcount, cureseriouscount, curelightcount, target, health)
       			elseif (isRegenExpired == false and isshamanbot) then
-      				tryingheal = doHealLogic(0, curecriticalcount, cureseriouscount, curelightcount, target, health)
+      				tryingheal = doHealLogic(0, 0, curecriticalcount, cureseriouscount, curelightcount, target, health)
       			end
             break
           end
@@ -4665,7 +4666,7 @@ function resetMem(name,line,wildcards)
   SetVariable("crusadecount", 0);
   SetVariable("cureblindnesscount", 0)
   SetVariable("curelightcount", 0);
-  SetVariable("curemassivecount", 0);
+  SetVariable("curemassivecount", 0);   -- for druid as of 3Q18
   SetVariable("cureseriouscount", 0);
   SetVariable("curecritcount", 0);
   SetVariable("curecriticalcount", 0);
@@ -4838,6 +4839,7 @@ end
 --*****************************************************************
 function showHeals(name,line,wildcards)
   local healcount         = 0
+  local curemassivecount  = 0     -- added for druids in v0.77
   local curecriticalcount = 0
   local cureseriouscount  = 0
   local curelightcount    = 0
@@ -4854,99 +4856,106 @@ function showHeals(name,line,wildcards)
   local darkenedsoulcount = 0
 
   if (GetVariable("healcount") ~= nil) then
-	healcount         = tonumber(GetVariable("healcount"))
+	   healcount         = tonumber(GetVariable("healcount"))
   else
-	SetVariable("healcount",0)
+	   SetVariable("healcount",0)
   end
 
   if (GetVariable("curecriticalcount") ~= nil) then
-	curecriticalcount = tonumber(GetVariable("curecriticalcount"))
+	   curecriticalcount = tonumber(GetVariable("curecriticalcount"))
   else
-	SetVariable("curecriticalcount",0)
+	   SetVariable("curecriticalcount",0)
   end
 
   if (GetVariable("cureseriouscount") ~= nil) then
-	cureseriouscount  = tonumber(GetVariable("cureseriouscount"))
+	   cureseriouscount  = tonumber(GetVariable("cureseriouscount"))
   else
-	SetVariable("cureseriouscount",0)
+	   SetVariable("cureseriouscount",0)
   end
 
   if (GetVariable("curelightcount") ~= nil) then
-	curelightcount    = tonumber(GetVariable("curelightcount"))
+	   curelightcount    = tonumber(GetVariable("curelightcount"))
   else
-	SetVariable("curelightcount",0)
+	   SetVariable("curelightcount",0)
   end
 
   --shaman spells
   if (GetVariable("regeneratecount") ~= nil) then
-	regeneratecount        = tonumber(GetVariable("regeneratecount"))
+	   regeneratecount        = tonumber(GetVariable("regeneratecount"))
   else
-	SetVariable("regeneratecount",0)
+	   SetVariable("regeneratecount",0)
   end
 
   if (GetVariable("healboostcount") ~= nil) then
-	healboostcount         = tonumber(GetVariable("healboostcount"))
+	   healboostcount         = tonumber(GetVariable("healboostcount"))
   else
-	SetVariable("healboostcount",0)
+	   SetVariable("healboostcount",0)
   end
 
   if (GetVariable("ritualvoyagecount") ~= nil) then
-	ritualvoyagecount      = tonumber(GetVariable("ritualvoyagecount"))
+	   ritualvoyagecount      = tonumber(GetVariable("ritualvoyagecount"))
   else
-	SetVariable("ritualvoyagecount",0)
+	   SetVariable("ritualvoyagecount",0)
   end
 
   if (GetVariable("ancestralspiritcount") ~= nil) then
-	ancestralspiritcount   = tonumber(GetVariable("ancestralspiritcount"))
+	   ancestralspiritcount   = tonumber(GetVariable("ancestralspiritcount"))
   else
-	SetVariable("ancestralspiritcount",0)
+	   SetVariable("ancestralspiritcount",0)
   end
 
   if (GetVariable("healingwavecount") ~= nil) then
-	healingwavecount       = tonumber(GetVariable("healingwavecount"))
+	   healingwavecount       = tonumber(GetVariable("healingwavecount"))
   else
-	SetVariable("healingwavecount",0)
+	   SetVariable("healingwavecount",0)
   end
 
   if (GetVariable("zombifycount") ~= nil) then
-	zombifycount = tonumber(GetVariable("zombifycount"))
+	   zombifycount = tonumber(GetVariable("zombifycount"))
   else
-	SetVariable("zombifycount",0)
+	   SetVariable("zombifycount",0)
   end
 
   if (GetVariable("darkenedsoulcount") ~= nil) then
-	darkenedsoulcount = tonumber(GetVariable("darkenedsoulcount"))
+	   darkenedsoulcount = tonumber(GetVariable("darkenedsoulcount"))
   else
-	SetVariable("darkenedsoulcount",0)
+	   SetVariable("darkenedsoulcount",0)
   end
 
   if (GetVariable("spell_healingwave") ~= nil) then
-	if (tonumber(GetVariable("spell_healingwave"))==1) then
-		spell_healingwave = true
-	end
+  	if (tonumber(GetVariable("spell_healingwave"))==1) then
+  		spell_healingwave = true
+  	end
   end
 
   --get druid specific spellcounts
   if (GetVariable("stoneskincount") ~= nil) then
 		stoneskincount = tonumber(GetVariable("stoneskincount"))
   end
+
   if (GetVariable("healingcloudcount") ~= nil) then
 		healingcloudcount = tonumber(GetVariable("healingcloudcount"))
   end
 
+  if (GetVariable("curemassivecount") ~= nil) then
+		curemassivecount = tonumber(GetVariable("curemassivecount"))
+  else
+     SetVariable("curemassivecount",0)
+  end
+
   if (charclass == "Shaman") then
-	if (spell_healingwave) then
-		Note("** ["..tostring(regeneratecount + healboostcount + ritualvoyagecount + ancestralspiritcount + darkenedsoulcount + zombifycount).."]regenerate ["..healingwavecount.."]healing wave ["..tostring(curecriticalcount).."]cure critical ["..tostring(cureseriouscount).."]cure serious ["..tostring(curelightcount).."]cure light")
-	else
-		Note("** ["..tostring(regeneratecount + healboostcount + ritualvoyagecount + ancestralspiritcount + darkenedsoulcount + zombifycount).."]regenerate ["..tostring(curecriticalcount).."]cure critical ["..tostring(cureseriouscount).."]cure serious ["..tostring(curelightcount).."]cure light")
-	end
+  	if (spell_healingwave) then
+  		Note("** ["..tostring(regeneratecount + healboostcount + ritualvoyagecount + ancestralspiritcount + darkenedsoulcount + zombifycount).."]regenerate ["..healingwavecount.."]healing wave ["..tostring(curecriticalcount).."]cure critical ["..tostring(cureseriouscount).."]cure serious ["..tostring(curelightcount).."]cure light")
+  	else
+  		Note("** ["..tostring(regeneratecount + healboostcount + ritualvoyagecount + ancestralspiritcount + darkenedsoulcount + zombifycount).."]regenerate ["..tostring(curecriticalcount).."]cure critical ["..tostring(cureseriouscount).."]cure serious ["..tostring(curelightcount).."]cure light")
+  	end
   elseif (charclass == "Druid") then
-    Note("** ["..tostring(stoneskincount).."]stone skin ["..tostring(healingcloudcount).."]healing cloud ["..tostring(curecriticalcount).."]cure critical ["..tostring(cureseriouscount).."]cure serious ["..tostring(curelightcount).."]cure light")
+    Note("** ["..tostring(stoneskincount).."]stone skin ["..tostring(healingcloudcount).."]healing cloud ["..tostring(curemassivecount).."]cure massive ["..tostring(curecriticalcount).."]cure critical ["..tostring(cureseriouscount).."]cure serious ["..tostring(curelightcount).."]cure light")
   else
     --note divine heal count done in another function
     Note("** ["..tostring(healcount).."]heal ["..tostring(curecriticalcount).."]cure critical ["..tostring(cureseriouscount).."]cure serious ["..tostring(curelightcount).."]cure light")
   end
-end
+end --this is the end of showHeals() function
 
 function gtShowHeals(name,line,wildcards)
   local healcount         = 0
@@ -5589,7 +5598,7 @@ function decrementSpellCount(name,lines,wildcards)
     spellcountstr = string.gsub(tmpstr, " ","").."count"
   end
   --Note(spellcountstr)
-  if (spellcountstr == "regeneratecount" or spellcountstr == "healcount" or spellcountstr == "curecriticalcount" or spellcountstr == "cureseriouscount" or spellcountstr == "curelightcount") then
+  if (spellcountstr == "regeneratecount" or spellcountstr == "healcount" or spellcountstr == "curemassivecount" or spellcountstr == "curecriticalcount" or spellcountstr == "cureseriouscount" or spellcountstr == "curelightcount") then
     interpretstr = "decrement "..spellcountstr..";showheals;endheal"
   elseif (spellcountstr == "healboostcount" or spellcountstr == "ritualvoyagecount" or spellcountstr == "ancestralspiritcount") then
     interpretstr = "decrement "..spellcountstr..";showheals" --need this for divine regenerate

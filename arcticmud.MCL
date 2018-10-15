@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE muclient>
-<!-- Saved on Saturday, October 13, 2018, 10:43 PM -->
+<!-- Saved on Sunday, October 14, 2018, 9:49 PM -->
 <!-- MuClient version 5.05 -->
 <!-- Written by Nick Gammon -->
 <!-- Home Page: http://www.mushclient.com/ -->
@@ -8,7 +8,7 @@
 <world
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-13 22:43:15"
+   date_saved="2018-10-14 21:49:54"
 
    auto_say_override_prefix="-"
    auto_say_string="say "
@@ -119,7 +119,7 @@
 <triggers
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-13 22:43:15"
+   date_saved="2018-10-14 21:49:54"
   >
   <trigger
    enabled="y"
@@ -14502,7 +14502,7 @@ Note("** Celes. Valley : bard2cv")
 <aliases
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-13 22:43:15"
+   date_saved="2018-10-14 21:49:54"
   >
   <alias
    match="^(?:forcegh|fgh)$"
@@ -15988,41 +15988,27 @@ end </send>
   end</send>
   </alias>
   <alias
-   match="^burstoff$"
+   match="^burst(on|status|off)$"
    enabled="y"
+   expand_variables="y"
    group="scoutscript"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("isautoburst",0)
-Execute("burststatus")</send>
-  </alias>
-  <alias
-   match="^burston$"
-   enabled="y"
-   group="scoutscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("isautoburst",1)
-Execute("burststatus")</send>
-  </alias>
-  <alias
-   match="^burststatus$"
-   enabled="y"
-   group="scoutscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>if (tonumber(GetVariable("isautoburst"))==1) then
+  <send>if (Trim("%1") == "status") then
+  if (tonumber(GetVariable("isautoburst")) == 1) then
+    Note("** Auto-burst     : Enabled")
+  else
+    Note("** Auto-burst     : Disabled")
+  end 
+elseif (Trim("%1") == "on") then
+  SetVariable("isautoburst",1)
   Note("** Auto-burst     : Enabled")
 else
+  SetVariable("isautoburst",0) 
   Note("** Auto-burst     : Disabled")
-end
-</send>
+end </send>
   </alias>
   <alias
    match="^bws$"
@@ -17844,77 +17830,49 @@ Send("backstab "..GetVariable("stabtarget"))
   <send>cast 'feast'</send>
   </alias>
   <alias
-   match="^fleeoff$"
+   match="^flee(on|status|off)$"
    enabled="y"
-   group="fleescript"
+   expand_variables="y"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("isautoflee",0)
-Execute("fleestatus")</send>
+  <send>if (Trim("%1") == "status") then
+  if (tonumber(GetVariable("isautoflee")) == 1) then
+    Note("** Auto-flee      : Enabled")
+  else
+    Note("** Auto-flee      : Disabled")
+  end 
+elseif (Trim("%1") == "on") then
+  SetVariable("isautoflee",1)
+  Note("** Auto-flee      : Enabled")
+else
+  SetVariable("isautoflee",0) 
+  Note("** Auto-flee      : Disabled")
+end </send>
   </alias>
   <alias
-   match="^fleeon$"
+   match="^fleesafe(on|status|off)$"
    enabled="y"
-   group="fleescript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("isautoflee",1)
-Execute("fleestatus")</send>
-  </alias>
-  <alias
-   match="^fleesafeoff$"
-   enabled="y"
+   expand_variables="y"
    group="scoutscript"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("isfleesafe",0)
-Execute("fleesafestatus")</send>
-  </alias>
-  <alias
-   match="^fleesafeon$"
-   enabled="y"
-   group="scoutscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("isfleesafe",1)
-Execute("fleesafestatus")</send>
-  </alias>
-  <alias
-   match="^fleesafestatus$"
-   enabled="y"
-   group="scoutscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>if (tonumber(GetVariable("isfleesafe"))==1) then
+  <send>if (Trim("%1") == "status") then
+  if (tonumber(GetVariable("isfleesafe")) == 1) then
+    Note("** Flee-safe      : Yes")
+  else
+    Note("** Flee-safe      : No")
+  end 
+elseif (Trim("%1") == "on") then
+  SetVariable("isfleesafe",1)
   Note("** Flee-safe      : Yes")
 else
+  SetVariable("isfleesafe",0) 
   Note("** Flee-safe      : No")
-end</send>
-  </alias>
-  <alias
-   match="^fleestatus$"
-   enabled="y"
-   group="fleescript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>if (tonumber(GetVariable("isautoflee")) == 1) then
-  Note("** Auto-flee      : Enabled")
-elseif  (tonumber(GetVariable("isautoflee")) == 0) then
-  Note("** Auto-flee      : Disabled")
-end
-</send>
+end </send>
   </alias>
   <alias
    match="^fli(\s+([0-9\.A-Za-z]+))?$"
@@ -21646,22 +21604,22 @@ end </send>
    script="resetMem"
    match="^resetmem$"
    enabled="y"
+   group="spelltracker"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  </alias>
+  <alias
+   script="resetMem"
+   match="^resetmem$"
+   enabled="y"
    group="healbot"
    regexp="y"
    send_to="12"
    sequence="100"
   >
   <send>--calls arctic.lua</send>
-  </alias>
-  <alias
-   script="resetMem"
-   match="^resetmem$"
-   enabled="y"
-   group="spelltracker"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
   </alias>
   <alias
    match="^resetproxy$"
@@ -23592,9 +23550,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e")
+  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e;n;n;n;n;n;n;n;w;s;e")
 else
-  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e")
+  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade n;fade n;fade n;fade n;fade n;fade n;fade n;fade w;fade s;fade e")
 end</send>
   </alias>
   <alias
@@ -23607,9 +23565,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e;n;n;n;n;n;n;n;w;s;e")
+  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e")
 else
-  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade n;fade n;fade n;fade n;fade n;fade n;fade n;fade w;fade s;fade e")
+  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e")
 end</send>
   </alias>
   <alias
@@ -24114,7 +24072,7 @@ end</send>
 <timers
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-13 22:43:15"
+   date_saved="2018-10-14 21:49:54"
   >
   <timer name="ticktimer" enabled="y" minute="1" second="0.00" offset_second="0.00"    send_to="12"
 group="tickscript" >
@@ -24140,7 +24098,7 @@ group="bot_train" >
 <macros
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-13 22:43:15"
+   date_saved="2018-10-14 21:49:54"
   >
 
   <macro name="up" type="send_now" >
@@ -24274,7 +24232,7 @@ group="bot_train" >
 <variables
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-13 22:43:15"
+   date_saved="2018-10-14 21:49:54"
   >
   <variable name="absolutioncount">1</variable>
   <variable name="acidblastcount">0</variable>
@@ -24323,15 +24281,15 @@ group="bot_train" >
   <variable name="char6">Hendo </variable>
   <variable name="char7">Alanis </variable>
   <variable name="char9">Glynda </variable>
-  <variable name="charAge">19</variable>
+  <variable name="charAge">17</variable>
   <variable name="charAlign">Evil</variable>
-  <variable name="charClass">Magic User</variable>
-  <variable name="charCurrentHP">320</variable>
-  <variable name="charCurrentMV">132</variable>
-  <variable name="charLevel">31</variable>
-  <variable name="charMaxHP">320</variable>
-  <variable name="charMaxMV">132</variable>
-  <variable name="charname">Oligo</variable>
+  <variable name="charClass">Druid</variable>
+  <variable name="charCurrentHP">40</variable>
+  <variable name="charCurrentMV">120</variable>
+  <variable name="charLevel">1</variable>
+  <variable name="charMaxHP">40</variable>
+  <variable name="charMaxMV">131</variable>
+  <variable name="charname">Ediausirien</variable>
   <variable name="clanName">Unforgiving</variable>
   <variable name="clanRank">Neophyte</variable>
   <variable name="clearskiescount">0</variable>
@@ -24358,7 +24316,7 @@ group="bot_train" >
   <variable name="curemalefactioncount">1</variable>
   <variable name="curemassivecount">0</variable>
   <variable name="cureseriouscount">0</variable>
-  <variable name="currentroom">Eldrad tells you 'ty'</variable>
+  <variable name="currentroom">The Reception</variable>
   <variable name="cursecount">0</variable>
   <variable name="darkenedsoulcount">0</variable>
   <variable name="darknesscount">0</variable>
@@ -24389,7 +24347,7 @@ group="bot_train" >
   <variable name="entanglecount">0</variable>
   <variable name="epiphanycount">0</variable>
   <variable name="etherealarmorcount">0</variable>
-  <variable name="exitdirs">ESWU</variable>
+  <variable name="exitdirs">D</variable>
   <variable name="fademode">0</variable>
   <variable name="faeriefirecount">0</variable>
   <variable name="fireballcount">0</variable>
@@ -24457,14 +24415,14 @@ group="bot_train" >
   <variable name="isautoburst">0</variable>
   <variable name="isautocarve">0</variable>
   <variable name="isautocommune">1</variable>
-  <variable name="isautoflee">1</variable>
+  <variable name="isautoflee">0</variable>
   <variable name="isautofrag">0</variable>
   <variable name="isautomeditate">1</variable>
   <variable name="isautomem">1</variable>
   <variable name="isautoparry">0</variable>
   <variable name="isautoreclaim">0</variable>
   <variable name="isautorescue">0</variable>
-  <variable name="isautorest">0</variable>
+  <variable name="isautorest">1</variable>
   <variable name="isautoscribe">0</variable>
   <variable name="isautoskill">0</variable>
   <variable name="isautostand">1</variable>
@@ -24478,11 +24436,11 @@ group="bot_train" >
   <variable name="iscoinloot">1</variable>
   <variable name="iscomploot">0</variable>
   <variable name="isdebug">0</variable>
-  <variable name="isdobuffs">1</variable>
-  <variable name="isdruidbot">0</variable>
+  <variable name="isdobuffs">0</variable>
+  <variable name="isdruidbot">1</variable>
   <variable name="isdrunk">0</variable>
   <variable name="isfighting">0</variable>
-  <variable name="isfleesafe">0</variable>
+  <variable name="isfleesafe">1</variable>
   <variable name="isflygroup">1</variable>
   <variable name="isgactgood">0</variable>
   <variable name="isgheal">0</variable>
@@ -24514,19 +24472,19 @@ group="bot_train" >
   <variable name="last_burst_time">0</variable>
   <variable name="lastassaulttime">0</variable>
   <variable name="lastbashtime">1366140496.334</variable>
-  <variable name="lastcasttime">1539221428.626</variable>
+  <variable name="lastcasttime">1539571779.639</variable>
   <variable name="lastchancecount">2</variable>
   <variable name="lastdir">north</variable>
   <variable name="lastengageclock">0</variable>
   <variable name="lastlook">Everlast</variable>
-  <variable name="lastmovetime">11794.167</variable>
-  <variable name="lastmv">131</variable>
+  <variable name="lastmovetime">5112.752</variable>
+  <variable name="lastmv">120</variable>
   <variable name="lastregen_Bloat">2367.738</variable>
   <variable name="lastregen_Glynda">1306.222</variable>
   <variable name="lastregen_Khonsu ">2154.676</variable>
   <variable name="lastregen_Pyrrha ">1256.89</variable>
   <variable name="lastrescuetime">1503.556</variable>
-  <variable name="lastroom">Eldrad tells you 'pls'</variable>
+  <variable name="lastroom">The Inn of the Last Home</variable>
   <variable name="lastroundclock">1537337168.288</variable>
   <variable name="laststandtime">69.963</variable>
   <variable name="lastveiltime">0</variable>
@@ -24538,7 +24496,7 @@ group="bot_train" >
   <variable name="magicblastcount">0</variable>
   <variable name="magicboltcount">0</variable>
   <variable name="magicmissilecount">0</variable>
-  <variable name="maintank">Eddisurien</variable>
+  <variable name="maintank">Ediausirien</variable>
   <variable name="malevolenttentaclescount">5</variable>
   <variable name="massflycount">0</variable>
   <variable name="massrefreshcount">0</variable>
@@ -24785,7 +24743,7 @@ group="bot_train" >
 <colours
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-13 22:43:15"
+   date_saved="2018-10-14 21:49:54"
   >
 
 <ansi>
@@ -24842,7 +24800,7 @@ group="bot_train" >
 <keypad
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-13 22:43:15"
+   date_saved="2018-10-14 21:49:54"
   >
 
   <key name="0" >
@@ -24956,7 +24914,7 @@ group="bot_train" >
 <printing
    muclient_version="5.05"
    world_file_version="15"
-   date_saved="2018-10-13 22:43:15"
+   date_saved="2018-10-14 21:49:54"
   >
 
 <ansi>
