@@ -3827,7 +3827,7 @@ function parseBuffs()
       table.insert(buffslist, "cast 'barkskin' me;")
     end
     if (not isBuffApplied(buffsArr, "sense life") and senselifecount > 0) then
-      table.insert(buffslist, "cast 'sense life';")
+      table.insert(buffslist, "cast 'sense life' me;")
     end
     if (not isBuffApplied(buffsArr, "blur") and blurcount > 0) then
       table.insert(buffslist, "cast 'blur' me;")
