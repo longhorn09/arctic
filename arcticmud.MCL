@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE muclient>
-<!-- Saved on Thursday, October 25, 2018, 10:32 PM -->
-<!-- MuClient version 5.05 -->
+<!-- Saved on Saturday, October 26, 2019, 11:32 PM -->
+<!-- MuClient version 5.06 -->
 <!-- Written by Nick Gammon -->
 <!-- Home Page: http://www.mushclient.com/ -->
 <muclient>
 <world
-   muclient_version="5.05"
+   muclient_version="5.06"
    world_file_version="15"
-   date_saved="2018-10-25 22:32:05"
+   date_saved="2019-10-26 23:32:54"
 
    auto_say_override_prefix="-"
    auto_say_string="say "
@@ -61,6 +61,8 @@
    enable_timers="y"
    enable_triggers="y"
    enable_trigger_sounds="y"
+   fade_output_opacity_percent="20"
+   fade_output_seconds="8"
    history_lines="1000"
    hyperlink_adds_to_command_history="y"
    hyperlink_colour="#0080FF"
@@ -117,9 +119,9 @@
 <!-- triggers -->
 
 <triggers
-   muclient_version="5.05"
+   muclient_version="5.06"
    world_file_version="15"
-   date_saved="2018-10-25 22:32:05"
+   date_saved="2019-10-26 23:32:54"
   >
   <trigger
    enabled="y"
@@ -14482,9 +14484,9 @@ Note("** Celes. Valley : bard2cv")
 <!-- aliases -->
 
 <aliases
-   muclient_version="5.05"
+   muclient_version="5.06"
    world_file_version="15"
-   date_saved="2018-10-25 22:32:05"
+   date_saved="2019-10-26 23:32:54"
   >
   <alias
    match="^(?:forcegh|fgh)$"
@@ -16657,9 +16659,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("d;w;w;n;n;n;n;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;s;s;s;w;w;w;u;n;n;n;n;n;w;w;w;w;w")
+  Execute("d;w;open gate west;w;close gate e;n;n;n;n;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;s;s;s;w;w;w;u;n;n;n;n;n;w;w;w;w;w")
 else
-  Execute("fade d;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade s;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w;fade w;fade w;fade u;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade w")
+  Execute("fade d;fade w;open gate west;fade w;close gate e;fade n;fade n;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade s;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w;fade w;fade w;fade u;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade w")
 end</send>
   </alias>
   <alias
@@ -16673,9 +16675,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("d;w;open gate west;w;close gate e;n;n;n;n;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;s;s;s;w;w;w;u;n;n;n;n;n;w;w;w;w;w")
+  Execute("d;w;w;n;n;n;n;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;s;s;s;w;w;w;u;n;n;n;n;n;w;w;w;w;w")
 else
-  Execute("fade d;fade w;open gate west;fade w;close gate e;fade n;fade n;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade s;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w;fade w;fade w;fade u;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade w")
+  Execute("fade d;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade s;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w;fade w;fade w;fade u;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade w")
 end</send>
   </alias>
   <alias
@@ -20337,45 +20339,26 @@ else
 end</send>
   </alias>
   <alias
-   match="^orderoff$"
+   match="^order(on|off|status)$"
    enabled="y"
    group="serverscript"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("allow_order",0)
-Execute("orderstatus")</send>
-  </alias>
-  <alias
-   match="^orderon$"
-   enabled="y"
-   group="serverscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("allow_order",1)
-Execute("orderstatus")</send>
-  </alias>
-  <alias
-   match="^orderstatus$"
-   enabled="y"
-   group="serverscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>
-
-if (tonumber(GetVariable("allow_order")) == 1) then
-  Note("** Allow order: Enabled")
-else
-  Note("** Allow order: Disabled")
-end
-
-
-</send>
+  <send>if (Trim("%1")=="on") then
+  SetVariable("allow_order",1)
+  Execute("orderstatus")
+elseif (Trim("%1")=="off") then
+  SetVariable("allow_order",0)
+  Execute("orderstatus")
+elseif (Trim("%1")=="status") then
+  if (tonumber(GetVariable("allow_order")) == 1) then
+    Note("** Allow order: Enabled")
+  else
+    Note("** Allow order: Disabled")
+  end
+end</send>
   </alias>
   <alias
    match="^ost(\s+[A-Za-z]+)?$"
@@ -21589,52 +21572,28 @@ end</send>
   <send>Send("cast 'remove poison' "..Trim("%1"))</send>
   </alias>
   <alias
-   match="^rescueoff$"
+   match="^rescue(on|off|status)$"
    enabled="y"
    group="rescuescript"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("isautorescue",0)
-Execute("rescuestatus")</send>
-  </alias>
-  <alias
-   match="^rescueon$"
-   enabled="y"
-   group="rescuescript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("isautorescue",1)
-Execute("rescuestatus")</send>
-  </alias>
-  <alias
-   match="^rescuestatus$"
-   enabled="y"
-   group="rescuescript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>isautorescue= tonumber(GetVariable("isautorescue"))
+  <send>if (Trim("%1") == "on") then
+  SetVariable("isautorescue",1)
+  Execute("rescuestatus")
+elseif  (Trim("%1") == "off") then
+  SetVariable("isautorescue",0)
+  Execute("rescuestatus")
+elseif  (Trim("%1") == "status") then
+  isautorescue= tonumber(GetVariable("isautorescue"))
 
-if (isautorescue==1) then
-  Note("** Auto-rescue    : Enabled")
-else
-  Note("** Auto-rescue    : Disabled")
-end </send>
-  </alias>
-  <alias
-   script="resetMem"
-   match="^resetmem$"
-   enabled="y"
-   group="spelltracker"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
+  if (isautorescue==1) then
+    Note("** Auto-rescue    : Enabled")
+  else
+    Note("** Auto-rescue    : Disabled")
+  end 
+end</send>
   </alias>
   <alias
    script="resetMem"
@@ -21646,6 +21605,16 @@ end </send>
    sequence="100"
   >
   <send>--calls arctic.lua</send>
+  </alias>
+  <alias
+   script="resetMem"
+   match="^resetmem$"
+   enabled="y"
+   group="spelltracker"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
   </alias>
   <alias
    match="^resetproxy$"
@@ -22807,16 +22776,25 @@ else
 end</send>
   </alias>
   <alias
-   match="^trainoff$"
+   match="^train(off|status)$"
    enabled="y"
    group="bot_train"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("isbottrain",0)
-Execute("trainstatus")
-EnableTimer("bottrain_timer", false)</send>
+  <send>if (Trim("%1")=="off") then
+  SetVariable("isbottrain",0)
+  Execute("trainstatus")
+  EnableTimer("bottrain_timer", false)
+elseif (Trim("%1")=="status") then
+  if (tonumber(GetVariable("isbottrain")) == 1) then
+    Note("** Bot-train      : Enabled")
+  elseif  (tonumber(GetVariable("isbottrain")) == 0) then
+    Note("** Bot-train      : Disabled")
+  end
+end
+</send>
   </alias>
   <alias
    script="doBotTrain"
@@ -22828,20 +22806,6 @@ EnableTimer("bottrain_timer", false)</send>
    sequence="100"
   >
   <send>--</send>
-  </alias>
-  <alias
-   match="^trainstatus$"
-   enabled="y"
-   group="bot_train"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>if (tonumber(GetVariable("isbottrain")) == 1) then
-  Note("** Bot-train      : Enabled")
-elseif  (tonumber(GetVariable("isbottrain")) == 0) then
-  Note("** Bot-train      : Disabled")
-end</send>
   </alias>
   <alias
    match="^ts(\s+([0-9\.A-Za-z]+))?$"
@@ -23508,9 +23472,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e;n;n;n;n;n;n;n;w;s;e")
+  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e")
 else
-  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade n;fade n;fade n;fade n;fade n;fade n;fade n;fade w;fade s;fade e")
+  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e")
 end</send>
   </alias>
   <alias
@@ -23523,9 +23487,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e")
+  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e;n;n;n;n;n;n;n;w;s;e")
 else
-  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e")
+  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade n;fade n;fade n;fade n;fade n;fade n;fade n;fade w;fade s;fade e")
 end</send>
   </alias>
   <alias
@@ -24028,9 +23992,9 @@ end</send>
 <!-- timers -->
 
 <timers
-   muclient_version="5.05"
+   muclient_version="5.06"
    world_file_version="15"
-   date_saved="2018-10-25 22:32:05"
+   date_saved="2019-10-26 23:32:54"
   >
   <timer name="ticktimer" enabled="y" minute="1" second="0.00" offset_second="0.00"    send_to="12"
 group="tickscript" >
@@ -24044,7 +24008,7 @@ Execute("aftertick10")</send>
 group="bot_train" >
 
   </timer>
-  <timer name="bottrain_timer" script="doBotTrainTimer" minute="2" second="0.00" offset_second="0.00"    send_to="12"
+  <timer name="bottrain_timer" script="doBotTrainTimer" enabled="y" minute="2" second="0.00" offset_second="0.00"    send_to="12"
 group="bot_train" >
   <send>--</send>
 
@@ -24054,9 +24018,9 @@ group="bot_train" >
 <!-- macros -->
 
 <macros
-   muclient_version="5.05"
+   muclient_version="5.06"
    world_file_version="15"
-   date_saved="2018-10-25 22:32:05"
+   date_saved="2019-10-26 23:32:54"
   >
 
   <macro name="up" type="send_now" >
@@ -24188,9 +24152,9 @@ group="bot_train" >
 <!-- variables -->
 
 <variables
-   muclient_version="5.05"
+   muclient_version="5.06"
    world_file_version="15"
-   date_saved="2018-10-25 22:32:05"
+   date_saved="2019-10-26 23:32:54"
   >
   <variable name="absolutioncount">1</variable>
   <variable name="acidblastcount">0</variable>
@@ -24198,7 +24162,7 @@ group="bot_train" >
   <variable name="acidmistcount">0</variable>
   <variable name="aidcount">0</variable>
   <variable name="aiqzacount">0</variable>
-  <variable name="allow_order">1</variable>
+  <variable name="allow_order">0</variable>
   <variable name="allow_snoop">1</variable>
   <variable name="amplifyspiritscount">0</variable>
   <variable name="ancestralblessingcount">1</variable>
@@ -24213,21 +24177,21 @@ group="bot_train" >
   <variable name="auraofglorycount">0</variable>
   <variable name="autostand">1</variable>
   <variable name="barb_skill_list">gore,wilddance,healdance,wardance</variable>
-  <variable name="barkskincount">0</variable>
+  <variable name="barkskincount">1</variable>
   <variable name="bartgtincount">0</variable>
   <variable name="blackrunecount">0</variable>
   <variable name="blesscount">0</variable>
   <variable name="blindnesscount">0</variable>
   <variable name="bljrcount">0</variable>
-  <variable name="blurcount">0</variable>
+  <variable name="blurcount">1</variable>
   <variable name="boilingbloodcount">0</variable>
   <variable name="booncount">0</variable>
   <variable name="bow">bow</variable>
   <variable name="brilliancecount">1</variable>
   <variable name="burninghandscount">0</variable>
   <variable name="burst_start_time">0</variable>
-  <variable name="calllightningcount">3</variable>
-  <variable name="calmcount">0</variable>
+  <variable name="calllightningcount">5</variable>
+  <variable name="calmcount">1</variable>
   <variable name="causelightcount">3</variable>
   <variable name="cfzaheyaoecount">0</variable>
   <variable name="chainlightningcount">0</variable>
@@ -24239,26 +24203,26 @@ group="bot_train" >
   <variable name="char6">Hendo </variable>
   <variable name="char7">Alanis </variable>
   <variable name="char9">Glynda </variable>
-  <variable name="charAge">22</variable>
+  <variable name="charAge">17</variable>
   <variable name="charAlign">Good</variable>
   <variable name="charClass">Druid</variable>
-  <variable name="charCurrentHP">512</variable>
-  <variable name="charCurrentMV">135</variable>
+  <variable name="charCurrentHP">631</variable>
+  <variable name="charCurrentMV">132</variable>
   <variable name="charLevel">30</variable>
-  <variable name="charMaxHP">520</variable>
-  <variable name="charMaxMV">135</variable>
-  <variable name="charname">Jeezy</variable>
-  <variable name="clanName">RISE FOREVER</variable>
+  <variable name="charMaxHP">648</variable>
+  <variable name="charMaxMV">132</variable>
+  <variable name="charname">Phool</variable>
+  <variable name="clanName">Coalition of Risky Endeavors</variable>
   <variable name="clanRank">Elder</variable>
   <variable name="clearskiescount">0</variable>
   <variable name="cloakofbraverycount">0</variable>
   <variable name="cloakofshadowscount">0</variable>
   <variable name="coinsInBank">3</variable>
-  <variable name="coinsOnHand">250</variable>
+  <variable name="coinsOnHand">2189</variable>
   <variable name="combatLines">0</variable>
-  <variable name="coneofcoldcount">2</variable>
-  <variable name="conjureelementalcount">3</variable>
-  <variable name="constantwindscount">0</variable>
+  <variable name="coneofcoldcount">0</variable>
+  <variable name="conjureelementalcount">1</variable>
+  <variable name="constantwindscount">1</variable>
   <variable name="container">chest</variable>
   <variable name="container1">knapsack</variable>
   <variable name="continuallightcount">1</variable>
@@ -24272,9 +24236,9 @@ group="bot_train" >
   <variable name="curecriticalcount">0</variable>
   <variable name="curelightcount">0</variable>
   <variable name="curemalefactioncount">1</variable>
-  <variable name="curemassivecount">3</variable>
-  <variable name="cureseriouscount">8</variable>
-  <variable name="currentroom">The Reception</variable>
+  <variable name="curemassivecount">4</variable>
+  <variable name="cureseriouscount">0</variable>
+  <variable name="currentroom">Sanjuro's Mulberry Field</variable>
   <variable name="cursecount">0</variable>
   <variable name="darkenedsoulcount">0</variable>
   <variable name="darknesscount">0</variable>
@@ -24301,28 +24265,28 @@ group="bot_train" >
   <variable name="enemylist">Leudo,Nimnogg,Pitta,Dad,Takyr,Arthas,Taivo,Jod,Hans,Brenar,Kogi,Adrianna,Fifty,Trippi,Thalas,Dad,Cephelo,Grogg,Ligt,Xeakmyhsh,Naowampalilo,Lieriel,Chiqiwiki,Brenar,Demaleon,Kwazii,Albarn,Knum,Cujo,Lira,Kanga,Lando,Viscera,Hawt,Ruun,Aubub,Sphonx,Paso,Abbie,Kanga,Habbi,Putz,Pantolones,Ogram,Turok,Elzzihs</variable>
   <variable name="engageaction">strike</variable>
   <variable name="engagedelay">4</variable>
-  <variable name="enlargecount">0</variable>
+  <variable name="enlargecount">1</variable>
   <variable name="entanglecount">0</variable>
   <variable name="epiphanycount">0</variable>
   <variable name="etherealarmorcount">0</variable>
-  <variable name="exitdirs">D</variable>
+  <variable name="exitdirs">NU</variable>
   <variable name="fademode">0</variable>
   <variable name="faeriefirecount">0</variable>
   <variable name="feastcount">1</variable>
   <variable name="fireballcount">0</variable>
   <variable name="fireshieldcount">0</variable>
   <variable name="firestormcount">0</variable>
-  <variable name="flameshroudcount">0</variable>
+  <variable name="flameshroudcount">4</variable>
   <variable name="fleshshieldcount">0</variable>
   <variable name="fllcount">0</variable>
-  <variable name="flycount">1</variable>
+  <variable name="flycount">2</variable>
   <variable name="fohcount">0</variable>
   <variable name="foldspacecount">0</variable>
   <variable name="food">bread</variable>
   <variable name="forceboltcount">0</variable>
   <variable name="forcemissilecount">0</variable>
   <variable name="fortifyselfcount">0</variable>
-  <variable name="freeactioncount">0</variable>
+  <variable name="freeactioncount">1</variable>
   <variable name="friendly_list">Bloat,Dracula,Aymahn,Glynda</variable>
   <variable name="frycount">0</variable>
   <variable name="gatecount">3</variable>
@@ -24330,7 +24294,7 @@ group="bot_train" >
   <variable name="ghostmasterritualcount">1</variable>
   <variable name="ghostskincount">0</variable>
   <variable name="globeofinvulnerabicount">0</variable>
-  <variable name="granitehandcount">3</variable>
+  <variable name="granitehandcount">9</variable>
   <variable name="groupaction">give bread</variable>
   <variable name="gtmode">2</variable>
   <variable name="gtwecount">0</variable>
@@ -24341,10 +24305,10 @@ group="bot_train" >
   <variable name="healboostcount">0</variable>
   <variable name="healcount">0</variable>
   <variable name="healdelay">0.5</variable>
-  <variable name="healingcloudcount">4</variable>
+  <variable name="healingcloudcount">6</variable>
   <variable name="healingwavecount">0</variable>
   <variable name="healmode">3</variable>
-  <variable name="healtype">3</variable>
+  <variable name="healtype">5</variable>
   <variable name="heroismcount">0</variable>
   <variable name="highprayercount">0</variable>
   <variable name="holyarmorcount">0</variable>
@@ -24352,25 +24316,25 @@ group="bot_train" >
   <variable name="holyauracount">0</variable>
   <variable name="holyvisioncount">0</variable>
   <variable name="holywordcount">3</variable>
-  <variable name="iceshieldcount">0</variable>
-  <variable name="iceskincount">1</variable>
-  <variable name="icestormcount">6</variable>
+  <variable name="iceshieldcount">1</variable>
+  <variable name="iceskincount">0</variable>
+  <variable name="icestormcount">3</variable>
   <variable name="improvedinvisibilitcount">0</variable>
   <variable name="infravisioncount">0</variable>
   <variable name="insectswarmcount">1</variable>
   <variable name="invisibilitycount">2</variable>
   <variable name="isCheckMem">0</variable>
-  <variable name="isCureOn">0</variable>
+  <variable name="isCureOn">1</variable>
   <variable name="isHealbot">0</variable>
   <variable name="isMainHealer">0</variable>
-  <variable name="isMemmed">0</variable>
+  <variable name="isMemmed">1</variable>
   <variable name="isRandomDelay">0</variable>
   <variable name="isShamanbot">0</variable>
   <variable name="isaimneeded">1</variable>
   <variable name="isautoassault">0</variable>
   <variable name="isautoassist">0</variable>
   <variable name="isautobash">0</variable>
-  <variable name="isautobrew">0</variable>
+  <variable name="isautobrew">1</variable>
   <variable name="isautobuff">1</variable>
   <variable name="isautoburst">0</variable>
   <variable name="isautocarve">0</variable>
@@ -24381,9 +24345,9 @@ group="bot_train" >
   <variable name="isautomem">1</variable>
   <variable name="isautoparry">0</variable>
   <variable name="isautoreclaim">0</variable>
-  <variable name="isautorescue">0</variable>
+  <variable name="isautorescue">1</variable>
   <variable name="isautorest">1</variable>
-  <variable name="isautoscribe">0</variable>
+  <variable name="isautoscribe">1</variable>
   <variable name="isautoskill">0</variable>
   <variable name="isautostand">1</variable>
   <variable name="isautostone">0</variable>
@@ -24391,15 +24355,15 @@ group="bot_train" >
   <variable name="isautoveil">0</variable>
   <variable name="isbandallgood">0</variable>
   <variable name="isbarbtrain">0</variable>
-  <variable name="isbottrain">0</variable>
+  <variable name="isbottrain">1</variable>
   <variable name="isclanned">0</variable>
   <variable name="iscoinloot">0</variable>
   <variable name="iscomploot">0</variable>
   <variable name="isdebug">0</variable>
   <variable name="isdobuffs">0</variable>
-  <variable name="isdruidbot">0</variable>
+  <variable name="isdruidbot">1</variable>
   <variable name="isdrunk">0</variable>
-  <variable name="isfighting">0</variable>
+  <variable name="isfighting">1</variable>
   <variable name="isfleesafe">1</variable>
   <variable name="isflygroup">1</variable>
   <variable name="isgactgood">0</variable>
@@ -24437,15 +24401,15 @@ group="bot_train" >
   <variable name="lastdir">down</variable>
   <variable name="lastengageclock">0</variable>
   <variable name="lastlook">Everlast</variable>
-  <variable name="lastmovetime">151.448</variable>
-  <variable name="lastmv">129</variable>
+  <variable name="lastmovetime">3604.922</variable>
+  <variable name="lastmv">96</variable>
   <variable name="lastregen_Bloat">2367.738</variable>
   <variable name="lastregen_Glynda">1306.222</variable>
   <variable name="lastregen_Khonsu ">2154.676</variable>
   <variable name="lastregen_Pyrrha ">1256.89</variable>
   <variable name="lastrescuetime">1503.556</variable>
-  <variable name="lastroom">A Grove of Neutrality</variable>
-  <variable name="lastroundclock">1540445972.573</variable>
+  <variable name="lastroom">Oligo's Orifice of Opulence</variable>
+  <variable name="lastroundclock">1572147194.41</variable>
   <variable name="laststandtime">963.908</variable>
   <variable name="laststone_Sharg ">440.374</variable>
   <variable name="lastveiltime">0</variable>
@@ -24458,7 +24422,7 @@ group="bot_train" >
   <variable name="magicblastcount">0</variable>
   <variable name="magicboltcount">0</variable>
   <variable name="magicmissilecount">0</variable>
-  <variable name="maintank">Jeezy</variable>
+  <variable name="maintank">Phool</variable>
   <variable name="malevolenttentaclescount">5</variable>
   <variable name="massflycount">0</variable>
   <variable name="massrefreshcount">0</variable>
@@ -24477,6 +24441,7 @@ group="bot_train" >
   <variable name="northcount">0</variable>
   <variable name="paincount">0</variable>
   <variable name="paladin_skill_list">rally,avenging faith,reckoning,strike</variable>
+  <variable name="paralysiscount">8</variable>
   <variable name="passwithouttracecount">0</variable>
   <variable name="pencount">-1</variable>
   <variable name="pkautodisable">1</variable>
@@ -24488,7 +24453,7 @@ group="bot_train" >
   <variable name="preservationcount">0</variable>
   <variable name="prevailingwindscount">0</variable>
   <variable name="prim">sword</variable>
-  <variable name="primalfurycount">3</variable>
+  <variable name="primalfurycount">0</variable>
   <variable name="protectionfromevilcount">0</variable>
   <variable name="protectionfromgoodcount">0</variable>
   <variable name="pzarungwazecount">-1</variable>
@@ -24504,20 +24469,20 @@ group="bot_train" >
   <variable name="regeneratecount">0</variable>
   <variable name="relocatecount">2</variable>
   <variable name="removecursecount">0</variable>
-  <variable name="removepoisoncount">2</variable>
+  <variable name="removepoisoncount">1</variable>
   <variable name="reposecount">0</variable>
-  <variable name="resistcount">1</variable>
+  <variable name="resistcount">4</variable>
   <variable name="restorationcount">0</variable>
   <variable name="restorestrengthcount">6</variable>
   <variable name="righteousindignatiocount">0</variable>
   <variable name="ritualvoyagecount">0</variable>
-  <variable name="rotcount">1</variable>
+  <variable name="rotcount">0</variable>
   <variable name="sacredwardcount">0</variable>
   <variable name="sanctuarycount">0</variable>
   <variable name="satiatecount">2</variable>
   <variable name="scandir">down</variable>
   <variable name="scorchcount">0</variable>
-  <variable name="senselifecount">1</variable>
+  <variable name="senselifecount">0</variable>
   <variable name="shieldcount">0</variable>
   <variable name="shockingblastcount">0</variable>
   <variable name="shockinggraspcount">0</variable>
@@ -24534,122 +24499,122 @@ group="bot_train" >
   <variable name="spell_ancestralblessing">0</variable>
   <variable name="spell_ancestralshroud">0</variable>
   <variable name="spell_ancestralspirit">0</variable>
-  <variable name="spell_barkskin">1</variable>
-  <variable name="spell_barrier">1</variable>
+  <variable name="spell_barkskin">0</variable>
+  <variable name="spell_barrier">0</variable>
   <variable name="spell_blindness">0</variable>
-  <variable name="spell_blur">1</variable>
+  <variable name="spell_blur">0</variable>
   <variable name="spell_boilingblood">0</variable>
   <variable name="spell_boneshape">0</variable>
-  <variable name="spell_burninghands">1</variable>
-  <variable name="spell_calllightning">1</variable>
-  <variable name="spell_calm">1</variable>
+  <variable name="spell_burninghands">0</variable>
+  <variable name="spell_calllightning">0</variable>
+  <variable name="spell_calm">0</variable>
   <variable name="spell_chainlightning">0</variable>
-  <variable name="spell_charmmonster">1</variable>
-  <variable name="spell_clearskies">1</variable>
+  <variable name="spell_charmmonster">0</variable>
+  <variable name="spell_clearskies">0</variable>
   <variable name="spell_clot">0</variable>
-  <variable name="spell_cloudkill">1</variable>
-  <variable name="spell_coneofcold">1</variable>
-  <variable name="spell_conjureelemental">1</variable>
-  <variable name="spell_constantwinds">1</variable>
+  <variable name="spell_cloudkill">0</variable>
+  <variable name="spell_coneofcold">0</variable>
+  <variable name="spell_conjureelemental">0</variable>
+  <variable name="spell_constantwinds">0</variable>
   <variable name="spell_createfood">0</variable>
   <variable name="spell_createwater">0</variable>
-  <variable name="spell_createwine">1</variable>
-  <variable name="spell_cultivate">1</variable>
+  <variable name="spell_createwine">0</variable>
+  <variable name="spell_cultivate">0</variable>
   <variable name="spell_cureblindness">0</variable>
   <variable name="spell_curecritical">0</variable>
   <variable name="spell_curedisease">0</variable>
-  <variable name="spell_curelight">1</variable>
-  <variable name="spell_curemassive">1</variable>
-  <variable name="spell_cureserious">1</variable>
+  <variable name="spell_curelight">0</variable>
+  <variable name="spell_curemassive">0</variable>
+  <variable name="spell_cureserious">0</variable>
   <variable name="spell_curse">0</variable>
   <variable name="spell_darkenedsoul">0</variable>
-  <variable name="spell_daze">1</variable>
+  <variable name="spell_daze">0</variable>
   <variable name="spell_delaydeath">0</variable>
   <variable name="spell_detectpoison">0</variable>
   <variable name="spell_devouringspirits">0</variable>
-  <variable name="spell_earthquake">1</variable>
-  <variable name="spell_elementalfist">1</variable>
+  <variable name="spell_earthquake">0</variable>
+  <variable name="spell_elementalfist">0</variable>
   <variable name="spell_endurance">0</variable>
-  <variable name="spell_enlarge">1</variable>
-  <variable name="spell_entangle">1</variable>
+  <variable name="spell_enlarge">0</variable>
+  <variable name="spell_entangle">0</variable>
   <variable name="spell_etherealarmor">0</variable>
-  <variable name="spell_faeriefire">1</variable>
-  <variable name="spell_faeriefog">1</variable>
-  <variable name="spell_feast">1</variable>
-  <variable name="spell_firestorm">1</variable>
-  <variable name="spell_flameshroud">1</variable>
-  <variable name="spell_fly">1</variable>
+  <variable name="spell_faeriefire">0</variable>
+  <variable name="spell_faeriefog">0</variable>
+  <variable name="spell_feast">0</variable>
+  <variable name="spell_firestorm">0</variable>
+  <variable name="spell_flameshroud">0</variable>
+  <variable name="spell_fly">0</variable>
   <variable name="spell_forcemissile">0</variable>
-  <variable name="spell_freeaction">1</variable>
+  <variable name="spell_freeaction">0</variable>
   <variable name="spell_ghostberries">0</variable>
   <variable name="spell_ghostmasterritual">0</variable>
   <variable name="spell_ghostskin">0</variable>
-  <variable name="spell_granitehand">1</variable>
+  <variable name="spell_granitehand">0</variable>
   <variable name="spell_gustofwind">0</variable>
   <variable name="spell_harm">0</variable>
   <variable name="spell_heal">0</variable>
   <variable name="spell_healboost">0</variable>
-  <variable name="spell_healingcloud">1</variable>
+  <variable name="spell_healingcloud">0</variable>
   <variable name="spell_healingwave">0</variable>
-  <variable name="spell_iceshield">1</variable>
-  <variable name="spell_iceskin">1</variable>
-  <variable name="spell_icestorm">1</variable>
+  <variable name="spell_iceshield">0</variable>
+  <variable name="spell_iceskin">0</variable>
+  <variable name="spell_icestorm">0</variable>
   <variable name="spell_infravision">0</variable>
   <variable name="spell_insectswarm">0</variable>
   <variable name="spell_lastchance">0</variable>
-  <variable name="spell_lightningstorm">1</variable>
-  <variable name="spell_massfly">1</variable>
-  <variable name="spell_massrefresh">1</variable>
+  <variable name="spell_lightningstorm">0</variable>
+  <variable name="spell_massfly">0</variable>
+  <variable name="spell_massrefresh">0</variable>
   <variable name="spell_monstrousmantle">0</variable>
   <variable name="spell_nightmare">0</variable>
-  <variable name="spell_paralysis">1</variable>
-  <variable name="spell_passwithouttrace">1</variable>
-  <variable name="spell_plantwalk">1</variable>
+  <variable name="spell_paralysis">0</variable>
+  <variable name="spell_passwithouttrace">0</variable>
+  <variable name="spell_plantwalk">0</variable>
   <variable name="spell_powerwordstun">0</variable>
-  <variable name="spell_prevailingwinds">1</variable>
-  <variable name="spell_primalfury">1</variable>
-  <variable name="spell_refresh">1</variable>
+  <variable name="spell_prevailingwinds">0</variable>
+  <variable name="spell_primalfury">0</variable>
+  <variable name="spell_refresh">0</variable>
   <variable name="spell_regenerate">0</variable>
   <variable name="spell_removecurse">0</variable>
   <variable name="spell_removeparalysis">0</variable>
-  <variable name="spell_removepoison">1</variable>
+  <variable name="spell_removepoison">0</variable>
   <variable name="spell_rend">0</variable>
-  <variable name="spell_resist">1</variable>
+  <variable name="spell_resist">0</variable>
   <variable name="spell_restorestrength">0</variable>
   <variable name="spell_ritualvoyage">0</variable>
-  <variable name="spell_rot">1</variable>
+  <variable name="spell_rot">0</variable>
   <variable name="spell_sanctifycorpse">0</variable>
   <variable name="spell_sanctuary">0</variable>
   <variable name="spell_sapstrength">0</variable>
   <variable name="spell_satiate">0</variable>
-  <variable name="spell_senselife">1</variable>
+  <variable name="spell_senselife">0</variable>
   <variable name="spell_shockingblast">0</variable>
-  <variable name="spell_silence">1</variable>
-  <variable name="spell_sleep">1</variable>
+  <variable name="spell_silence">0</variable>
+  <variable name="spell_sleep">0</variable>
   <variable name="spell_slowpoison">0</variable>
   <variable name="spell_soulleech">0</variable>
   <variable name="spell_spectralglow">0</variable>
   <variable name="spell_spectralsight">0</variable>
   <variable name="spell_spiritualguidance">0</variable>
   <variable name="spell_steelskin">0</variable>
-  <variable name="spell_stinkingcloud">1</variable>
-  <variable name="spell_stoneskin">1</variable>
-  <variable name="spell_stormcall">1</variable>
-  <variable name="spell_stratification">1</variable>
+  <variable name="spell_stinkingcloud">0</variable>
+  <variable name="spell_stoneskin">0</variable>
+  <variable name="spell_stormcall">0</variable>
+  <variable name="spell_stratification">0</variable>
   <variable name="spell_sublimeresistance">0</variable>
-  <variable name="spell_summon">1</variable>
-  <variable name="spell_summonfaerie">1</variable>
-  <variable name="spell_sustenance">1</variable>
-  <variable name="spell_temporalpath">1</variable>
+  <variable name="spell_summon">0</variable>
+  <variable name="spell_summonfaerie">0</variable>
+  <variable name="spell_sustenance">0</variable>
+  <variable name="spell_temporalpath">0</variable>
   <variable name="spell_tenaciousheart">0</variable>
-  <variable name="spell_thornspray">1</variable>
+  <variable name="spell_thornspray">0</variable>
   <variable name="spell_thunderbolt">0</variable>
-  <variable name="spell_tornado">1</variable>
+  <variable name="spell_tornado">0</variable>
   <variable name="spell_veilofice">0</variable>
   <variable name="spell_vilespirits">0</variable>
-  <variable name="spell_waterbreath">1</variable>
+  <variable name="spell_waterbreath">0</variable>
   <variable name="spell_wizardeye">0</variable>
-  <variable name="spell_wordofrecall">1</variable>
+  <variable name="spell_wordofrecall">0</variable>
   <variable name="spheresofabsorptiocount">0</variable>
   <variable name="spirit_in_room_count">0</variable>
   <variable name="spiritualguidancecount">0</variable>
@@ -24663,27 +24628,27 @@ group="bot_train" >
   <variable name="stonemain">0</variable>
   <variable name="stonemode">1</variable>
   <variable name="stoneskincount">3</variable>
-  <variable name="stormcallcount">0</variable>
+  <variable name="stormcallcount">1</variable>
   <variable name="strengthcount">0</variable>
   <variable name="strengthofonecount">1</variable>
   <variable name="sublimeresistancecount">1</variable>
-  <variable name="summoncount">0</variable>
+  <variable name="summoncount">2</variable>
   <variable name="summonelixircount">2</variable>
-  <variable name="summonfaeriecount">2</variable>
+  <variable name="summonfaeriecount">1</variable>
   <variable name="summoningcirclecount">2</variable>
   <variable name="summonmountcount">1</variable>
   <variable name="sunboltcount">1</variable>
   <variable name="sunraycount">1</variable>
-  <variable name="sustenancecount">2</variable>
+  <variable name="sustenancecount">0</variable>
   <variable name="target">asdf</variable>
-  <variable name="target1">tanin</variable>
+  <variable name="target1">baarba</variable>
   <variable name="temporalpathcount">4</variable>
   <variable name="tenaciousheartcount">0</variable>
   <variable name="tenebrousorbcount">0</variable>
-  <variable name="thornspraycount">5</variable>
+  <variable name="thornspraycount">10</variable>
   <variable name="thunderboltcount">0</variable>
-  <variable name="tornadocount">4</variable>
-  <variable name="tryingheal">0</variable>
+  <variable name="tornadocount">11</variable>
+  <variable name="tryingheal">1</variable>
   <variable name="tryingstone">0</variable>
   <variable name="unholyauracount">0</variable>
   <variable name="unholymightcount">0</variable>
@@ -24708,9 +24673,9 @@ group="bot_train" >
 <!-- colours -->
 
 <colours
-   muclient_version="5.05"
+   muclient_version="5.06"
    world_file_version="15"
-   date_saved="2018-10-25 22:32:05"
+   date_saved="2019-10-26 23:32:54"
   >
 
 <ansi>
@@ -24765,9 +24730,9 @@ group="bot_train" >
 <!-- keypad -->
 
 <keypad
-   muclient_version="5.05"
+   muclient_version="5.06"
    world_file_version="15"
-   date_saved="2018-10-25 22:32:05"
+   date_saved="2019-10-26 23:32:54"
   >
 
   <key name="0" >
@@ -24879,9 +24844,9 @@ group="bot_train" >
 <!-- printing -->
 
 <printing
-   muclient_version="5.05"
+   muclient_version="5.06"
    world_file_version="15"
-   date_saved="2018-10-25 22:32:05"
+   date_saved="2019-10-26 23:32:54"
   >
 
 <ansi>
