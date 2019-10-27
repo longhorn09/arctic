@@ -80,6 +80,7 @@
 -- v0.75 - 09/28/2018 - tweak druid spell slots to match latest spell circles - added cure massive, need to add divine free action
 -- v0.76 - 10/10/2018 - added automem toggle
 -- v0.77 - 10/13/2018 - cure massive auto-heal logic
+-- v0.78 - 10/26/2019 - made fixes to cure massive auto-heal logic, including heal delay depending on healg or healp, logic in doCheckRescueTarget and healGroupParse
 --[[
 function Trim(s)
     return (s:gsub("^%s*(.-)%s*$", "%1"))
@@ -91,7 +92,7 @@ function endswith(s, send)
 end
 
 function getVersion(name,line,wildcards)
-  local version = "0.77"
+  local version = "0.78"
   Note("** Version        : v"..version)
   Execute("cgt ** Version        : v"..version)
 
@@ -903,7 +904,6 @@ end
 --* setting off the (heal|druid|shaman)bot group health check
 --*********************************************************
 function do_gheal(name,line,wildcards)
-	--Note("gheal executed")
 	if (tonumber(GetVariable("tryingheal")) == 0 and (tonumber(GetVariable("isHealbot")) == 1 or tonumber(GetVariable("isdruidbot")) == 1 or tonumber(GetVariable("isShamanbot")) == 1)) then
 	  SetVariable("isgheal",1)
 	  Send("group")
@@ -1626,37 +1626,13 @@ function loginMenu()
     if (socket.dns.gethostname()=="AMAZONA-HDSPRN5") then
       AddTriggerEx("login_char"
         , "^     | |  | Based on DikuMUD I by Michael Seifert, Sebastian Hammer, |$"
-        , "Aemon;noretard;"
+        , "Aemon;xxxxxx;"
         , bit.bor(trigger_flag.Enabled ,trigger_flag.RegularExpression,trigger_flag.OneShot)
         , custom_colour.NoChange, 0, "", "",sendto.execute,100)
     elseif (socket.dns.gethostname()=="NORMSTORM") then
       AddTriggerEx("login_char"
         , "^     | |  | Based on DikuMUD I by Michael Seifert, Sebastian Hammer, |$"
         , "Oligo"
-        , bit.bor(trigger_flag.Enabled ,trigger_flag.RegularExpression,trigger_flag.OneShot)
-        , custom_colour.NoChange, 0, "", "",sendto.execute,100)
-    elseif (socket.dns.gethostname()=="AMAZONA-L3F1I0F") then
-      AddTriggerEx("login_char"
-        , "^     | |  | Based on DikuMUD I by Michael Seifert, Sebastian Hammer, |$"
-        , "royderage;druidcast;"
-        , bit.bor(trigger_flag.Enabled ,trigger_flag.RegularExpression,trigger_flag.OneShot)
-        , custom_colour.NoChange, 0, "", "",sendto.execute,100)
-    elseif (socket.dns.gethostname()=="AMAZONA-BBE18RA") then
-      AddTriggerEx("login_char"
-        , "^     | |  | Based on DikuMUD I by Michael Seifert, Sebastian Hammer, |$"
-        , "rhonda;dumbass;"
-        , bit.bor(trigger_flag.Enabled ,trigger_flag.RegularExpression,trigger_flag.OneShot)
-        , custom_colour.NoChange, 0, "", "",sendto.execute,100)
-    elseif (socket.dns.gethostname()=="EC2AMAZ-Y1GMI2W") then
-      AddTriggerEx("login_char"
-        , "^     | |  | Based on DikuMUD I by Michael Seifert, Sebastian Hammer, |$"
-        , "yhonk;bigones;"
-        , bit.bor(trigger_flag.Enabled ,trigger_flag.RegularExpression,trigger_flag.OneShot)
-        , custom_colour.NoChange, 0, "", "",sendto.execute,100)
-    elseif (socket.dns.gethostname()=="AMAZONA-HO7V87J") then
-      AddTriggerEx("login_char"
-        , "^     | |  | Based on DikuMUD I by Michael Seifert, Sebastian Hammer, |$"
-        , "moinier;skyscout;"
         , bit.bor(trigger_flag.Enabled ,trigger_flag.RegularExpression,trigger_flag.OneShot)
         , custom_colour.NoChange, 0, "", "",sendto.execute,100)
     end
@@ -1668,15 +1644,9 @@ function loginMenu()
             or GetRecentLines(1)=="A name must be at least 2 characters long, and at most 15."
             or GetRecentLines(1)=="Name:") then
       if (socket.dns.gethostname()=="EC2AMAZ-PJRX6XQ") then
-        Execute("Aemon;arcticmud;")
+        Execute("Aemon;xxxxx;")
       elseif (socket.dns.gethostname()=="NORMSTORM") then
         Execute("Oligo")
-      elseif (socket.dns.gethostname()=="AMAZONA-L3F1I0F") then
-        Execute("royderage;druidcast;")
-      elseif (socket.dns.gethostname()=="EC2AMAZ-Y1GMI2W") then
-        Execute("yhonk;bigones;")
-      elseif (socket.dns.gethostname()=="AMAZONA-GHM0DRE") then
-        Execute("moinier;skyscout;")
       end
     end
   end
@@ -2056,7 +2026,7 @@ end
 function doHealLogic(healcount,curemassivecount,curecriticalcount,cureseriouscount,curelightcount,healtarget,hits)
   local tryingheal = 0
   local isshamanbot       = false
-  local curemassivecount = 0    -- temp variable for development - delete
+  --local curemassivecount = 0    -- temp variable for development - delete
 
   if (GetVariable("isShamanbot") ~= nil and GetVariable("charClass") ~= nil) then
 	  if (tonumber(GetVariable("isShamanbot")) == 1 and GetVariable("charClass") == "Shaman") then
@@ -2140,6 +2110,7 @@ function healGroupParse()
   local maintankhealth    = ""
   local isCureOn          = true
   local isshamanbot       = false
+  local isDruidBot        = false
 
   --for shaman bot
   local regeneratecount	     = 0
@@ -2198,6 +2169,13 @@ function healGroupParse()
 	  healcount   = regeneratecount
   end
 
+  --determine if druid bot enabled
+  if (tonumber(GetVariable("isdruidbot")) == 1 and GetVariable("charClass") == "Druid") then
+    isDruidBot = true
+    isshamanbot = false
+	  healcount   = 0
+  end
+
   if (tonumber(GetVariable("isCureOn")) == 1) then
     isCureOn = true
   else
@@ -2223,12 +2201,12 @@ function healGroupParse()
 
   local t = {}
   t = xmlTest:split("\n")
-
-  --**************************************************
-  --** NOTE: for shaman healcount = regeneratecount  *
-  --**************************************************
-  --** Step 1 : Check main tank            ***********
-  --**************************************************
+  --Note(xmlTest)
+  --##################################################
+  --## note: for shaman healcount = regeneratecount
+  --##################################################
+  --## Step 1 : Check main tank
+  --##################################################
   for i, v in ipairs(t) do
     --target,health = string.match(v,"^<char name='([A-Z][a-z]+)' class='[A-Z][A-Z]' imt='[YN]' hits='([a-z%.]+)' move='[a-z]+' wb='[YN]' invis='[YN]' here='Y' mem='%d+' light='%d+' flying='[YN]' position='[a-z]+' ismain='Y'  />")
     target,health = string.match(v,"^<char name='([A-Z][a-z]+)' class='[A-Z][A-Z]' imt='[YN]' hits='([a-z%.]+)' move='[a-z]+' wb='[YN]' invis='[YN]' here='Y' mem='%d+' light='%d+' flying='[YN]' position='[a-z]+' ismain='Y'  />")
@@ -2239,8 +2217,8 @@ function healGroupParse()
   maintankhealth = health
 
   --if (target ~= nil and health ~= nil and #target > 0 and #health > 0 and isMainHealer and tryingheal == 0) then
-  if (target ~= nil and health ~= nil and #target > 0 and #health > 0 and tryingheal == 0 and (GetVariable("charClass") == "Cleric" or isshamanbot)) then
-
+  --if (target ~= nil and health ~= nil and #target > 0 and #health > 0 and tryingheal == 0 and (GetVariable("charClass") == "Cleric" or (isDruidBot and isCureOn) or isshamanbot)) then
+  if (target ~= nil and health ~= nil and #target > 0 and #health > 0 and tryingheal == 0 and (GetVariable("charClass") == "Cleric" or isDruidBot or isshamanbot)) then
 	--need to put lastregen_<target> check in this block of code because target might be nil outside of it
 	  if (isshamanbot and GetVariable("lastregen_"..target) ~= nil) then
   		lastregen_target = tonumber(GetVariable("lastregen_"..target))
@@ -2251,7 +2229,6 @@ function healGroupParse()
   			isRegenExpired = false
   		end
 	  end
-
 	if (healMode == HEAL_VBAD) then
       if (tryingheal == 0 and (string.lower(health) == "v.bad" or string.lower(health) == "awful" or string.lower(health) == "dying")) then
     		if (isshamanbot == false or (isshamanbot and isRegenExpired)) then
@@ -2286,7 +2263,6 @@ function healGroupParse()
       end
     end
   end
-
   --**************************************************
   --** Step 2 : Check 'dying' or 'awful' ([adfgilnuwy]+)
   --**************************************************
@@ -3146,19 +3122,19 @@ function doCheckRescueTarget(attacker, victim, patternid, damage)
 		  --** this logic branch for druid bot auto-stone
           if (isdruidbot and tonumber(GetVariable("stoneskincount")) > 0 and isautostone and tonumber(GetVariable("tryingstone"))==0 and damage ~= "bruises") then
             if ((tonumber(GetVariable("stonemain"))==0 and victim ~= Trim(GetVariable("maintank"))) or tonumber(GetVariable("stonemain"))==1) then
-				--NOTE: USUALLY the branch below, rarely this branch reached
-				if (GetVariable("laststone_"..Proper(Trim(victim))) ~= nil) then
-					laststone_time = tonumber(GetVariable("laststone_"..Proper(Trim(victim))) )
-				end
-				if ((os.clock() - laststone_time) > stone_threshhold) then
-					Execute("doautostand;cast 'stone skin' "..victim)
-					SetVariable("laststone_"..Proper(Trim(victim)), os.clock())
-					SetVariable("tryingstone",1)
-				else
-					if (isdebug) then
-					  Note("** Under threshhold ("..stone_threshhold.."): "..(os.clock() - laststone_time))
-					end
-				end
+      				--## note: USUALLY the branch below, rarely this branch reached
+      				if (GetVariable("laststone_"..Proper(Trim(victim))) ~= nil) then
+      					laststone_time = tonumber(GetVariable("laststone_"..Proper(Trim(victim))) )
+      				end
+      				if ((os.clock() - laststone_time) > stone_threshhold) then
+      					Execute("doautostand;cast 'stone skin' "..victim)
+      					SetVariable("laststone_"..Proper(Trim(victim)), os.clock())
+      					SetVariable("tryingstone",1)
+      				else
+      					if (isdebug) then
+      					  Note("** Under threshhold ("..stone_threshhold.."): "..(os.clock() - laststone_time))
+      					end
+      				end
               EnableTriggerGroup("rescuescript", false)
               retvalue = true
             end
@@ -3178,27 +3154,45 @@ function doCheckRescueTarget(attacker, victim, patternid, damage)
 		  --** this logic branch for druid bot auto-stone
           if (isdruidbot and tonumber(GetVariable("stoneskincount")) > 0 and isautostone and tonumber(GetVariable("tryingstone"))==0 and damage ~= "bruises") then
             if ((tonumber(GetVariable("stonemain"))==0 and victim ~= Trim(GetVariable("maintank"))) or tonumber(GetVariable("stonemain"))==1) then
-			  if (string.upper(victim) == "YOU") then
-					Execute("doautostand;cast 'stone skin' me")
-			  else
-					if (GetVariable("laststone_"..Proper(Trim(victim))) ~= nil) then
-						laststone_time = tonumber(GetVariable("laststone_"..Proper(Trim(victim))) )
-					end
-					if ((os.clock() - laststone_time) > stone_threshhold) then
-						Execute("doautostand;cast 'stone skin' "..victim)
-						SetVariable("laststone_"..Proper(Trim(victim)), os.clock())
-						SetVariable("tryingstone",1)
-					else
-						if (isdebug) then
-						  Note("** Under threshhold ("..stone_threshhold.."): "..(os.clock() - laststone_time))
-						end
-					end
-			  end
+      			  if (string.upper(victim) == "YOU") then
+      					Execute("doautostand;cast 'stone skin' me")
+      			  else
+      					if (GetVariable("laststone_"..Proper(Trim(victim))) ~= nil) then
+      						laststone_time = tonumber(GetVariable("laststone_"..Proper(Trim(victim))) )
+      					end
+      					if ((os.clock() - laststone_time) > stone_threshhold) then
+      						Execute("doautostand;cast 'stone skin' "..victim)
+      						SetVariable("laststone_"..Proper(Trim(victim)), os.clock())
+      						SetVariable("tryingstone",1)
+      					else
+      						if (isdebug) then
+      						  Note("** Under threshhold ("..stone_threshhold.."): "..(os.clock() - laststone_time))
+      						end
+      					end
+      			  end
               EnableTriggerGroup("rescuescript", false)
               retvalue = true
             end
-		  --** this logic branch for healbot in healp mode
+            --############################################
+		        --# this following elseif() logic branch for soley for druids
+            --# esp. for druids with cure massive
+            --# Remember, for debuggings, timers must be enabled for DoAfterSpecial to work
+            --# https://www.gammon.com.au/scripts/doc.php?function=DoAfterSpecial
+            --############################################
+          elseif (isdruidbot) then
+            if (tonumber(GetVariable("isMainHealer"))==0 and tonumber(GetVariable("healdelay")) > 0.1) then
+              DoAfterSpecial(tonumber(GetVariable("healdelay")),"gheal",sendto.execute)
+            else
+              Execute("gheal")
+            end
+            EnableTriggerGroup("rescuescript", false)
+            retvalue = true
+            --############################################
+		        --# this logic branch for healbot in healp mode
+            --# this logic is kinda faulty but prior elseif (druidbot) catches druids
+            --############################################
           elseif (not isdruidbot or not isautostone) then
+
             Execute("gheal")
             EnableTriggerGroup("rescuescript", false)
             retvalue = true
