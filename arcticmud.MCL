@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE muclient>
-<!-- Saved on Saturday, October 26, 2019, 11:32 PM -->
+<!-- Saved on Sunday, October 27, 2019, 2:07 PM -->
 <!-- MuClient version 5.06 -->
 <!-- Written by Nick Gammon -->
 <!-- Home Page: http://www.mushclient.com/ -->
@@ -8,7 +8,7 @@
 <world
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-10-26 23:32:54"
+   date_saved="2019-10-27 14:07:49"
 
    auto_say_override_prefix="-"
    auto_say_string="say "
@@ -121,7 +121,7 @@
 <triggers
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-10-26 23:32:54"
+   date_saved="2019-10-27 14:07:49"
   >
   <trigger
    enabled="y"
@@ -11425,7 +11425,6 @@ if (tonumber(GetVariable("isautocarve"))==1 and GetVariable("charClass")=="Barba
 end</send>
   </trigger>
   <trigger
-   enabled="y"
    group="essencescript"
    match="^The death cry of Drake\, the dark druid echoes from somewhere nearby\.\.\.$"
    regexp="y"
@@ -11435,7 +11434,6 @@ end</send>
   <send>get essence drake</send>
   </trigger>
   <trigger
-   enabled="y"
    group="essencescript"
    match="^The death cry of Eern Tyot echoes from somewhere nearby\.\.\.$"
    regexp="y"
@@ -11445,7 +11443,6 @@ end</send>
   <send>get essence eern</send>
   </trigger>
   <trigger
-   enabled="y"
    group="essencescript"
    match="^The death cry of Lezi Sylian echoes from somewhere nearby\.\.\.$"
    regexp="y"
@@ -11455,7 +11452,6 @@ end</send>
   <send>get essence lezi</send>
   </trigger>
   <trigger
-   enabled="y"
    group="essencescript"
    match="^The death cry of Slarn Urm echoes from somewhere nearby\.\.\.$"
    regexp="y"
@@ -11465,7 +11461,6 @@ end</send>
   <send>get essence slarn</send>
   </trigger>
   <trigger
-   enabled="y"
    group="essencescript"
    match="^The death cry of a hierophant druid echoes from somewhere nearby\.\.\.$"
    regexp="y"
@@ -14486,7 +14481,7 @@ Note("** Celes. Valley : bard2cv")
 <aliases
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-10-26 23:32:54"
+   date_saved="2019-10-27 14:07:49"
   >
   <alias
    match="^(?:forcegh|fgh)$"
@@ -16294,39 +16289,25 @@ else
 end </send>
   </alias>
   <alias
-   match="^complootoff$"
+   match="^comploot(on|off|status)$"
    enabled="y"
    group="splitscript"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("iscomploot",0)
-Execute("complootstatus")</send>
-  </alias>
-  <alias
-   match="^complooton$"
-   enabled="y"
-   group="splitscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("iscomploot",1)
-Execute("complootstatus")</send>
-  </alias>
-  <alias
-   match="^complootstatus$"
-   enabled="y"
-   group="splitscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>if (tonumber(GetVariable("iscomploot"))==1) then
-  Note("** Component loot : Enabled")
-else
-  Note("** Component loot : Disabled")
+  <send>if (Trim("%1") == "off") then
+  SetVariable("iscomploot",0)
+  Execute("complootstatus")
+elseif (Trim("%1") == "on") then
+  SetVariable("iscomploot",1)
+  Execute("complootstatus")
+elseif (Trim("%1") == "status") then
+  if (tonumber(GetVariable("iscomploot"))==1) then
+    Note("** Component loot : Enabled")
+  else
+    Note("** Component loot : Disabled")
+  end
 end</send>
   </alias>
   <alias
@@ -17497,6 +17478,20 @@ else
 end</send>
   </alias>
   <alias
+   match="^essence(on|off)$"
+   enabled="y"
+   group="essencescript"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>if (Trim("%1") == "on") then
+  EnableTriggerGroup ("essencescript", true)
+elseif (Trim("%1") == "off") then
+  EnableTriggerGroup ("essencescript", false)
+end</send>
+  </alias>
+  <alias
    match="^exall( \d+)?$"
    enabled="y"
    expand_variables="y"
@@ -17517,24 +17512,19 @@ end
 </send>
   </alias>
   <alias
-   match="^examoff$"
+   match="^exam(off|on)$"
    enabled="y"
    group="splitscript"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("doexam",0)</send>
-  </alias>
-  <alias
-   match="^examon$"
-   enabled="y"
-   group="splitscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("doexam",1)</send>
+  <send>if (Trim("%1") == "on") then
+  SetVariable("doexam",1)
+elseif (Trim("%1") == "off") then
+  SetVariable("doexam",0)
+end
+</send>
   </alias>
   <alias
    match="^f2b$"
@@ -18910,26 +18900,20 @@ end</send>
   <send>hover;archery s 5 p 5 a 2</send>
   </alias>
   <alias
-   match="^hideoff$"
+   match="^hide(on|off)$"
    enabled="y"
    group="thiefscript"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>Note("** Hide: Disabled")
-SetVariable("ishideon",0)  </send>
-  </alias>
-  <alias
-   match="^hideon$"
-   enabled="y"
-   group="thiefscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>Note("** Hide: Enabled")
-SetVariable("ishideon",1)  </send>
+  <send>if (Trim("%1") == "on") then
+  Note("** Hide: Enabled")
+  SetVariable("ishideon",1)  
+elseif (Trim("%1") == "off") then
+  Note("** Hide: Disabled")
+  SetVariable("ishideon",0)  
+end</send>
   </alias>
   <alias
    match="^home$"
@@ -19457,6 +19441,29 @@ end</send>
   >
   </alias>
   <alias
+   match="^loot(on|off|status)$"
+   enabled="y"
+   group="splitscript"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>if (Trim("%1") == "off") then
+  SetVariable("iscoinloot",0)
+  Execute("lootstatus")
+elseif (Trim("%1") == "on") then
+  SetVariable("iscoinloot",1)
+  Execute("lootstatus")
+elseif (Trim("%1") == "status") then
+  if (tonumber(GetVariable("iscoinloot"))==1) then
+    Note("** Coin loot      : Enabled")
+  else
+    Note("** Coin loot      : Disabled")
+  end
+end
+</send>
+  </alias>
+  <alias
    match="^lootcompsoff$"
    enabled="y"
    group="splitscript"
@@ -19485,42 +19492,6 @@ end</send>
    sequence="100"
   >
   <send>Execute("complootstatus")</send>
-  </alias>
-  <alias
-   match="^lootoff$"
-   enabled="y"
-   group="splitscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("iscoinloot",0)
-Execute("lootstatus")</send>
-  </alias>
-  <alias
-   match="^looton$"
-   enabled="y"
-   group="splitscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("iscoinloot",1)
-Execute("lootstatus")</send>
-  </alias>
-  <alias
-   match="^lootstatus$"
-   enabled="y"
-   group="splitscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>if (tonumber(GetVariable("iscoinloot"))==1) then
-  Note("** Coin loot      : Enabled")
-else
-  Note("** Coin loot      : Disabled")
-end</send>
   </alias>
   <alias
    script="doLostConcentration"
@@ -22220,26 +22191,20 @@ end
 Execute("splitstatus")</send>
   </alias>
   <alias
-   match="^skimoff$"
+   match="^skim(on|off)$"
    enabled="y"
    group="splitscript"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("doskim",0)
-Execute("splitstatus")</send>
-  </alias>
-  <alias
-   match="^skimon$"
-   enabled="y"
-   group="splitscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("doskim",1)
-Execute("splitstatus")</send>
+  <send>if (Trim("%1") == "on") then
+  SetVariable("doskim",1)
+  Execute("splitstatus")
+elseif (Trim("%1") == "off") then
+  SetVariable("doskim",0)
+  Execute("splitstatus")
+end</send>
   </alias>
   <alias
    match="^skybotoff$"
@@ -22341,25 +22306,18 @@ end</send>
   <send>--for testing only</send>
   </alias>
   <alias
-   match="^splitoff$"
+   match="^split(on|off)$"
    enabled="y"
    group="splitscript"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("doautosplit",0)</send>
-  </alias>
-  <alias
-   match="^spliton$"
-   enabled="y"
-   group="splitscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("doautosplit",1)
-</send>
+  <send>if (Trim("%1") == "on") then
+  SetVariable("doautosplit",1)
+elseif (Trim("%1") == "off") then
+  SetVariable("doautosplit",0)
+end </send>
   </alias>
   <alias
    match="^splitstatus$"
@@ -23113,24 +23071,6 @@ if (IsSocketConnected() and GetVariable("charClass")~="Red Robe") then
 Note("----- YOU ARE SITTING -----")
 Execute("autostandstatus")
 Execute("doautostand")</send>
-  </alias>
-  <alias
-   match="essenceoff"
-   enabled="y"
-   group="essencescript"
-   send_to="12"
-   sequence="100"
-  >
-  <send>EnableTriggerGroup ("essencescript", false )</send>
-  </alias>
-  <alias
-   match="essenceon"
-   enabled="y"
-   group="essencescript"
-   send_to="12"
-   sequence="100"
-  >
-  <send>EnableTriggerGroup ("essencescript", true )</send>
   </alias>
   <alias
    match="qk2th"
@@ -23994,7 +23934,7 @@ end</send>
 <timers
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-10-26 23:32:54"
+   date_saved="2019-10-27 14:07:49"
   >
   <timer name="ticktimer" enabled="y" minute="1" second="0.00" offset_second="0.00"    send_to="12"
 group="tickscript" >
@@ -24008,7 +23948,7 @@ Execute("aftertick10")</send>
 group="bot_train" >
 
   </timer>
-  <timer name="bottrain_timer" script="doBotTrainTimer" enabled="y" minute="2" second="0.00" offset_second="0.00"    send_to="12"
+  <timer name="bottrain_timer" script="doBotTrainTimer" minute="2" second="0.00" offset_second="0.00"    send_to="12"
 group="bot_train" >
   <send>--</send>
 
@@ -24020,7 +23960,7 @@ group="bot_train" >
 <macros
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-10-26 23:32:54"
+   date_saved="2019-10-27 14:07:49"
   >
 
   <macro name="up" type="send_now" >
@@ -24154,7 +24094,7 @@ group="bot_train" >
 <variables
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-10-26 23:32:54"
+   date_saved="2019-10-27 14:07:49"
   >
   <variable name="absolutioncount">1</variable>
   <variable name="acidblastcount">0</variable>
@@ -24203,22 +24143,22 @@ group="bot_train" >
   <variable name="char6">Hendo </variable>
   <variable name="char7">Alanis </variable>
   <variable name="char9">Glynda </variable>
-  <variable name="charAge">17</variable>
+  <variable name="charAge">57</variable>
   <variable name="charAlign">Good</variable>
-  <variable name="charClass">Druid</variable>
-  <variable name="charCurrentHP">631</variable>
-  <variable name="charCurrentMV">132</variable>
-  <variable name="charLevel">30</variable>
-  <variable name="charMaxHP">648</variable>
-  <variable name="charMaxMV">132</variable>
-  <variable name="charname">Phool</variable>
+  <variable name="charClass">Magic User</variable>
+  <variable name="charCurrentHP">335</variable>
+  <variable name="charCurrentMV">116</variable>
+  <variable name="charLevel">31</variable>
+  <variable name="charMaxHP">335</variable>
+  <variable name="charMaxMV">116</variable>
+  <variable name="charname">Oligo</variable>
   <variable name="clanName">Coalition of Risky Endeavors</variable>
   <variable name="clanRank">Elder</variable>
   <variable name="clearskiescount">0</variable>
   <variable name="cloakofbraverycount">0</variable>
   <variable name="cloakofshadowscount">0</variable>
   <variable name="coinsInBank">3</variable>
-  <variable name="coinsOnHand">2189</variable>
+  <variable name="coinsOnHand">0</variable>
   <variable name="combatLines">0</variable>
   <variable name="coneofcoldcount">0</variable>
   <variable name="conjureelementalcount">1</variable>
@@ -24238,7 +24178,7 @@ group="bot_train" >
   <variable name="curemalefactioncount">1</variable>
   <variable name="curemassivecount">4</variable>
   <variable name="cureseriouscount">0</variable>
-  <variable name="currentroom">Sanjuro's Mulberry Field</variable>
+  <variable name="currentroom">Oligo's Orifice of Opulence</variable>
   <variable name="cursecount">0</variable>
   <variable name="darkenedsoulcount">0</variable>
   <variable name="darknesscount">0</variable>
@@ -24252,7 +24192,7 @@ group="bot_train" >
   <variable name="dispelmagiccount">1</variable>
   <variable name="displacementcount">0</variable>
   <variable name="doautofill">1</variable>
-  <variable name="doautosplit">1</variable>
+  <variable name="doautosplit">0</variable>
   <variable name="doenvenom">1</variable>
   <variable name="doexam">1</variable>
   <variable name="dogrouptick">0</variable>
@@ -24269,7 +24209,7 @@ group="bot_train" >
   <variable name="entanglecount">0</variable>
   <variable name="epiphanycount">0</variable>
   <variable name="etherealarmorcount">0</variable>
-  <variable name="exitdirs">NU</variable>
+  <variable name="exitdirs">NESWU</variable>
   <variable name="fademode">0</variable>
   <variable name="faeriefirecount">0</variable>
   <variable name="feastcount">1</variable>
@@ -24355,15 +24295,15 @@ group="bot_train" >
   <variable name="isautoveil">0</variable>
   <variable name="isbandallgood">0</variable>
   <variable name="isbarbtrain">0</variable>
-  <variable name="isbottrain">1</variable>
+  <variable name="isbottrain">0</variable>
   <variable name="isclanned">0</variable>
-  <variable name="iscoinloot">0</variable>
+  <variable name="iscoinloot">1</variable>
   <variable name="iscomploot">0</variable>
   <variable name="isdebug">0</variable>
-  <variable name="isdobuffs">0</variable>
-  <variable name="isdruidbot">1</variable>
+  <variable name="isdobuffs">1</variable>
+  <variable name="isdruidbot">0</variable>
   <variable name="isdrunk">0</variable>
-  <variable name="isfighting">1</variable>
+  <variable name="isfighting">0</variable>
   <variable name="isfleesafe">1</variable>
   <variable name="isflygroup">1</variable>
   <variable name="isgactgood">0</variable>
@@ -24371,7 +24311,7 @@ group="bot_train" >
   <variable name="isghealgood">0</variable>
   <variable name="isguild">0</variable>
   <variable name="ishideon">0</variable>
-  <variable name="islegendary">1</variable>
+  <variable name="islegendary">0</variable>
   <variable name="islookback">1</variable>
   <variable name="ismagebot">0</variable>
   <variable name="isnomagicfight">0</variable>
@@ -24401,14 +24341,14 @@ group="bot_train" >
   <variable name="lastdir">down</variable>
   <variable name="lastengageclock">0</variable>
   <variable name="lastlook">Everlast</variable>
-  <variable name="lastmovetime">3604.922</variable>
-  <variable name="lastmv">96</variable>
+  <variable name="lastmovetime">131.087</variable>
+  <variable name="lastmv">116</variable>
   <variable name="lastregen_Bloat">2367.738</variable>
   <variable name="lastregen_Glynda">1306.222</variable>
   <variable name="lastregen_Khonsu ">2154.676</variable>
   <variable name="lastregen_Pyrrha ">1256.89</variable>
   <variable name="lastrescuetime">1503.556</variable>
-  <variable name="lastroom">Oligo's Orifice of Opulence</variable>
+  <variable name="lastroom">Dza tells you 'Dza the Dzenius'</variable>
   <variable name="lastroundclock">1572147194.41</variable>
   <variable name="laststandtime">963.908</variable>
   <variable name="laststone_Sharg ">440.374</variable>
@@ -24426,7 +24366,7 @@ group="bot_train" >
   <variable name="malevolenttentaclescount">5</variable>
   <variable name="massflycount">0</variable>
   <variable name="massrefreshcount">0</variable>
-  <variable name="memticks">2</variable>
+  <variable name="memticks">0</variable>
   <variable name="mentalacuitycount">0</variable>
   <variable name="mentalhazecount">2</variable>
   <variable name="mindafirecount">0</variable>
@@ -24675,7 +24615,7 @@ group="bot_train" >
 <colours
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-10-26 23:32:54"
+   date_saved="2019-10-27 14:07:49"
   >
 
 <ansi>
@@ -24732,7 +24672,7 @@ group="bot_train" >
 <keypad
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-10-26 23:32:54"
+   date_saved="2019-10-27 14:07:49"
   >
 
   <key name="0" >
@@ -24846,7 +24786,7 @@ group="bot_train" >
 <printing
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-10-26 23:32:54"
+   date_saved="2019-10-27 14:07:49"
   >
 
 <ansi>
