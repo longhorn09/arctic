@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE muclient>
-<!-- Saved on Sunday, October 27, 2019, 2:07 PM -->
+<!-- Saved on Thursday, October 31, 2019, 8:11 AM -->
 <!-- MuClient version 5.06 -->
 <!-- Written by Nick Gammon -->
 <!-- Home Page: http://www.mushclient.com/ -->
@@ -8,7 +8,7 @@
 <world
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-10-27 14:07:49"
+   date_saved="2019-10-31 08:11:10"
 
    auto_say_override_prefix="-"
    auto_say_string="say "
@@ -121,7 +121,7 @@
 <triggers
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-10-27 14:07:49"
+   date_saved="2019-10-31 08:11:10"
   >
   <trigger
    enabled="y"
@@ -13751,16 +13751,6 @@ Execute("buffrem blur")</send>
   <send>SetVariable("isstanding", 0)</send>
   </trigger>
   <trigger
-   enabled="y"
-   group="tickscript"
-   match="^You throw away your bloody bandages\.$"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>Execute("dotick")</send>
-  </trigger>
-  <trigger
    group="barb_train"
    match="^You throw away your bloody bandages\.$"
    regexp="y"
@@ -13776,6 +13766,16 @@ end
 if (isbarbtrain) then
   Execute("stand;learn all;lore claymore;bandself")
 end</send>
+  </trigger>
+  <trigger
+   enabled="y"
+   group="tickscript"
+   match="^You throw away your bloody bandages\.$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>Execute("dotick")</send>
   </trigger>
   <trigger
    enabled="y"
@@ -14481,7 +14481,7 @@ Note("** Celes. Valley : bard2cv")
 <aliases
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-10-27 14:07:49"
+   date_saved="2019-10-31 08:11:10"
   >
   <alias
    match="^(?:forcegh|fgh)$"
@@ -15070,42 +15070,29 @@ else
 end</send>
   </alias>
   <alias
-   match="^autotrainoff$"
+   match="^autotrain(on|off|status)$"
    enabled="y"
    group="autotrain"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("isautotrain",0)
-Execute("autotrainstatus")</send>
-  </alias>
-  <alias
-   match="^autotrainon$"
-   enabled="y"
-   group="autotrain"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("isautotrain",1)
-Execute("autotrainstatus")</send>
-  </alias>
-  <alias
-   match="^autotrainstatus$"
-   enabled="y"
-   group="autotrain"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>isautotrain = tonumber(GetVariable("isautotrain"))
+  <send>if (Trim("%1") == "on") then
+  SetVariable("isautotrain",1)
+  Execute("autotrainstatus")
+elseif (Trim("%1") == "off") then
+  SetVariable("isautotrain",0)
+  Execute("autotrainstatus")
+elseif (Trim("%1") == "status") then
+  isautotrain = tonumber(GetVariable("isautotrain"))
 
-if (isautotrain == 1) then
-  Note("** Auto-Train     : Enabled")
-else
-  Note("** Auto-Train     : Disabled")
-end </send>
+  if (isautotrain == 1) then
+    Note("** Auto-Train     : Enabled")
+  else
+    Note("** Auto-Train     : Disabled")
+  end 
+end
+</send>
   </alias>
   <alias
    match="^b(\s+[A-Za-z0-9\.\-\'\,]+)?$"
@@ -15511,64 +15498,27 @@ end
 </send>
   </alias>
   <alias
-   match="^barrd$"
+   match="^barr(n|e|s|w|d|u)$"
    enabled="y"
    group="druidscript"
    regexp="y"
-   send_to="10"
+   send_to="12"
    sequence="100"
   >
-  <send>cast 'barrier' down</send>
-  </alias>
-  <alias
-   match="^barre$"
-   enabled="y"
-   group="druidscript"
-   regexp="y"
-   send_to="10"
-   sequence="100"
-  >
-  <send>cast 'barrier' east</send>
-  </alias>
-  <alias
-   match="^barrn$"
-   enabled="y"
-   group="druidscript"
-   regexp="y"
-   send_to="10"
-   sequence="100"
-  >
-  <send>cast 'barrier' north</send>
-  </alias>
-  <alias
-   match="^barrs$"
-   enabled="y"
-   group="druidscript"
-   regexp="y"
-   send_to="10"
-   sequence="100"
-  >
-  <send>cast 'barrier' south</send>
-  </alias>
-  <alias
-   match="^barru$"
-   enabled="y"
-   group="druidscript"
-   regexp="y"
-   send_to="10"
-   sequence="100"
-  >
-  <send>cast 'barrier' up</send>
-  </alias>
-  <alias
-   match="^barrw$"
-   enabled="y"
-   group="druidscript"
-   regexp="y"
-   send_to="10"
-   sequence="100"
-  >
-  <send>cast 'barrier' west</send>
+  <send>if (Trim("%1") == "n") then
+  Execute("cast 'barrier' north")
+elseif (Trim("%1") == "e") then
+  Execute("cast 'barrier' east")
+elseif (Trim("%1") == "s") then
+  Execute("cast 'barrier' south")
+elseif (Trim("%1") == "w") then
+  Execute("cast 'barrier' west")
+elseif (Trim("%1") == "u") then
+  Execute("cast 'barrier' up")
+elseif (Trim("%1") == "d") then
+  Execute("cast 'barrier' down")
+end
+</send>
   </alias>
   <alias
    match="^bashoff$"
@@ -16640,9 +16590,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("d;w;open gate west;w;close gate e;n;n;n;n;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;s;s;s;w;w;w;u;n;n;n;n;n;w;w;w;w;w")
+  Execute("d;w;w;n;n;n;n;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;s;s;s;w;w;w;u;n;n;n;n;n;w;w;w;w;w")
 else
-  Execute("fade d;fade w;open gate west;fade w;close gate e;fade n;fade n;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade s;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w;fade w;fade w;fade u;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade w")
+  Execute("fade d;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade s;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w;fade w;fade w;fade u;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade w")
 end</send>
   </alias>
   <alias
@@ -16656,9 +16606,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("d;w;w;n;n;n;n;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;s;s;s;w;w;w;u;n;n;n;n;n;w;w;w;w;w")
+  Execute("d;w;open gate west;w;close gate e;n;n;n;n;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;s;s;s;w;w;w;u;n;n;n;n;n;w;w;w;w;w")
 else
-  Execute("fade d;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade s;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w;fade w;fade w;fade u;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade w")
+  Execute("fade d;fade w;open gate west;fade w;close gate e;fade n;fade n;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade s;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w;fade w;fade w;fade u;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade w")
 end</send>
   </alias>
   <alias
@@ -23412,9 +23362,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e")
+  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e;n;n;n;n;n;n;n;w;s;e")
 else
-  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e")
+  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade n;fade n;fade n;fade n;fade n;fade n;fade n;fade w;fade s;fade e")
 end</send>
   </alias>
   <alias
@@ -23427,9 +23377,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e;n;n;n;n;n;n;n;w;s;e")
+  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e")
 else
-  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade n;fade n;fade n;fade n;fade n;fade n;fade n;fade w;fade s;fade e")
+  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e")
 end</send>
   </alias>
   <alias
@@ -23934,7 +23884,7 @@ end</send>
 <timers
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-10-27 14:07:49"
+   date_saved="2019-10-31 08:11:10"
   >
   <timer name="ticktimer" enabled="y" minute="1" second="0.00" offset_second="0.00"    send_to="12"
 group="tickscript" >
@@ -23960,7 +23910,7 @@ group="bot_train" >
 <macros
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-10-27 14:07:49"
+   date_saved="2019-10-31 08:11:10"
   >
 
   <macro name="up" type="send_now" >
@@ -24094,7 +24044,7 @@ group="bot_train" >
 <variables
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-10-27 14:07:49"
+   date_saved="2019-10-31 08:11:10"
   >
   <variable name="absolutioncount">1</variable>
   <variable name="acidblastcount">0</variable>
@@ -24143,14 +24093,14 @@ group="bot_train" >
   <variable name="char6">Hendo </variable>
   <variable name="char7">Alanis </variable>
   <variable name="char9">Glynda </variable>
-  <variable name="charAge">57</variable>
+  <variable name="charAge">58</variable>
   <variable name="charAlign">Good</variable>
   <variable name="charClass">Magic User</variable>
-  <variable name="charCurrentHP">335</variable>
-  <variable name="charCurrentMV">116</variable>
+  <variable name="charCurrentHP">336</variable>
+  <variable name="charCurrentMV">114</variable>
   <variable name="charLevel">31</variable>
-  <variable name="charMaxHP">335</variable>
-  <variable name="charMaxMV">116</variable>
+  <variable name="charMaxHP">336</variable>
+  <variable name="charMaxMV">114</variable>
   <variable name="charname">Oligo</variable>
   <variable name="clanName">Coalition of Risky Endeavors</variable>
   <variable name="clanRank">Elder</variable>
@@ -24192,7 +24142,7 @@ group="bot_train" >
   <variable name="dispelmagiccount">1</variable>
   <variable name="displacementcount">0</variable>
   <variable name="doautofill">1</variable>
-  <variable name="doautosplit">0</variable>
+  <variable name="doautosplit">1</variable>
   <variable name="doenvenom">1</variable>
   <variable name="doexam">1</variable>
   <variable name="dogrouptick">0</variable>
@@ -24209,7 +24159,7 @@ group="bot_train" >
   <variable name="entanglecount">0</variable>
   <variable name="epiphanycount">0</variable>
   <variable name="etherealarmorcount">0</variable>
-  <variable name="exitdirs">NESWU</variable>
+  <variable name="exitdirs">EWU</variable>
   <variable name="fademode">0</variable>
   <variable name="faeriefirecount">0</variable>
   <variable name="feastcount">1</variable>
@@ -24291,7 +24241,7 @@ group="bot_train" >
   <variable name="isautoskill">0</variable>
   <variable name="isautostand">1</variable>
   <variable name="isautostone">0</variable>
-  <variable name="isautotrain">1</variable>
+  <variable name="isautotrain">0</variable>
   <variable name="isautoveil">0</variable>
   <variable name="isbandallgood">0</variable>
   <variable name="isbarbtrain">0</variable>
@@ -24341,14 +24291,14 @@ group="bot_train" >
   <variable name="lastdir">down</variable>
   <variable name="lastengageclock">0</variable>
   <variable name="lastlook">Everlast</variable>
-  <variable name="lastmovetime">131.087</variable>
+  <variable name="lastmovetime">1545.536</variable>
   <variable name="lastmv">116</variable>
   <variable name="lastregen_Bloat">2367.738</variable>
   <variable name="lastregen_Glynda">1306.222</variable>
   <variable name="lastregen_Khonsu ">2154.676</variable>
   <variable name="lastregen_Pyrrha ">1256.89</variable>
   <variable name="lastrescuetime">1503.556</variable>
-  <variable name="lastroom">Dza tells you 'Dza the Dzenius'</variable>
+  <variable name="lastroom">Jeezy tells you 'aye'</variable>
   <variable name="lastroundclock">1572147194.41</variable>
   <variable name="laststandtime">963.908</variable>
   <variable name="laststone_Sharg ">440.374</variable>
@@ -24615,7 +24565,7 @@ group="bot_train" >
 <colours
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-10-27 14:07:49"
+   date_saved="2019-10-31 08:11:10"
   >
 
 <ansi>
@@ -24672,7 +24622,7 @@ group="bot_train" >
 <keypad
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-10-27 14:07:49"
+   date_saved="2019-10-31 08:11:10"
   >
 
   <key name="0" >
@@ -24786,7 +24736,7 @@ group="bot_train" >
 <printing
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-10-27 14:07:49"
+   date_saved="2019-10-31 08:11:10"
   >
 
 <ansi>
