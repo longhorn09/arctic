@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE muclient>
-<!-- Saved on Friday, November 01, 2019, 9:33 PM -->
+<!-- Saved on Saturday, November 02, 2019, 3:02 PM -->
 <!-- MuClient version 5.06 -->
 <!-- Written by Nick Gammon -->
 <!-- Home Page: http://www.mushclient.com/ -->
@@ -8,7 +8,7 @@
 <world
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-11-01 21:33:51"
+   date_saved="2019-11-02 15:02:15"
 
    auto_say_override_prefix="-"
    auto_say_string="say "
@@ -121,7 +121,7 @@
 <triggers
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-11-01 21:33:51"
+   date_saved="2019-11-02 15:02:15"
   >
   <trigger
    enabled="y"
@@ -14481,7 +14481,7 @@ Note("** Celes. Valley : bard2cv")
 <aliases
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-11-01 21:33:51"
+   date_saved="2019-11-02 15:02:15"
   >
   <alias
    match="^(?:forcegh|fgh)$"
@@ -14968,41 +14968,26 @@ elseif (Trim("%1")=="off") then
 end</send>
   </alias>
   <alias
-   match="^assaultoff$"
+   match="^assault(on|off|status)$"
    enabled="y"
    group="warriorscript"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("isautoassault",0)
-Execute("assaultstatus")</send>
-  </alias>
-  <alias
-   match="^assaulton$"
-   enabled="y"
-   group="warriorscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("isautoassault",1)
-Execute("assaultstatus")</send>
-  </alias>
-  <alias
-   match="^assaultstatus$"
-   enabled="y"
-   group="warriorscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>if (tonumber(GetVariable("isautoassault"))==1) then
-  Note("** Auto-Assault   : Enabled")
-else
-  Note("** Auto-Assault   : Disabled")
-end
-</send>
+  <send>if (Trim("%1") == "on") then
+  SetVariable("isautoassault",1)
+  Execute("assaultstatus")
+elseif (Trim("%1") == "off") then
+  SetVariable("isautoassault",0)
+  Execute("assaultstatus")
+elseif (Trim("%1") == "status") then
+  if (tonumber(GetVariable("isautoassault"))==1) then
+    Note("** Auto-Assault   : Enabled")
+  else
+    Note("** Auto-Assault   : Disabled")
+  end
+end</send>
   </alias>
   <alias
    match="^assiststatus$"
@@ -15502,29 +15487,24 @@ end
 </send>
   </alias>
   <alias
-   match="^bashoff$"
+   match="^bash(on|off)$"
    enabled="y"
    group="warriorscript"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("isautobash",0)
-Execute("bashstatus")</send>
-  </alias>
-  <alias
-   match="^bashon$"
-   enabled="y"
-   group="warriorscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>if (GetVariable("charClass") == "Warrior") then
-  SetVariable("isautobash",1)
+  <send>if (Trim("%1") == "on") then
+  if (GetVariable("charClass") == "Warrior") then
+    SetVariable("isautobash",1)
+    Execute("bashstatus")
+  else
+    SetVariable("isautobash",0)
+    Note("** bashon only for warrior class.")
+  end
+elseif (Trim("%1") == "off") then
+  SetVariable("isautobash",0)
   Execute("bashstatus")
-else
-  Note("** bashon only for warrior class.")
 end</send>
   </alias>
   <alias
@@ -16445,28 +16425,20 @@ end
 </send>
   </alias>
   <alias
-   match="^cures?off$"
+   match="^cures?(off|on)$"
    enabled="y"
    group="healbot"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("isCureOn",0)
-Note("** Cure serious   : Disabled")
-</send>
-  </alias>
-  <alias
-   match="^cures?on$"
-   enabled="y"
-   group="healbot"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("isCureOn",1)
-Note("** Cure serious   : Enabled")
-</send>
+  <send>if (Trim("%1") == "off") then
+  SetVariable("isCureOn",0)
+  Note("** Cure serious   : Disabled")
+elseif (Trim("%1") == "on") then
+  SetVariable("isCureOn",1)
+  Note("** Cure serious   : Enabled")
+end</send>
   </alias>
   <alias
    match="^cuse( [A-Za-z0-9\.\,\'\-]+)?$"
@@ -18702,24 +18674,20 @@ else
 end</send>
   </alias>
   <alias
-   match="^healbad$"
+   match="^heal(bad|vbad|fair)$"
    enabled="y"
    group="healbot"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("healmode",2)</send>
-  </alias>
-  <alias
-   match="^healfair$"
-   enabled="y"
-   group="healbot"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("healmode",3)</send>
+  <send>if (Trim("%1") == "bad") then
+  SetVariable("healmode",2)
+elseif (Trim("%1") == "vbad") then
+  SetVariable("healmode",1)
+elseif  (Trim("%1") == "fair") then
+  SetVariable("healmode",3)
+end</send>
   </alias>
   <alias
    match="^healg$"
@@ -18765,16 +18733,6 @@ Execute("showhealertype")</send>
   >
   <send>Execute("brewoff;scribeoff;medoff;autorestoff;autostandon")
 SetVariable("healmode",4)</send>
-  </alias>
-  <alias
-   match="^healvbad$"
-   enabled="y"
-   group="healbot"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("healmode",1)</send>
   </alias>
   <alias
    match="^hero( [A-Za-z0-9\.\,\'\-]+)?$"
@@ -19366,34 +19324,20 @@ end
 </send>
   </alias>
   <alias
-   match="^lootcompsoff$"
+   match="^lootcomps?(on|off|status)$"
    enabled="y"
    group="splitscript"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>Execute("complootoff")</send>
-  </alias>
-  <alias
-   match="^lootcompson$"
-   enabled="y"
-   group="splitscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>Execute("complooton")</send>
-  </alias>
-  <alias
-   match="^lootcompsstatus$"
-   enabled="y"
-   group="splitscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>Execute("complootstatus")</send>
+  <send>if (Trim("%1") == "on") then
+  Execute("complooton")
+elseif (Trim("%1") == "off") then
+  Execute("complootoff")
+elseif (Trim("%1") == "status") then
+  Execute("complootstatus")
+end</send>
   </alias>
   <alias
    script="doLostConcentration"
@@ -20099,6 +20043,22 @@ end</send>
   <send>Execute("order all.corpse "..Trim("%1"))</send>
   </alias>
   <alias
+   match="^oac(m|sit|st)$"
+   enabled="y"
+   group="corpses"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>if (Trim("%1") =="m") then
+  Execute("order all.corpse assist "..GetVariable("maintank"))
+elseif (Trim("%1") =="st") then
+  Execute("order all.corpse stand")
+elseif (Trim("%1") =="sit") then
+  Execute("order all.corpse sit")
+end</send>
+  </alias>
+  <alias
    match="^oack(\s+.+)$"
    enabled="y"
    group="corpses"
@@ -20107,36 +20067,6 @@ end</send>
    sequence="100"
   >
   <send>Execute("order all.corpse kill "..Trim("%1"))</send>
-  </alias>
-  <alias
-   match="^oacm$"
-   enabled="y"
-   group="corpses"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>Execute("order all.corpse assist "..GetVariable("maintank"))</send>
-  </alias>
-  <alias
-   match="^oacsit$"
-   enabled="y"
-   group="corpses"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>Execute("order all.corpse sit")</send>
-  </alias>
-  <alias
-   match="^oacst$"
-   enabled="y"
-   group="corpses"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>Execute("order all.corpse stand")</send>
   </alias>
   <alias
    match="^oall(\s[A-Za-z0-9\*\.\;\'\-\s\_]+)$"
@@ -21309,39 +21239,25 @@ Execute("rdelaystatus")</send>
   <send>--note</send>
   </alias>
   <alias
-   match="^reclaimoff$"
+   match="^reclaim(on|off|status)$"
    enabled="y"
    group="druidscript"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("isautoreclaim",0)
-Execute("reclaimstatus")</send>
-  </alias>
-  <alias
-   match="^reclaimon$"
-   enabled="y"
-   group="druidscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("isautoreclaim",1)
-Execute("reclaimstatus")</send>
-  </alias>
-  <alias
-   match="^reclaimstatus$"
-   enabled="y"
-   group="druidscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>if (tonumber(GetVariable("isautoreclaim"))==1) then
-  Note("** Auto-reclaim   : Enabled")
-else
-  Note("** Auto-reclaim   : Disabled")
+  <send>if (Trim("%1") == "on") then
+  SetVariable("isautoreclaim",1)
+  Execute("reclaimstatus")
+elseif (Trim("%1") == "off") then
+  SetVariable("isautoreclaim",0)
+  Execute("reclaimstatus")
+elseif (Trim("%1") == "status") then
+  if (tonumber(GetVariable("isautoreclaim"))==1) then
+    Note("** Auto-reclaim   : Enabled")
+  else
+    Note("** Auto-reclaim   : Disabled")
+  end
 end</send>
   </alias>
   <alias
@@ -22291,59 +22207,39 @@ end
 </send>
   </alias>
   <alias
-   match="^stoneg$"
+   match="^stone(on|off|status)$"
    enabled="y"
    group="druidscript"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("stonemain",0)</send>
+  <send>if (Trim("%1") == "off") then
+  SetVariable("isautostone",0)
+  Execute("stonestatus")
+elseif (Trim("%1") == "on") then
+  SetVariable("isautostone",1)
+  Execute("stonestatus")
+elseif (Trim("%1") == "status") then
+  if (tonumber(GetVariable("isautostone"))==1) then
+    Note("** Auto-Stone     : Enabled")
+  else
+    Note("** Auto-Stone     : Disabled")
+  end
+end</send>
   </alias>
   <alias
-   match="^stoneoff$"
+   match="^stone(p|g)$"
    enabled="y"
    group="druidscript"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>SetVariable("isautostone",0)
-Execute("stonestatus")</send>
-  </alias>
-  <alias
-   match="^stoneon$"
-   enabled="y"
-   group="druidscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("isautostone",1)
-Execute("stonestatus")</send>
-  </alias>
-  <alias
-   match="^stonep$"
-   enabled="y"
-   group="druidscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>SetVariable("stonemain",1)</send>
-  </alias>
-  <alias
-   match="^stonestatus$"
-   enabled="y"
-   group="druidscript"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>if (tonumber(GetVariable("isautostone"))==1) then
-  Note("** Auto-Stone     : Enabled")
-else
-  Note("** Auto-Stone     : Disabled")
+  <send>if (Trim("%1") == "p") then
+  SetVariable("stonemain",1)
+elseif (Trim("%1") == "g") then
+  SetVariable("stonemain",0)
 end</send>
   </alias>
   <alias
@@ -23812,7 +23708,7 @@ end</send>
 <timers
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-11-01 21:33:51"
+   date_saved="2019-11-02 15:02:15"
   >
   <timer name="ticktimer" enabled="y" minute="1" second="0.00" offset_second="0.00"    send_to="12"
 group="tickscript" >
@@ -23838,7 +23734,7 @@ group="bot_train" >
 <macros
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-11-01 21:33:51"
+   date_saved="2019-11-02 15:02:15"
   >
 
   <macro name="up" type="send_now" >
@@ -23972,7 +23868,7 @@ group="bot_train" >
 <variables
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-11-01 21:33:51"
+   date_saved="2019-11-02 15:02:15"
   >
   <variable name="absolutioncount">1</variable>
   <variable name="acidblastcount">0</variable>
@@ -24056,7 +23952,7 @@ group="bot_train" >
   <variable name="curemalefactioncount">1</variable>
   <variable name="curemassivecount">4</variable>
   <variable name="cureseriouscount">0</variable>
-  <variable name="currentroom">Mordack's Inner Sanctum</variable>
+  <variable name="currentroom">Oligo's Orifice of Opulence</variable>
   <variable name="cursecount">0</variable>
   <variable name="darkenedsoulcount">0</variable>
   <variable name="darknesscount">0</variable>
@@ -24087,7 +23983,7 @@ group="bot_train" >
   <variable name="entanglecount">0</variable>
   <variable name="epiphanycount">0</variable>
   <variable name="etherealarmorcount">0</variable>
-  <variable name="exitdirs"> </variable>
+  <variable name="exitdirs">NESWU</variable>
   <variable name="fademode">0</variable>
   <variable name="faeriefirecount">0</variable>
   <variable name="feastcount">1</variable>
@@ -24141,8 +24037,8 @@ group="bot_train" >
   <variable name="infravisioncount">0</variable>
   <variable name="insectswarmcount">1</variable>
   <variable name="invisibilitycount">2</variable>
-  <variable name="isCheckMem">1</variable>
-  <variable name="isCureOn">1</variable>
+  <variable name="isCheckMem">0</variable>
+  <variable name="isCureOn">0</variable>
   <variable name="isHealbot">0</variable>
   <variable name="isMainHealer">0</variable>
   <variable name="isMemmed">1</variable>
@@ -24220,14 +24116,14 @@ group="bot_train" >
   <variable name="lastdir">down</variable>
   <variable name="lastengageclock">0</variable>
   <variable name="lastlook">Everlast</variable>
-  <variable name="lastmovetime">1143.763</variable>
+  <variable name="lastmovetime">10.434</variable>
   <variable name="lastmv">116</variable>
   <variable name="lastregen_Bloat">2367.738</variable>
   <variable name="lastregen_Glynda">1306.222</variable>
   <variable name="lastregen_Khonsu ">2154.676</variable>
   <variable name="lastregen_Pyrrha ">1256.89</variable>
   <variable name="lastrescuetime">1503.556</variable>
-  <variable name="lastroom">Oligo's Orifice of Opulence</variable>
+  <variable name="lastroom">Mordack's Inner Sanctum</variable>
   <variable name="lastroundclock">1572147194.41</variable>
   <variable name="laststandtime">963.908</variable>
   <variable name="laststone_Sharg ">440.374</variable>
@@ -24494,7 +24390,7 @@ group="bot_train" >
 <colours
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-11-01 21:33:51"
+   date_saved="2019-11-02 15:02:15"
   >
 
 <ansi>
@@ -24551,7 +24447,7 @@ group="bot_train" >
 <keypad
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-11-01 21:33:51"
+   date_saved="2019-11-02 15:02:15"
   >
 
   <key name="0" >
@@ -24665,7 +24561,7 @@ group="bot_train" >
 <printing
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-11-01 21:33:51"
+   date_saved="2019-11-02 15:02:15"
   >
 
 <ansi>
