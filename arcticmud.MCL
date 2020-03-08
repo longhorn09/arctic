@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE muclient>
-<!-- Saved on Saturday, November 02, 2019, 3:02 PM -->
+<!-- Saved on Saturday, March 07, 2020, 8:22 PM -->
 <!-- MuClient version 5.06 -->
 <!-- Written by Nick Gammon -->
 <!-- Home Page: http://www.mushclient.com/ -->
@@ -8,7 +8,7 @@
 <world
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-11-02 15:02:15"
+   date_saved="2020-03-07 20:22:51"
 
    auto_say_override_prefix="-"
    auto_say_string="say "
@@ -121,7 +121,7 @@
 <triggers
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-11-02 15:02:15"
+   date_saved="2020-03-07 20:22:51"
   >
   <trigger
    enabled="y"
@@ -13309,7 +13309,7 @@ Note("** Wizard eye died")</send>
   </trigger>
   <trigger
    enabled="y"
-   group="spelltracker"
+   group="healbot"
    match="^You lost your concentration\!$"
    regexp="y"
    send_to="12"
@@ -13319,7 +13319,7 @@ Note("** Wizard eye died")</send>
   </trigger>
   <trigger
    enabled="y"
-   group="healbot"
+   group="spelltracker"
    match="^You lost your concentration\!$"
    regexp="y"
    send_to="12"
@@ -14481,7 +14481,7 @@ Note("** Celes. Valley : bard2cv")
 <aliases
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-11-02 15:02:15"
+   date_saved="2020-03-07 20:22:51"
   >
   <alias
    match="^(?:forcegh|fgh)$"
@@ -15719,19 +15719,25 @@ else
 end </send>
   </alias>
   <alias
-   match="^bs( .+)$"
+   match="^bs( .+)?$"
    enabled="y"
    group="thiefscript"
    regexp="y"
    send_to="12"
    sequence="100"
   >
-  <send>if (tonumber(GetVariable("doenvenom"))==1) then
+  <send>--enhanced per request from eddiex on 20200307
+if (tonumber(GetVariable("doenvenom"))==1) then
   Send("envenom "..GetVariable("weap1"))
 end
 
-Send("backstab "..Trim("%1"))
-SetVariable("stabtarget",Trim("%1"))
+if (#Trim("%1") == 0 and #Trim(GetVariable("stabtarget")) &gt; 0) then
+  Send("backstab "..GetVariable("stabtarget"))
+elseif (#Trim("%1") &gt; 0) then
+  Send("backstab "..Trim("%1"))
+  SetVariable("stabtarget",Trim("%1"))
+end
+
 </send>
   </alias>
   <alias
@@ -23186,9 +23192,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e")
+  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e;n;n;n;n;n;n;n;w;s;e")
 else
-  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e")
+  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade n;fade n;fade n;fade n;fade n;fade n;fade n;fade w;fade s;fade e")
 end</send>
   </alias>
   <alias
@@ -23201,9 +23207,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e;n;n;n;n;n;n;n;w;s;e")
+  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e")
 else
-  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade n;fade n;fade n;fade n;fade n;fade n;fade n;fade w;fade s;fade e")
+  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e")
 end</send>
   </alias>
   <alias
@@ -23708,7 +23714,7 @@ end</send>
 <timers
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-11-02 15:02:15"
+   date_saved="2020-03-07 20:22:51"
   >
   <timer name="ticktimer" enabled="y" minute="1" second="0.00" offset_second="0.00"    send_to="12"
 group="tickscript" >
@@ -23734,7 +23740,7 @@ group="bot_train" >
 <macros
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-11-02 15:02:15"
+   date_saved="2020-03-07 20:22:51"
   >
 
   <macro name="up" type="send_now" >
@@ -23868,7 +23874,7 @@ group="bot_train" >
 <variables
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-11-02 15:02:15"
+   date_saved="2020-03-07 20:22:51"
   >
   <variable name="absolutioncount">1</variable>
   <variable name="acidblastcount">0</variable>
@@ -23917,14 +23923,14 @@ group="bot_train" >
   <variable name="char6">Hendo </variable>
   <variable name="char7">Alanis </variable>
   <variable name="char9">Glynda </variable>
-  <variable name="charAge">58</variable>
+  <variable name="charAge">17</variable>
   <variable name="charAlign">Good</variable>
   <variable name="charClass">Magic User</variable>
-  <variable name="charCurrentHP">336</variable>
-  <variable name="charCurrentMV">114</variable>
+  <variable name="charCurrentHP">322</variable>
+  <variable name="charCurrentMV">131</variable>
   <variable name="charLevel">31</variable>
-  <variable name="charMaxHP">336</variable>
-  <variable name="charMaxMV">114</variable>
+  <variable name="charMaxHP">322</variable>
+  <variable name="charMaxMV">131</variable>
   <variable name="charname">Oligo</variable>
   <variable name="clanName">Coalition of Risky Endeavors</variable>
   <variable name="clanRank">Elder</variable>
@@ -23952,7 +23958,7 @@ group="bot_train" >
   <variable name="curemalefactioncount">1</variable>
   <variable name="curemassivecount">4</variable>
   <variable name="cureseriouscount">0</variable>
-  <variable name="currentroom">Oligo's Orifice of Opulence</variable>
+  <variable name="currentroom">Babbler's Bubbling Brook</variable>
   <variable name="cursecount">0</variable>
   <variable name="darkenedsoulcount">0</variable>
   <variable name="darknesscount">0</variable>
@@ -23983,7 +23989,7 @@ group="bot_train" >
   <variable name="entanglecount">0</variable>
   <variable name="epiphanycount">0</variable>
   <variable name="etherealarmorcount">0</variable>
-  <variable name="exitdirs">NESWU</variable>
+  <variable name="exitdirs">NW</variable>
   <variable name="fademode">0</variable>
   <variable name="faeriefirecount">0</variable>
   <variable name="feastcount">1</variable>
@@ -24037,7 +24043,7 @@ group="bot_train" >
   <variable name="infravisioncount">0</variable>
   <variable name="insectswarmcount">1</variable>
   <variable name="invisibilitycount">2</variable>
-  <variable name="isCheckMem">0</variable>
+  <variable name="isCheckMem">1</variable>
   <variable name="isCureOn">0</variable>
   <variable name="isHealbot">0</variable>
   <variable name="isMainHealer">0</variable>
@@ -24116,14 +24122,14 @@ group="bot_train" >
   <variable name="lastdir">down</variable>
   <variable name="lastengageclock">0</variable>
   <variable name="lastlook">Everlast</variable>
-  <variable name="lastmovetime">10.434</variable>
+  <variable name="lastmovetime">4938.439</variable>
   <variable name="lastmv">116</variable>
   <variable name="lastregen_Bloat">2367.738</variable>
   <variable name="lastregen_Glynda">1306.222</variable>
   <variable name="lastregen_Khonsu ">2154.676</variable>
   <variable name="lastregen_Pyrrha ">1256.89</variable>
   <variable name="lastrescuetime">1503.556</variable>
-  <variable name="lastroom">Mordack's Inner Sanctum</variable>
+  <variable name="lastroom">Oligo's Orifice of Opulence</variable>
   <variable name="lastroundclock">1572147194.41</variable>
   <variable name="laststandtime">963.908</variable>
   <variable name="laststone_Sharg ">440.374</variable>
@@ -24336,7 +24342,7 @@ group="bot_train" >
   <variable name="spiritualhammercount">0</variable>
   <variable name="splitamount">0</variable>
   <variable name="spzclsicount">-1</variable>
-  <variable name="stabtarget">bard</variable>
+  <variable name="stabtarget">dog</variable>
   <variable name="steelskincount">0</variable>
   <variable name="stinkingcloudcount">0</variable>
   <variable name="stone_threshhold">8</variable>
@@ -24374,7 +24380,7 @@ group="bot_train" >
   <variable name="watchfuleyecount">0</variable>
   <variable name="water">all.waterskin</variable>
   <variable name="waterbreathcount">1</variable>
-  <variable name="weap1">club</variable>
+  <variable name="weap1">dagger</variable>
   <variable name="weap2">dagger</variable>
   <variable name="weapons_list">rapier,longsword,shortsword,sword,cudgel,mace,blade,staff,whip,banner,dagger,spear,lance,hammer,bardiche,claw,rod,club,halberd,knife,tooth,fang,fan,pick,flail,voulge,wand,trident,scourge,javelin,axe,longbow,hatchet,reaver,shard,goad,sickle,trident</variable>
   <variable name="westcount">0</variable>
@@ -24390,7 +24396,7 @@ group="bot_train" >
 <colours
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-11-02 15:02:15"
+   date_saved="2020-03-07 20:22:51"
   >
 
 <ansi>
@@ -24447,7 +24453,7 @@ group="bot_train" >
 <keypad
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-11-02 15:02:15"
+   date_saved="2020-03-07 20:22:51"
   >
 
   <key name="0" >
@@ -24561,7 +24567,7 @@ group="bot_train" >
 <printing
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2019-11-02 15:02:15"
+   date_saved="2020-03-07 20:22:51"
   >
 
 <ansi>
