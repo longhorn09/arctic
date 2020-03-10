@@ -19070,7 +19070,7 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("open gate; s;s;s;s;s;s;s;u;s;s;s;d;s;e;s;s;e;s;s;d;s;s;s;s;s;e;e;e;d;s;s;s;s;s")
+  Execute("open gate s;s;s;s;s;s;s;s;u;s;s;s;d;s;e;s;s;e;s;s;d;s;s;s;s;s;e;e;e;d;s;s;s;s;s")
 else
   Execute("open gate;fade s;fade s;fade s;fade s;fade s;fade s;fade s;fade u;fade s;fade s;fade s;fade d;fade s;fade e;fade s;fade s;fade e;fade s;fade s;fade d;fade s;fade s;fade s;fade s;fade s;fade e;fade e;fade e;fade d;fade s;fade s;fade s;fade s;fade s")
 end</send>
@@ -19818,9 +19818,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("n;n;n;n;n;u;w;w;w;n;n;n;n;n;u;n;n;w;n;n;w;n;u;n;n;n;d;n;n;n;n;n;n;open gate n;n")
+  Execute("n;n;n;n;n;u;w;w;w;n;n;n;n;n;u;n;n;w;n;n;w;n;u;n;n;n;d;n;n;n;n;n;n;open gate n;n;close gate")
 else
-  Execute("fade n;fade n;fade n;fade n;fade n;fade u;fade w;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade u;fade n;fade n;fade w;fade n;fade n;fade w;fade n;fade u;fade n;fade n;fade n;fade d;fade n;fade n;fade n;fade n;fade n;fade n;open gate n;fade n")
+  Execute("fade n;fade n;fade n;fade n;fade n;fade u;fade w;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade u;fade n;fade n;fade w;fade n;fade n;fade w;fade n;fade u;fade n;fade n;fade n;fade d;fade n;fade n;fade n;fade n;fade n;fade n;open gate n;fade n; close gate;")
 end</send>
   </alias>
   <alias
