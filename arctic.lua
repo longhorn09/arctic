@@ -4724,6 +4724,7 @@ function resetMem(name,line,wildcards)
   SetVariable("mindafirecount", 0);-- w.robe buff
   SetVariable("minorglobeofinvulcount", 0);
   SetVariable("monstrousmantlecount", 0);
+  SetVariable("negativeplaneprotecount", 0);
   SetVariable("nightmarecount", 0);
   SetVariable("nightvisioncount", 0);
   SetVariable("paincount", 0);
