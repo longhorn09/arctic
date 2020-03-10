@@ -15122,9 +15122,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("n;n;n;n;n;n;n;w;w;w;w;s;s;s;w")
+  Execute("n;n;n;n;n;n;w;w;w;w;w;w;s;s;w")
 else
-  Execute("fade n;fade n;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w")
+  Execute("fade n;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade w;fade w;fade s;fade s;fade w")
 end</send>
   </alias>
   <alias
@@ -15316,9 +15316,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("e;n;n;n;e;e;e;e;s;s;s;s;s;s;s")
+  Execute("e;n;n;e;e;e;e;e;e;s;s;s;s;s;s")
 else
-  Execute("fade e;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade s;fade s;fade s;fade s;fade s;fade s;fade s")
+  Execute("fade e;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade s;fade s;fade s;fade s;fade s")
 end</send>
   </alias>
   <alias
