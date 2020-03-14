@@ -6,7 +6,7 @@
 <!-- Home Page: http://www.mushclient.com/ -->
 <muclient>
 <world
-   muclient_version="5.06"
+   muclient_version="4.94"
    world_file_version="15"
    date_saved="2020-03-07 20:22:51"
 
@@ -28,7 +28,7 @@
    proxy_password="cG93ZXIyMjI="
    script_editor="notepad"
    script_editor_argument="%file"
-   script_filename="C:\dev\luadev\test\arctic.lua"
+   script_filename="C:\Program Files (x86)\MUSHclient\lua\arctic.lua"
    script_language="Lua"
    script_prefix="/"
    site="mud.arctic.org"
@@ -119,7 +119,7 @@
 <!-- triggers -->
 
 <triggers
-   muclient_version="5.06"
+   muclient_version="4.94"
    world_file_version="15"
    date_saved="2020-03-07 20:22:51"
   >
@@ -9931,8 +9931,22 @@ SetVariable("last_burst_time",round(socket.gettime(),3))
   >
   <send>
 Note("** Speedwalks from Tarsis E.Gate ***********")
-Note("** Kender bard   : t2bard")
+Note("** Twendle       : t2twe")
 Note("** Cloud Kingdom : t2ck")
+</send>
+  </trigger>
+  <trigger
+   enabled="y"
+   group="speedwalk"
+   match="^Amidst the Ruins of Twendle"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>
+Note("** Speedwalks from Twendle ***********")
+Note("** Kender bard  : twe2bard")
+Note("** Tarsis       : twe2t")
 </send>
   </trigger>
   <trigger
@@ -14470,7 +14484,7 @@ Note("** Dwarven       : bard2dk")
 Note("** Silvi         : bard2silvi")
 Note("** Neraka        : bard2n")
 Note("** Balifor       : bard2b")
-Note("** Tarsis        : bard2t")
+Note("** Twendle       : bard2twe")
 Note("** Celes. Valley : bard2cv")
 </send>
   </trigger>
@@ -14479,7 +14493,7 @@ Note("** Celes. Valley : bard2cv")
 <!-- aliases -->
 
 <aliases
-   muclient_version="5.06"
+   muclient_version="4.94"
    world_file_version="15"
    date_saved="2020-03-07 20:22:51"
   >
@@ -15432,7 +15446,7 @@ else
 end</send>
   </alias>
   <alias
-   match="^bard2t$"
+   match="^bard2twe$"
    enabled="y"
    group="speedwalk"
    regexp="y"
@@ -15442,9 +15456,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("s;s;s;s;d;w;s;s;w;w;s;w;w;w;w;w;w;w;d;w;w;w;u;n;w;w;w;w;w;w;w")
+  Execute("s;s;s;s;s;d;s;s;s;w;w;w;w;s;w;w;s;s;s;s;d;w;s;s;w;w;w;w;w;w;s;s;s;w;w;w;w;s")
 else
-  Execute("fade s;fade s;fade s;fade s;fade d;fade w;fade s;fade s;fade w;fade w;fade s;fade w;fade w;fade w;fade w;fade w;fade w;fade w;fade d;fade w;fade w;fade w;fade u;fade n;fade w;fade w;fade w;fade w;fade w;fade w;fade w")
+  Execute("fade s;fade s;fade s;fade s;fade s;fade d;fade s;fade s;fade s;fade w;fade w;fade w;fade w;fade s;fade w;fade w;fade s;fade s;fade s;fade s;fade d;fade w;fade s;fade s;fade w;fade w;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w;fade w;fade w;fade w;fade s")
 end</send>
   </alias>
   <alias
@@ -23153,7 +23167,7 @@ else
 end</send>
   </alias>
   <alias
-   match="t2bard"
+   match="twe2bard"
    enabled="y"
    group="speedwalk"
    send_to="12"
@@ -23162,9 +23176,39 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("e;e;e;e;e;e;e;s;d;e;e;e;u;e;e;e;e;e;e;e;n;e;e;n;n;e;u;n;n;n;n")
+  Execute("n;e;e;e;e;n;n;n;e;e;e;e;e;e;n;n;e;u;n;n;n;n;e;e;n;e;e;e;e;n;n;n;u;n;n;n;n;n")
 else
-  Execute("fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade d;fade e;fade e;fade e;fade u;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade n;fade e;fade e;fade n;fade n;fade e;fade u;fade n;fade n;fade n;fade n")
+  Execute("fade n;fade e;fade e;fade e;fade e;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade n;fade n;fade e;fade u;fade n;fade n;fade n;fade n;fade e;fade e;fade n;fade e;fade e;fade e;fade e;fade n;fade n;fade n;fade u;fade n;fade n;fade n;fade n;fade n")
+end</send>
+  </alias>
+  <alias
+   match="t2twe"
+   enabled="y"
+   group="speedwalk"
+   send_to="12"
+   sequence="100"
+  >
+  <send>fademode = tonumber(GetVariable("fademode"))
+Execute("fly")
+if (fademode == 0) then
+  Execute("e;e;e;e;e;s;e;e;e;e;n;n;e;u;s")
+else
+  Execute("fade e;fade e;fade e;fade e;fade e;fade s;fade e;fade e;fade e;fade e;fade n;fade n;fade e;fade u;fade s")
+end</send>
+  </alias>
+  <alias
+   match="twe2t"
+   enabled="y"
+   group="speedwalk"
+   send_to="12"
+   sequence="100"
+  >
+  <send>fademode = tonumber(GetVariable("fademode"))
+Execute("fly")
+if (fademode == 0) then
+  Execute("n;d;w;s;s;w;w;w;w;n;w;w;w;w;w")
+else
+  Execute("fade n;fade d;fade w;fade s;fade s;fade w;fade w;fade w;fade w;fade n;fade w;fade w;fade w;fade w;fade w")
 end</send>
   </alias>
   <alias
@@ -23712,7 +23756,7 @@ end</send>
 <!-- timers -->
 
 <timers
-   muclient_version="5.06"
+   muclient_version="4.94"
    world_file_version="15"
    date_saved="2020-03-07 20:22:51"
   >
@@ -24394,7 +24438,7 @@ group="bot_train" >
 <!-- colours -->
 
 <colours
-   muclient_version="5.06"
+   muclient_version="4.94"
    world_file_version="15"
    date_saved="2020-03-07 20:22:51"
   >
@@ -24565,7 +24609,7 @@ group="bot_train" >
 <!-- printing -->
 
 <printing
-   muclient_version="5.06"
+   muclient_version="4.94"
    world_file_version="15"
    date_saved="2020-03-07 20:22:51"
   >
