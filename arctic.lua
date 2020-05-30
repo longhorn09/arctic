@@ -81,6 +81,7 @@
 -- v0.76 - 10/10/2018 - added automem toggle
 -- v0.77 - 10/13/2018 - cure massive auto-heal logic
 -- v0.78 - 10/26/2019 - made fixes to cure massive auto-heal logic, including heal delay depending on healg or healp, logic in doCheckRescueTarget and healGroupParse
+-- v0.79 - 05/29/2020 - fixed for divine heal count for animate dead
 --[[
 function Trim(s)
     return (s:gsub("^%s*(.-)%s*$", "%1"))
