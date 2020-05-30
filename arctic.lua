@@ -4787,7 +4787,7 @@ function doDivineHeal()
   local summoncount = 0;
   local healcount = 0;
 
-  if (GetVariable("animateddeadcount") ~= nil) then
+  if (GetVariable("animatedeadcount") ~= nil) then
 	animatedeadcount = tonumber(GetVariable("animatedeadcount"))
   else
 	SetVariable("animatedeadcount",0)
