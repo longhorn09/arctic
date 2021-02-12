@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE muclient>
-<!-- Saved on Monday, February 08, 2021, 7:38 PM -->
+<!-- Saved on Friday, February 12, 2021, 10:08 AM -->
 <!-- MuClient version 5.06 -->
 <!-- Written by Nick Gammon -->
 <!-- Home Page: http://www.mushclient.com/ -->
@@ -8,7 +8,7 @@
 <world
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-08 19:38:48"
+   date_saved="2021-02-12 10:08:47"
 
    auto_say_override_prefix="-"
    auto_say_string="say "
@@ -121,7 +121,7 @@
 <triggers
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-08 19:38:48"
+   date_saved="2021-02-12 10:08:47"
   >
   <trigger
    enabled="y"
@@ -13323,7 +13323,7 @@ Note("** Wizard eye died")</send>
   </trigger>
   <trigger
    enabled="y"
-   group="healbot"
+   group="spelltracker"
    match="^You lost your concentration\!$"
    regexp="y"
    send_to="12"
@@ -13333,7 +13333,7 @@ Note("** Wizard eye died")</send>
   </trigger>
   <trigger
    enabled="y"
-   group="spelltracker"
+   group="healbot"
    match="^You lost your concentration\!$"
    regexp="y"
    send_to="12"
@@ -13765,6 +13765,16 @@ Execute("buffrem blur")</send>
   <send>SetVariable("isstanding", 0)</send>
   </trigger>
   <trigger
+   enabled="y"
+   group="tickscript"
+   match="^You throw away your bloody bandages\.$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>Execute("dotick")</send>
+  </trigger>
+  <trigger
    group="barb_train"
    match="^You throw away your bloody bandages\.$"
    regexp="y"
@@ -13780,16 +13790,6 @@ end
 if (isbarbtrain) then
   Execute("stand;learn all;lore claymore;bandself")
 end</send>
-  </trigger>
-  <trigger
-   enabled="y"
-   group="tickscript"
-   match="^You throw away your bloody bandages\.$"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>Execute("dotick")</send>
   </trigger>
   <trigger
    enabled="y"
@@ -14422,7 +14422,7 @@ end</send>
   </trigger>
   <trigger
    expand_variables="y"
-   match="^\s\s\s\s([a-z0-9 \(\)]+)\s+\[[0-9]+\shrs\]$"
+   match="^\s\s\s\s([a-z0-9 \(\)]+)(\s+\[([0-9]+\shrs|permanent|1 hour)\])?$"
    name="buffs_pattern"
    regexp="y"
    send_to="12"
@@ -14495,7 +14495,7 @@ Note("** Celes. Valley : bard2cv")
 <aliases
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-08 19:38:48"
+   date_saved="2021-02-12 10:08:47"
   >
   <alias
    match="^(?:forcegh|fgh)$"
@@ -16534,9 +16534,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("d;w;w;n;n;n;n;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;s;s;s;w;w;w;u;n;n;n;n;n;w;w;w;w;w")
+  Execute("d;w;open gate west;w;close gate e;n;n;n;n;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;s;s;s;w;w;w;u;n;n;n;n;n;w;w;w;w;w")
 else
-  Execute("fade d;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade s;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w;fade w;fade w;fade u;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade w")
+  Execute("fade d;fade w;open gate west;fade w;close gate e;fade n;fade n;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade s;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w;fade w;fade w;fade u;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade w")
 end</send>
   </alias>
   <alias
@@ -16550,9 +16550,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("d;w;open gate west;w;close gate e;n;n;n;n;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;s;s;s;w;w;w;u;n;n;n;n;n;w;w;w;w;w")
+  Execute("d;w;w;n;n;n;n;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;s;s;s;w;w;w;u;n;n;n;n;n;w;w;w;w;w")
 else
-  Execute("fade d;fade w;open gate west;fade w;close gate e;fade n;fade n;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade s;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w;fade w;fade w;fade u;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade w")
+  Execute("fade d;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade s;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w;fade w;fade w;fade u;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade w")
 end</send>
   </alias>
   <alias
@@ -23191,9 +23191,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e")
+  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e;n;n;n;n;n;n;n;w;s;e")
 else
-  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e")
+  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade n;fade n;fade n;fade n;fade n;fade n;fade n;fade w;fade s;fade e")
 end</send>
   </alias>
   <alias
@@ -23206,9 +23206,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e;n;n;n;n;n;n;n;w;s;e")
+  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e")
 else
-  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade n;fade n;fade n;fade n;fade n;fade n;fade n;fade w;fade s;fade e")
+  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e")
 end</send>
   </alias>
   <alias
@@ -23758,7 +23758,7 @@ end</send>
 <timers
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-08 19:38:48"
+   date_saved="2021-02-12 10:08:47"
   >
   <timer name="ticktimer" enabled="y" minute="1" second="0.00" offset_second="0.00"    send_to="12"
 group="tickscript" >
@@ -23784,7 +23784,7 @@ group="bot_train" >
 <macros
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-08 19:38:48"
+   date_saved="2021-02-12 10:08:47"
   >
 
   <macro name="up" type="send_now" >
@@ -23918,7 +23918,7 @@ group="bot_train" >
 <variables
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-08 19:38:48"
+   date_saved="2021-02-12 10:08:47"
   >
   <variable name="absolutioncount">1</variable>
   <variable name="acidblastcount">0</variable>
@@ -23967,13 +23967,13 @@ group="bot_train" >
   <variable name="char6">Hendo </variable>
   <variable name="char7">Alanis </variable>
   <variable name="char9">Glynda </variable>
-  <variable name="charAge">19</variable>
+  <variable name="charAge">17</variable>
   <variable name="charAlign">Evil</variable>
   <variable name="charClass">Cleric</variable>
   <variable name="charCurrentHP">50</variable>
-  <variable name="charCurrentMV">131</variable>
+  <variable name="charCurrentMV">123</variable>
   <variable name="charLevel">1</variable>
-  <variable name="charMaxHP">50</variable>
+  <variable name="charMaxHP">45</variable>
   <variable name="charMaxMV">131</variable>
   <variable name="charname">Tickar</variable>
   <variable name="clanName">Coalition of Risky Endeavors</variable>
@@ -24002,7 +24002,7 @@ group="bot_train" >
   <variable name="curemalefactioncount">1</variable>
   <variable name="curemassivecount">0</variable>
   <variable name="cureseriouscount">0</variable>
-  <variable name="currentroom">The Temple of Healing Arts</variable>
+  <variable name="currentroom">The Reception</variable>
   <variable name="cursecount">0</variable>
   <variable name="darkenedsoulcount">0</variable>
   <variable name="darknesscount">0</variable>
@@ -24033,7 +24033,7 @@ group="bot_train" >
   <variable name="entanglecount">0</variable>
   <variable name="epiphanycount">0</variable>
   <variable name="etherealarmorcount">0</variable>
-  <variable name="exitdirs">W</variable>
+  <variable name="exitdirs">D</variable>
   <variable name="fademode">0</variable>
   <variable name="faeriefirecount">0</variable>
   <variable name="fearcount">1</variable>
@@ -24088,11 +24088,11 @@ group="bot_train" >
   <variable name="infravisioncount">0</variable>
   <variable name="insectswarmcount">1</variable>
   <variable name="invisibilitycount">2</variable>
-  <variable name="isCheckMem">1</variable>
+  <variable name="isCheckMem">0</variable>
   <variable name="isCureOn">0</variable>
   <variable name="isHealbot">0</variable>
   <variable name="isMainHealer">0</variable>
-  <variable name="isMemmed">0</variable>
+  <variable name="isMemmed">1</variable>
   <variable name="isRandomDelay">0</variable>
   <variable name="isShamanbot">0</variable>
   <variable name="isaimneeded">1</variable>
@@ -24117,7 +24117,7 @@ group="bot_train" >
   <variable name="isautoskill">0</variable>
   <variable name="isautostand">1</variable>
   <variable name="isautostone">0</variable>
-  <variable name="isautotrain">0</variable>
+  <variable name="isautotrain">1</variable>
   <variable name="isautoveil">0</variable>
   <variable name="isbandallgood">0</variable>
   <variable name="isbarbtrain">0</variable>
@@ -24162,21 +24162,21 @@ group="bot_train" >
   <variable name="last_burst_time">0</variable>
   <variable name="lastassaulttime">0</variable>
   <variable name="lastbashtime">1366140496.334</variable>
-  <variable name="lastcasttime">1612834658.688</variable>
+  <variable name="lastcasttime">1613146113.391</variable>
   <variable name="lastchancecount">2</variable>
-  <variable name="lastdir">down</variable>
+  <variable name="lastdir">up</variable>
   <variable name="lastengageclock">0</variable>
   <variable name="lastlook">Everlast</variable>
-  <variable name="lastmovetime">296.134</variable>
+  <variable name="lastmovetime">1497.088</variable>
   <variable name="lastmv">116</variable>
   <variable name="lastregen_Bloat">2367.738</variable>
   <variable name="lastregen_Glynda">1306.222</variable>
   <variable name="lastregen_Khonsu ">2154.676</variable>
   <variable name="lastregen_Pyrrha ">1256.89</variable>
   <variable name="lastrescuetime">1503.556</variable>
-  <variable name="lastroom">On a Vallenwood Bough</variable>
+  <variable name="lastroom">The Inn of the Last Home</variable>
   <variable name="lastroundclock">1572147194.41</variable>
-  <variable name="laststandtime">963.908</variable>
+  <variable name="laststandtime">2626.935</variable>
   <variable name="laststone_Sharg ">440.374</variable>
   <variable name="lastveiltime">0</variable>
   <variable name="leader">Namahs</variable>
@@ -24192,7 +24192,7 @@ group="bot_train" >
   <variable name="malevolenttentaclescount">5</variable>
   <variable name="massflycount">0</variable>
   <variable name="massrefreshcount">0</variable>
-  <variable name="memticks">1</variable>
+  <variable name="memticks">3</variable>
   <variable name="mentalacuitycount">0</variable>
   <variable name="mentalhazecount">2</variable>
   <variable name="mindafirecount">0</variable>
@@ -24420,7 +24420,7 @@ group="bot_train" >
   <variable name="thornspraycount">0</variable>
   <variable name="thunderboltcount">0</variable>
   <variable name="tornadocount">11</variable>
-  <variable name="tryingheal">1</variable>
+  <variable name="tryingheal">0</variable>
   <variable name="tryingstone">0</variable>
   <variable name="unholyauracount">0</variable>
   <variable name="unholymightcount">0</variable>
@@ -24447,7 +24447,7 @@ group="bot_train" >
 <colours
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-08 19:38:48"
+   date_saved="2021-02-12 10:08:47"
   >
 
 <ansi>
@@ -24504,7 +24504,7 @@ group="bot_train" >
 <keypad
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-08 19:38:48"
+   date_saved="2021-02-12 10:08:47"
   >
 
   <key name="0" >
@@ -24618,7 +24618,7 @@ group="bot_train" >
 <printing
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-08 19:38:48"
+   date_saved="2021-02-12 10:08:47"
   >
 
 <ansi>
