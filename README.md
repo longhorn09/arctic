@@ -33,3 +33,23 @@ The following settings need to be ```off```
 opt expert
 opt compact
 ``` 
+
+
+## New as of 2021
+
+Due to new buff timings, for example
+```
+You are affected by the following:
+    resist negative energy [7 hrs]
+    sanctuary            [16 hrs]
+    stone skin           [1 hour]
+    ancestral blessing   [permanent]
+    spirit mastery
+
+45H 123V 1499X 0.00% 0C Mem:1 Exits:W>
+```
+
+You need to modify `buffs_pattern` trigger to have the regex be
+```
+^\s\s\s\s([a-z0-9 \(\)]+)(\s+\[([0-9]+\shrs|permanent|1 hour)\])?$
+```
