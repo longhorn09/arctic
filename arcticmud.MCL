@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE muclient>
-<!-- Saved on Friday, February 12, 2021, 10:08 AM -->
+<!-- Saved on Friday, February 12, 2021, 10:11 AM -->
 <!-- MuClient version 5.06 -->
 <!-- Written by Nick Gammon -->
 <!-- Home Page: http://www.mushclient.com/ -->
@@ -8,7 +8,7 @@
 <world
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-12 10:08:47"
+   date_saved="2021-02-12 10:11:51"
 
    auto_say_override_prefix="-"
    auto_say_string="say "
@@ -121,7 +121,7 @@
 <triggers
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-12 10:08:47"
+   date_saved="2021-02-12 10:11:51"
   >
   <trigger
    enabled="y"
@@ -7756,7 +7756,7 @@ end</send>
    enabled="y"
    expand_variables="y"
    group="rescuescript"
-   match="^([A-Za-z \,\.\-\']+) (obliterates|annihilates|massacres|bruises|misses) ([A-Za-z \,\.\-\']+) with (his|her|their|its|a) (whip|plunk|hit|shoot|crush|drain|sting|slash|cleave|stab|pierce|claw|bite|bludgeon|smite)\.$"
+   match="^([A-Za-z \,\.\-\']+) (mutilates|obliterates|annihilates|massacres|bruises|misses) ([A-Za-z \,\.\-\']+) with (his|her|their|its|a) (whip|plunk|hit|shoot|crush|drain|sting|slash|cleave|stab|pierce|claw|bite|bludgeon|smite)\.$"
    name="combatpattern2"
    regexp="y"
    send_to="12"
@@ -13323,7 +13323,7 @@ Note("** Wizard eye died")</send>
   </trigger>
   <trigger
    enabled="y"
-   group="spelltracker"
+   group="healbot"
    match="^You lost your concentration\!$"
    regexp="y"
    send_to="12"
@@ -13333,7 +13333,7 @@ Note("** Wizard eye died")</send>
   </trigger>
   <trigger
    enabled="y"
-   group="healbot"
+   group="spelltracker"
    match="^You lost your concentration\!$"
    regexp="y"
    send_to="12"
@@ -13765,16 +13765,6 @@ Execute("buffrem blur")</send>
   <send>SetVariable("isstanding", 0)</send>
   </trigger>
   <trigger
-   enabled="y"
-   group="tickscript"
-   match="^You throw away your bloody bandages\.$"
-   regexp="y"
-   send_to="12"
-   sequence="100"
-  >
-  <send>Execute("dotick")</send>
-  </trigger>
-  <trigger
    group="barb_train"
    match="^You throw away your bloody bandages\.$"
    regexp="y"
@@ -13790,6 +13780,16 @@ end
 if (isbarbtrain) then
   Execute("stand;learn all;lore claymore;bandself")
 end</send>
+  </trigger>
+  <trigger
+   enabled="y"
+   group="tickscript"
+   match="^You throw away your bloody bandages\.$"
+   regexp="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>Execute("dotick")</send>
   </trigger>
   <trigger
    enabled="y"
@@ -14495,7 +14495,7 @@ Note("** Celes. Valley : bard2cv")
 <aliases
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-12 10:08:47"
+   date_saved="2021-02-12 10:11:52"
   >
   <alias
    match="^(?:forcegh|fgh)$"
@@ -16534,9 +16534,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("d;w;open gate west;w;close gate e;n;n;n;n;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;s;s;s;w;w;w;u;n;n;n;n;n;w;w;w;w;w")
+  Execute("d;w;w;n;n;n;n;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;s;s;s;w;w;w;u;n;n;n;n;n;w;w;w;w;w")
 else
-  Execute("fade d;fade w;open gate west;fade w;close gate e;fade n;fade n;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade s;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w;fade w;fade w;fade u;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade w")
+  Execute("fade d;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade s;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w;fade w;fade w;fade u;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade w")
 end</send>
   </alias>
   <alias
@@ -16550,9 +16550,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("d;w;w;n;n;n;n;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;s;s;s;w;w;w;u;n;n;n;n;n;w;w;w;w;w")
+  Execute("d;w;open gate west;w;close gate e;n;n;n;n;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;s;s;s;w;w;w;u;n;n;n;n;n;w;w;w;w;w")
 else
-  Execute("fade d;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade s;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w;fade w;fade w;fade u;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade w")
+  Execute("fade d;fade w;open gate west;fade w;close gate e;fade n;fade n;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade s;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w;fade w;fade w;fade u;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade w")
 end</send>
   </alias>
   <alias
@@ -23191,9 +23191,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e;n;n;n;n;n;n;n;w;s;e")
+  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e")
 else
-  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade n;fade n;fade n;fade n;fade n;fade n;fade n;fade w;fade s;fade e")
+  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e")
 end</send>
   </alias>
   <alias
@@ -23206,9 +23206,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e")
+  Execute("n;w;n;n;w;n;n;n;w;w;n;n;n;n;n;e;n;n;n;n;n;n;n;w;s;e")
 else
-  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e")
+  Execute("fade n;fade w;fade n;fade n;fade w;fade n;fade n;fade n;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade n;fade n;fade n;fade n;fade n;fade n;fade n;fade w;fade s;fade e")
 end</send>
   </alias>
   <alias
@@ -23758,7 +23758,7 @@ end</send>
 <timers
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-12 10:08:47"
+   date_saved="2021-02-12 10:11:52"
   >
   <timer name="ticktimer" enabled="y" minute="1" second="0.00" offset_second="0.00"    send_to="12"
 group="tickscript" >
@@ -23784,7 +23784,7 @@ group="bot_train" >
 <macros
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-12 10:08:47"
+   date_saved="2021-02-12 10:11:52"
   >
 
   <macro name="up" type="send_now" >
@@ -23918,7 +23918,7 @@ group="bot_train" >
 <variables
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-12 10:08:47"
+   date_saved="2021-02-12 10:11:52"
   >
   <variable name="absolutioncount">1</variable>
   <variable name="acidblastcount">0</variable>
@@ -24126,7 +24126,7 @@ group="bot_train" >
   <variable name="iscoinloot">1</variable>
   <variable name="iscomploot">0</variable>
   <variable name="isdebug">0</variable>
-  <variable name="isdobuffs">0</variable>
+  <variable name="isdobuffs">1</variable>
   <variable name="isdruidbot">0</variable>
   <variable name="isdrunk">0</variable>
   <variable name="isfighting">0</variable>
@@ -24447,7 +24447,7 @@ group="bot_train" >
 <colours
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-12 10:08:47"
+   date_saved="2021-02-12 10:11:52"
   >
 
 <ansi>
@@ -24504,7 +24504,7 @@ group="bot_train" >
 <keypad
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-12 10:08:47"
+   date_saved="2021-02-12 10:11:52"
   >
 
   <key name="0" >
@@ -24618,7 +24618,7 @@ group="bot_train" >
 <printing
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-12 10:08:47"
+   date_saved="2021-02-12 10:11:52"
   >
 
 <ansi>
