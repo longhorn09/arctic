@@ -35,9 +35,9 @@ opt compact
 ``` 
 
 
-## New as of 2021
+## 2021 Updates
 
-Due to new buff timings, for example
+Due to new buff timing descriptors in `score`, for example
 ```
 You are affected by the following:
     resist negative energy [7 hrs]
