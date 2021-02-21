@@ -44,6 +44,7 @@ You are affected by the following:
     sanctuary            [16 hrs]
     stone skin           [1 hour]
     ancestral blessing   [permanent]
+    regenerate           [3 rnds]
     spirit mastery
 
 45H 123V 1499X 0.00% 0C Mem:1 Exits:W>
@@ -51,5 +52,5 @@ You are affected by the following:
 
 You need to modify `buffs_pattern` trigger to have the regex be
 ```
-^\s\s\s\s([a-z0-9 \(\)]+)(\s+\[([0-9]+\shrs|permanent|1 hour)\])?$
+^\s\s\s\s([a-z0-9 \(\)]+)(\s+\[([0-9]+\shrs|[0-9]+\srnds|permanent|1 hour)\])?$
 ```
