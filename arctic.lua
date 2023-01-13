@@ -82,6 +82,7 @@
 -- v0.77 - 10/13/2018 - cure massive auto-heal logic
 -- v0.78 - 10/26/2019 - made fixes to cure massive auto-heal logic, including heal delay depending on healg or healp, logic in doCheckRescueTarget and healGroupParse
 -- v0.79 - 05/29/2020 - fixed for divine heal count for animate dead
+-- v0.80 - 01/13/2023 - added Sun Bolt to doDivineHeal() logic and resetMem()
 --[[
 function Trim(s)
     return (s:gsub("^%s*(.-)%s*$", "%1"))
@@ -4764,6 +4765,7 @@ function resetMem(name,line,wildcards)
   SetVariable("stormcallcount", 0);
   SetVariable("strengthcount", 0);
   SetVariable("summoncount", 0);
+  SetVariable("sunboltcount", 0);
   SetVariable("sustenancecount", 0);
   SetVariable("tenaciousheartcount", 0);
   SetVariable("tenebrousorbcount", 0);
@@ -4787,6 +4789,7 @@ function doDivineHeal()
   local restorationcount = 0;
   local summoncount = 0;
   local healcount = 0;
+  local sunboltcount = 0;
 
   if (GetVariable("animatedeadcount") ~= nil) then
 	animatedeadcount = tonumber(GetVariable("animatedeadcount"))
@@ -4817,6 +4820,12 @@ function doDivineHeal()
   else
 	SetVariable("summoncount",0)
   end
+  
+  if (GetVariable("sunboltcount") ~= nil) then
+	sunboltcount      = tonumber(GetVariable("sunboltcount"))
+  else
+	SetVariable("sunboltcount",0)
+  end
 
   if (GetVariable("healcount") ~= nil) then
 	healcount        = tonumber(GetVariable("healcount"))
@@ -4826,7 +4835,7 @@ function doDivineHeal()
 
   local charclass = tostring(GetVariable("charClass"));
   if (charclass == "Cleric") then
-    healcount = healcount + summoncount + restorationcount + harmcount + darknesscount + animatedeadcount;
+    healcount = healcount + summoncount + restorationcount + harmcount + darknesscount + animatedeadcount + sunboltcount;
   end
   SetVariable("healcount", tonumber(healcount))
 end
@@ -5255,6 +5264,7 @@ function parseMemSlots(name,line,wildcards)
   	end
   end
 
+  
   if (charclass == "Druid" or charclass == "Cleric" or charclass == "Shaman") then
     doDivineHeal()
     showHeals()
