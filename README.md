@@ -35,7 +35,7 @@ opt compact
 ``` 
 
 ## 2023 Update(s)
-Added `sunbolt`for heal count tracking for divine heal for Clerics. Credit Mavlad for bringing to my attention.
+Added `sunbolt` for heal count tracking for divine heal for Clerics. Credit Mavlad for bringing to my attention.
 
 ## 2021 Update(s)
 
