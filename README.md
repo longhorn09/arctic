@@ -34,8 +34,10 @@ opt expert
 opt compact
 ``` 
 
+## 2023 Update(s)
+Added `sunbolt`for heal count tracking for divine heal for Clerics. Credit Mavlad for bringing to my attention.
 
-## 2021 Updates
+## 2021 Update(s)
 
 Due to new buff timing descriptors in `score`, for example
 ```
@@ -54,3 +56,5 @@ You need to modify `buffs_pattern` trigger to have the regex be
 ```
 ^\s\s\s\s([a-z0-9 \(\)]+)(\s+\[([0-9]+\shrs|[0-9]+\srnds|permanent|1 hour)\])?$
 ```
+
+
