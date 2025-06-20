@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE muclient>
-<!-- Saved on Friday, February 12, 2021, 10:11 AM -->
+<!-- Saved on Thursday, June 19, 2025, 8:46 PM -->
 <!-- MuClient version 5.06 -->
 <!-- Written by Nick Gammon -->
 <!-- Home Page: http://www.mushclient.com/ -->
@@ -8,7 +8,7 @@
 <world
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-12 10:11:51"
+   date_saved="2025-06-19 20:46:10"
 
    auto_say_override_prefix="-"
    auto_say_string="say "
@@ -121,7 +121,7 @@
 <triggers
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-12 10:11:51"
+   date_saved="2025-06-19 20:46:10"
   >
   <trigger
    enabled="y"
@@ -12518,17 +12518,7 @@ end</send>
   <trigger
    enabled="y"
    group="autostandscript"
-   match="^You are knocked to the ground by the force of the wind\.$"
-   regexp="y"
-   send_to="10"
-   sequence="100"
-  >
-  <send>dostand</send>
-  </trigger>
-  <trigger
-   enabled="y"
-   group="autostandscript"
-   match="^You are knocked to the ground\.$"
+   match="^You are knocked to the ground(?:\s+by the\s.+)?\.$"
    regexp="y"
    send_to="10"
    sequence="100"
@@ -14495,7 +14485,7 @@ Note("** Celes. Valley : bard2cv")
 <aliases
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-12 10:11:52"
+   date_saved="2025-06-19 20:46:10"
   >
   <alias
    match="^(?:forcegh|fgh)$"
@@ -16534,9 +16524,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("d;w;w;n;n;n;n;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;s;s;s;w;w;w;u;n;n;n;n;n;w;w;w;w;w")
+  Execute("d;w;open gate west;w;close gate e;n;n;n;n;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;s;s;s;w;w;w;u;n;n;n;n;n;w;w;w;w;w")
 else
-  Execute("fade d;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade s;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w;fade w;fade w;fade u;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade w")
+  Execute("fade d;fade w;open gate west;fade w;close gate e;fade n;fade n;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade s;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w;fade w;fade w;fade u;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade w")
 end</send>
   </alias>
   <alias
@@ -16550,9 +16540,9 @@ end</send>
   <send>fademode = tonumber(GetVariable("fademode"))
 Execute("fly")
 if (fademode == 0) then
-  Execute("d;w;open gate west;w;close gate e;n;n;n;n;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;s;s;s;w;w;w;u;n;n;n;n;n;w;w;w;w;w")
+  Execute("d;w;w;n;n;n;n;n;e;e;e;e;e;e;e;e;e;e;e;e;e;e;s;s;w;w;w;w;s;s;s;w;w;w;u;n;n;n;n;n;w;w;w;w;w")
 else
-  Execute("fade d;fade w;open gate west;fade w;close gate e;fade n;fade n;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade s;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w;fade w;fade w;fade u;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade w")
+  Execute("fade d;fade w;fade w;fade n;fade n;fade n;fade n;fade n;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade e;fade s;fade s;fade w;fade w;fade w;fade w;fade s;fade s;fade s;fade w;fade w;fade w;fade u;fade n;fade n;fade n;fade n;fade n;fade w;fade w;fade w;fade w;fade w")
 end</send>
   </alias>
   <alias
@@ -23758,7 +23748,7 @@ end</send>
 <timers
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-12 10:11:52"
+   date_saved="2025-06-19 20:46:10"
   >
   <timer name="ticktimer" enabled="y" minute="1" second="0.00" offset_second="0.00"    send_to="12"
 group="tickscript" >
@@ -23784,7 +23774,7 @@ group="bot_train" >
 <macros
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-12 10:11:52"
+   date_saved="2025-06-19 20:46:10"
   >
 
   <macro name="up" type="send_now" >
@@ -23918,7 +23908,7 @@ group="bot_train" >
 <variables
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-12 10:11:52"
+   date_saved="2025-06-19 20:46:10"
   >
   <variable name="absolutioncount">1</variable>
   <variable name="acidblastcount">0</variable>
@@ -24447,7 +24437,7 @@ group="bot_train" >
 <colours
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-12 10:11:52"
+   date_saved="2025-06-19 20:46:10"
   >
 
 <ansi>
@@ -24504,7 +24494,7 @@ group="bot_train" >
 <keypad
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-12 10:11:52"
+   date_saved="2025-06-19 20:46:10"
   >
 
   <key name="0" >
@@ -24618,7 +24608,7 @@ group="bot_train" >
 <printing
    muclient_version="5.06"
    world_file_version="15"
-   date_saved="2021-02-12 10:11:52"
+   date_saved="2025-06-19 20:46:10"
   >
 
 <ansi>
